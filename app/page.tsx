@@ -93,7 +93,7 @@ export default function HomePage() {
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
               <ul className="space-y-2 text-gray-400">
-                <li>Email: fitrah.andhika@email.com</li>
+                <li>Email: fitrahramadhan310@email.com</li>
                 <li>Phone: +62 877 6028 7039</li>
                 <li>GitHub: Fitrah-Andhika-Ramadhan</li>
                 <li>Location: Bandung, Indonesia</li>

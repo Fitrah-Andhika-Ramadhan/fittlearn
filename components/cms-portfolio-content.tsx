@@ -139,21 +139,16 @@ export function CMSPortfolioContent() {
           <div className="space-y-8">
             {frontendSkills.length > 0 && (
               <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Frontend Development</h3>
-                <div className="grid md:grid-cols-2 gap-4">
+                <h3 className="text-xl font-semibold text-gray-800 mb-6">Frontend Development</h3>
+                <div className="flex flex-wrap justify-center gap-3">
                   {frontendSkills.map((skill) => (
-                    <div key={skill.id} className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-gray-500">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
-                          style={{ width: `${skill.level}%` }}
-                        ></div>
-                      </div>
-                    </div>
+                    <Badge
+                      key={skill.id}
+                      variant="secondary"
+                      className="px-4 py-2 text-sm bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                    >
+                      {skill.name}
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -161,21 +156,16 @@ export function CMSPortfolioContent() {
 
             {backendSkills.length > 0 && (
               <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Backend Development</h3>
-                <div className="grid md:grid-cols-2 gap-4">
+                <h3 className="text-xl font-semibold text-gray-800 mb-6">Backend Development</h3>
+                <div className="flex flex-wrap justify-center gap-3">
                   {backendSkills.map((skill) => (
-                    <div key={skill.id} className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-gray-500">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-green-600 h-2 rounded-full transition-all duration-1000"
-                          style={{ width: `${skill.level}%` }}
-                        ></div>
-                      </div>
-                    </div>
+                    <Badge
+                      key={skill.id}
+                      variant="secondary"
+                      className="px-4 py-2 text-sm bg-green-100 text-green-800 hover:bg-green-200 transition-colors"
+                    >
+                      {skill.name}
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -183,13 +173,13 @@ export function CMSPortfolioContent() {
 
             {otherSkills.length > 0 && (
               <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Other Skills</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-6">Other Skills</h3>
                 <div className="flex flex-wrap justify-center gap-3">
                   {otherSkills.map((skill) => (
                     <Badge
                       key={skill.id}
                       variant="secondary"
-                      className="px-4 py-2 text-sm bg-purple-100 text-purple-800"
+                      className="px-4 py-2 text-sm bg-purple-100 text-purple-800 hover:bg-purple-200 transition-colors"
                     >
                       {skill.name}
                     </Badge>

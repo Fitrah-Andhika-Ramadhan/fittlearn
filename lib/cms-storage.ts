@@ -275,15 +275,15 @@ class CMSStorage {
   initializeCMSData(): void {
     if (typeof window === "undefined") return
 
-    // Initialize settings
+    // Initialize settings first
     if (!this.getSettings()) {
       this.updateSettings({
         siteName: "FitLearned",
-        siteDescription: "AI-powered document summarization platform",
+        siteDescription: "AI-powered document summarization platform for students and professionals",
         ownerName: "Fitrah Andhika Ramadhan",
         ownerTitle: "Frontend Developer & AI Enthusiast",
         ownerBio:
-          "Mahasiswa S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata.",
+          "Mahasiswa S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Sedang belajar Data Analytics & Software Development dengan AI, berfokus pada frontend development dan teknologi web modern.",
         email: "fitrah.andhika@email.com",
         phone: "+62 877 6028 7039",
         location: "Bandung, Indonesia",
@@ -302,10 +302,10 @@ class CMSStorage {
             "Platform untuk merangkum dokumen PDF dan Word menggunakan AI, membantu mahasiswa dan profesional menghemat waktu belajar.",
           longDescription:
             "FitLearned adalah platform AI-powered yang dirancang khusus untuk membantu mahasiswa dan profesional dalam memproses dokumen dengan lebih efisien. Aplikasi ini menggunakan teknologi AI canggih untuk mengekstrak informasi penting dari dokumen PDF dan Word, kemudian mengubahnya menjadi ringkasan yang mudah dipahami beserta poin-poin kunci.",
-          tech: ["Next.js", "TypeScript", "AI Integration", "Tailwind CSS"],
+          tech: ["Next.js", "TypeScript", "AI Integration", "Tailwind CSS", "React"],
           github: "https://github.com/Fitrah-Andhika-Ramadhan/fitlearned",
           demo: "/summarizer",
-          image: "/placeholder.svg?height=200&width=300",
+          image: "/placeholder.svg?height=200&width=300&text=FitLearned",
           featured: true,
           status: "published" as const,
           category: "Web Application",
@@ -316,13 +316,27 @@ class CMSStorage {
             "Sistem manajemen pembelajaran online dengan fitur video streaming, quiz interaktif, dan tracking progress.",
           longDescription:
             "Sistem LMS lengkap yang dibangun dengan Laravel dan Vue.js, menyediakan platform pembelajaran online yang komprehensif dengan fitur-fitur modern seperti video streaming, quiz interaktif, tracking progress siswa, dan dashboard analytics untuk instructor.",
-          tech: ["Laravel", "Vue.js", "MySQL", "Redis"],
+          tech: ["Laravel", "Vue.js", "MySQL", "Redis", "PHP"],
           github: "https://github.com/Fitrah-Andhika-Ramadhan/elearning-lms",
           demo: "https://elearning-lms-i3jk.vercel.app/",
-          image: "/placeholder.svg?height=200&width=300",
+          image: "/placeholder.svg?height=200&width=300&text=E-Learning",
           featured: true,
           status: "published" as const,
           category: "Web Application",
+        },
+        {
+          title: "Smart Campus Mobile App",
+          description:
+            "Aplikasi mobile untuk kampus dengan fitur jadwal kuliah, absensi digital, dan notifikasi akademik.",
+          longDescription:
+            "Aplikasi mobile yang memudahkan mahasiswa dalam mengakses informasi kampus, melihat jadwal kuliah, melakukan absensi digital, dan menerima notifikasi penting dari kampus.",
+          tech: ["React Native", "Firebase", "Node.js", "Express"],
+          github: "https://github.com/Fitrah-Andhika-Ramadhan/smart-campus",
+          demo: "#",
+          image: "/placeholder.svg?height=200&width=300&text=Smart+Campus",
+          featured: false,
+          status: "published" as const,
+          category: "Mobile Application",
         },
       ]
 
@@ -332,12 +346,34 @@ class CMSStorage {
     // Initialize skills if empty
     if (this.getSkills().length === 0) {
       const sampleSkills = [
+        // Frontend Skills
         { name: "JavaScript", level: 90, category: "frontend" as const, order: 1 },
         { name: "TypeScript", level: 85, category: "frontend" as const, order: 2 },
-        { name: "React/Next.js", level: 88, category: "frontend" as const, order: 3 },
-        { name: "Laravel/PHP", level: 80, category: "backend" as const, order: 4 },
-        { name: "MySQL", level: 85, category: "database" as const, order: 5 },
-        { name: "Git", level: 90, category: "tools" as const, order: 6 },
+        { name: "React", level: 88, category: "frontend" as const, order: 3 },
+        { name: "Next.js", level: 85, category: "frontend" as const, order: 4 },
+        { name: "Vue.js", level: 80, category: "frontend" as const, order: 5 },
+        { name: "HTML5", level: 95, category: "frontend" as const, order: 6 },
+        { name: "CSS3", level: 90, category: "frontend" as const, order: 7 },
+        { name: "Tailwind CSS", level: 88, category: "frontend" as const, order: 8 },
+
+        // Backend Skills
+        { name: "Node.js", level: 82, category: "backend" as const, order: 9 },
+        { name: "Laravel", level: 80, category: "backend" as const, order: 10 },
+        { name: "PHP", level: 78, category: "backend" as const, order: 11 },
+        { name: "Python", level: 75, category: "backend" as const, order: 12 },
+        { name: "Express.js", level: 80, category: "backend" as const, order: 13 },
+
+        // Database Skills
+        { name: "MySQL", level: 85, category: "database" as const, order: 14 },
+        { name: "PostgreSQL", level: 80, category: "database" as const, order: 15 },
+        { name: "MongoDB", level: 78, category: "database" as const, order: 16 },
+        { name: "Redis", level: 70, category: "database" as const, order: 17 },
+
+        // Tools & Others
+        { name: "Git", level: 90, category: "tools" as const, order: 18 },
+        { name: "Docker", level: 70, category: "tools" as const, order: 19 },
+        { name: "AWS", level: 65, category: "tools" as const, order: 20 },
+        { name: "Figma", level: 75, category: "tools" as const, order: 21 },
       ]
 
       sampleSkills.forEach((skill) => this.createSkill(skill))
@@ -354,11 +390,29 @@ class CMSStorage {
             "Currently studying Data Analytics & Software Development with AI, focusing on frontend development and modern web technologies.",
           achievements: [
             "Learning React, Next.js, and modern JavaScript frameworks",
-            "Developing AI-integrated web applications",
+            "Developing AI-integrated web applications like FitLearned",
             "Building responsive and user-friendly interfaces",
+            "Participating in programming communities and hackathons",
+            "Focus on frontend development and AI integration",
           ],
           current: true,
           order: 1,
+        },
+        {
+          title: "Freelance Web Developer",
+          company: "Various Clients",
+          period: "Jan 2023 - Present",
+          description:
+            "Mengerjakan berbagai proyek web development untuk UMKM dan startup lokal, membantu mereka membangun presence online yang kuat.",
+          achievements: [
+            "Menyelesaikan 10+ proyek web development",
+            "Membantu klien meningkatkan online presence dan penjualan",
+            "Memberikan maintenance dan support berkelanjutan",
+            "Menggunakan teknologi modern seperti React, Laravel, dan Vue.js",
+            "Membangun aplikasi e-commerce dan company profile",
+          ],
+          current: true,
+          order: 2,
         },
       ]
 
@@ -372,10 +426,12 @@ class CMSStorage {
           degree: "S1 Sistem Informasi",
           school: "Telkom University",
           period: "2021 - 2025",
+          gpa: "3.75",
           achievements: [
             "Currently studying Data Analytics & Software Development with AI",
             "Active in programming communities and hackathons",
             "Focus on frontend development and AI integration",
+            "Relevant coursework: Database Systems, Web Programming, AI & Machine Learning",
           ],
           current: true,
           order: 1,

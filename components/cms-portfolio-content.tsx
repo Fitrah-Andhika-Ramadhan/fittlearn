@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -17,24 +18,56 @@ import {
   Upload,
   Users,
   Zap,
+  Loader2,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { useCMSProjects, useCMSSkills, useCMSExperiences, useCMSSettings } from "@/hooks/useCMS"
+import { cmsStorage } from "@/lib/cms-storage"
+import type { CMSProject, CMSSkill, CMSExperience, CMSSettings } from "@/lib/types"
 
 export function CMSPortfolioContent() {
-  const { getFeaturedProjects } = useCMSProjects()
-  const { skills } = useCMSSkills()
-  const { experiences } = useCMSExperiences()
-  const { settings } = useCMSSettings()
+  const [projects, setProjects] = useState<CMSProject[]>([])
+  const [skills, setSkills] = useState<CMSSkill[]>([])
+  const [experiences, setExperiences] = useState<CMSExperience[]>([])
+  const [settings, setSettings] = useState<CMSSettings | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const featuredProjects = getFeaturedProjects()
+  useEffect(() => {
+    // Initialize CMS data and load from storage
+    cmsStorage.initializeCMSData()
+
+    // Load data from storage
+    setProjects(cmsStorage.getProjects().filter((p) => p.status === "published" && p.featured))
+    setSkills(cmsStorage.getSkills())
+    setExperiences(cmsStorage.getExperiences())
+    setSettings(cmsStorage.getSettings())
+
+    setLoading(false)
+  }, [])
+
   const frontendSkills = skills.filter((s) => s.category === "frontend")
   const backendSkills = skills.filter((s) => s.category === "backend")
   const otherSkills = skills.filter((s) => !["frontend", "backend"].includes(s.category))
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    )
+  }
+
   if (!settings) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Settings not found. Please configure in admin panel.</p>
+          <Link href="/admin/settings">
+            <Button className="mt-4">Go to Settings</Button>
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -270,7 +303,7 @@ export function CMSPortfolioContent() {
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Featured Projects</h2>
           <div className="grid md:grid-cols-2 gap-8">
-            {featuredProjects.map((project) => (
+            {projects.map((project) => (
               <Card key={project.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="aspect-video relative">
                   <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover" />

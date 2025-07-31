@@ -275,8 +275,8 @@ class CMSStorage {
   initializeCMSData(): void {
     if (typeof window === "undefined") return
 
-    // Initialize settings first
-    if (!this.getSettings()) {
+    // Initialize settings if empty
+    if (this.getData<CMSSettings>("settings").length === 0) {
       this.updateSettings({
         siteName: "FitLearned",
         siteDescription: "AI-powered document summarization platform for students and professionals",
@@ -294,7 +294,7 @@ class CMSStorage {
     }
 
     // Initialize projects if empty
-    if (this.getProjects().length === 0) {
+    if (this.getData<CMSProject>("projects").length === 0) {
       const sampleProjects = [
         {
           title: "FitLearned - AI Document Processor",
@@ -344,7 +344,7 @@ class CMSStorage {
     }
 
     // Initialize skills if empty
-    if (this.getSkills().length === 0) {
+    if (this.getData<CMSSkill>("skills").length === 0) {
       const sampleSkills = [
         // Frontend Skills
         { name: "JavaScript", level: 90, category: "frontend" as const, order: 1 },
@@ -380,7 +380,7 @@ class CMSStorage {
     }
 
     // Initialize experiences if empty
-    if (this.getExperiences().length === 0) {
+    if (this.getData<CMSExperience>("experiences").length === 0) {
       const sampleExperiences = [
         {
           title: "Frontend Developer Student",
@@ -420,7 +420,7 @@ class CMSStorage {
     }
 
     // Initialize education if empty
-    if (this.getEducation().length === 0) {
+    if (this.getData<CMSEducation>("education").length === 0) {
       const sampleEducation = [
         {
           degree: "S1 Sistem Informasi",

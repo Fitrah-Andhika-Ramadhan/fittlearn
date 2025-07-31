@@ -13,6 +13,9 @@ function useCMSSync() {
       setSyncTrigger((prev) => prev + 1)
     }
 
+    // Initialize data on first load
+    cmsStorage.initializeCMSData()
+
     window.addEventListener("cms-data-changed", handleCMSDataChange)
 
     return () => {
@@ -29,7 +32,6 @@ export function useCMSProjects() {
   const syncTrigger = useCMSSync()
 
   useEffect(() => {
-    cmsStorage.initializeCMSData()
     setProjects(cmsStorage.getProjects())
     setLoading(false)
   }, [syncTrigger])
@@ -81,7 +83,6 @@ export function useCMSSkills() {
   const syncTrigger = useCMSSync()
 
   useEffect(() => {
-    cmsStorage.initializeCMSData()
     setSkills(cmsStorage.getSkills())
     setLoading(false)
   }, [syncTrigger])
@@ -130,7 +131,6 @@ export function useCMSExperiences() {
   const syncTrigger = useCMSSync()
 
   useEffect(() => {
-    cmsStorage.initializeCMSData()
     setExperiences(cmsStorage.getExperiences())
     setLoading(false)
   }, [syncTrigger])
@@ -176,7 +176,6 @@ export function useCMSSettings() {
   const syncTrigger = useCMSSync()
 
   useEffect(() => {
-    cmsStorage.initializeCMSData()
     setSettings(cmsStorage.getSettings())
     setLoading(false)
   }, [syncTrigger])

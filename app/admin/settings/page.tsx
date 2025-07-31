@@ -187,7 +187,7 @@ export default function AdminSettings() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  placeholder="your@email.com"
+                  placeholder="fitrahramadhan310@gmail.com"
                 />
               </div>
               <div>
@@ -274,10 +274,10 @@ export default function AdminSettings() {
             {isSubmitting ? (
               "Saving..."
             ) : (
-              <>
+              <span className="flex items-center">
                 <Save className="mr-2 h-4 w-4" />
                 Save Settings
-              </>
+              </span>
             )}
           </Button>
         </div>

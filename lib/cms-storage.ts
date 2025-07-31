@@ -284,7 +284,7 @@ class CMSStorage {
         ownerTitle: "Frontend Developer & AI Enthusiast",
         ownerBio:
           "Mahasiswa S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Sedang belajar Data Analytics & Software Development dengan AI, berfokus pada frontend development dan teknologi web modern.",
-        email: "fitrah.andhika@email.com",
+        email: "fitrahramadhan310@gmail.com",
         phone: "+62 877 6028 7039",
         location: "Bandung, Indonesia",
         github: "https://github.com/Fitrah-Andhika-Ramadhan/",

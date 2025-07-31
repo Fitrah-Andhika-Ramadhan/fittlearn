@@ -1,11 +1,25 @@
 import { Button } from "@/components/ui/button"
-import { Brain, Upload, Lock } from "lucide-react"
+import { Brain, Upload, Lock, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 import { CMSPortfolioContent } from "@/components/cms-portfolio-content"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Development Notice */}
+      <div className="bg-yellow-50 border-b border-yellow-200">
+        <div className="container mx-auto px-4 py-3">
+          <Alert className="border-yellow-300 bg-yellow-50">
+            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+            <AlertDescription className="text-yellow-800">
+              <strong>🚧 Development Notice:</strong> Website portfolio ini masih dalam tahap pengembangan. Beberapa
+              fitur mungkin belum sempurna atau masih dalam proses penyempurnaan.
+            </AlertDescription>
+          </Alert>
+        </div>
+      </div>
+
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -71,6 +85,12 @@ export default function HomePage() {
                 <span className="text-lg font-bold">FitLearned</span>
               </div>
               <p className="text-gray-400">Making document summarization accessible and efficient for everyone.</p>
+              <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-700/30 rounded-lg">
+                <p className="text-yellow-300 text-sm">
+                  <AlertTriangle className="h-4 w-4 inline mr-1" />
+                  Website masih dalam pengembangan
+                </p>
+              </div>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Features</h3>
@@ -93,7 +113,7 @@ export default function HomePage() {
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
               <ul className="space-y-2 text-gray-400">
-                <li>Email: fitrah.andhika@email.com</li>
+                <li>Email: fitrahramadhan310@gmail.com</li>
                 <li>Phone: +62 877 6028 7039</li>
                 <li>GitHub: Fitrah-Andhika-Ramadhan</li>
                 <li>Location: Bandung, Indonesia</li>
@@ -102,6 +122,10 @@ export default function HomePage() {
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
             <p>&copy; 2024 FitLearned. Built with Next.js and AI technology by Fitrah Andhika Ramadhan.</p>
+            <p className="text-sm mt-2 text-yellow-400">
+              <AlertTriangle className="h-3 w-3 inline mr-1" />
+              Portfolio website ini masih dalam tahap pengembangan dan penyempurnaan
+            </p>
           </div>
         </div>
       </footer>

@@ -21,7 +21,7 @@ class AuthService {
   // Default admin credentials (in production, this should be in a secure database)
   private readonly DEFAULT_ADMIN = {
     id: "admin-1",
-    email: "admin@fitlearned.com",
+    email: "fitrahramadhan310@gmail.com",
     password: "admin123", // In production, this should be hashed
     name: "Fitrah Andhika Ramadhan",
     role: "admin" as const,

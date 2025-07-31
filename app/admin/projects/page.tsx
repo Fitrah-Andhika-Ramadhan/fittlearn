@@ -1,103 +1,103 @@
 "use client"
 
-import type React from "react"
+import { CardFooter } from "@/components/ui/card"
 
+import type React from "react"
 import { useState, useEffect } from "react"
-import { useCMSProjects } from "@/hooks/useCMS"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { PlusCircle, Edit, Trash2, Save, XCircle } from "lucide-react"
 import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import Image from "next/image"
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Textarea,
+  Badge,
+  Switch,
+} from "@/components/ui"
+import { useCMSProjects } from "@/hooks/useCMS"
 import type { CMSProject } from "@/lib/types"
 
-export default function ProjectsPage() {
+type ProjectFormState = Omit<CMSProject, "id" | "createdAt" | "updatedAt" | "views" | "likes">
+
+const initialFormState: ProjectFormState = {
+  title: "",
+  description: "",
+  longDescription: "",
+  tech: [],
+  github: "",
+  demo: "",
+  image: "",
+  featured: false,
+  status: "draft",
+  category: "",
+}
+
+export default function AdminProjects() {
   const { projects, loading, createProject, updateProject, deleteProject } = useCMSProjects()
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [currentProject, setCurrentProject] = useState<CMSProject | null>(null)
-  const [formData, setFormData] = useState<Omit<CMSProject, "id" | "createdAt" | "updatedAt" | "views" | "likes">>({
-    name: "",
-    description: "",
-    longDescription: "",
-    category: "Web Development",
-    status: "In Progress",
-    technologies: [],
-    image: "/placeholder.svg?height=200&width=300",
-    url: "",
-    github: "",
-    isFeatured: false,
-  })
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingProject, setEditingProject] = useState<CMSProject | null>(null)
+  const [formData, setFormData] = useState<ProjectFormState>(initialFormState)
+  const [techInput, setTechInput] = useState("")
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    if (currentProject) {
+    if (editingProject) {
       setFormData({
-        name: currentProject.name,
-        description: currentProject.description,
-        longDescription: currentProject.longDescription,
-        category: currentProject.category,
-        status: currentProject.status,
-        technologies: currentProject.technologies,
-        image: currentProject.image,
-        url: currentProject.url,
-        github: currentProject.github,
-        isFeatured: currentProject.isFeatured,
+        title: editingProject.title,
+        description: editingProject.description,
+        longDescription: editingProject.longDescription || "",
+        tech: editingProject.tech,
+        github: editingProject.github,
+        demo: editingProject.demo,
+        image: editingProject.image,
+        featured: editingProject.featured,
+        status: editingProject.status,
+        category: editingProject.category,
       })
-      setImagePreviewUrl(currentProject.image)
+      setImagePreview(editingProject.image)
     } else {
-      setFormData({
-        name: "",
-        description: "",
-        longDescription: "",
-        category: "Web Development",
-        status: "In Progress",
-        technologies: [],
-        image: "/placeholder.svg?height=200&width=300",
-        url: "",
-        github: "",
-        isFeatured: false,
-      })
-      setSelectedImageFile(null)
-      setImagePreviewUrl(null)
+      setFormData(initialFormState)
+      setImagePreview(null)
     }
-  }, [currentProject, isDialogOpen]) // Reset form when dialog closes or currentProject changes
+    setTechInput("")
+    setSelectedImageFile(null)
+  }, [editingProject, isModalOpen])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement
-    if (name === "technologies") {
+  const handleInputChange = (field: keyof ProjectFormState, value: any) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const handleTechAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && techInput.trim() !== "") {
+      e.preventDefault()
       setFormData((prev) => ({
         ...prev,
-        technologies: value.split(",").map((tech) => tech.trim()),
+        tech: [...new Set([...prev.tech, techInput.trim()])],
       }))
-    } else if (type === "checkbox") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: checked,
-      }))
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }))
+      setTechInput("")
     }
   }
 
-  const handleSelectChange = (name: string, value: string) => {
+  const handleTechRemove = (techToRemove: string) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      tech: prev.tech.filter((tech) => tech !== techToRemove),
     }))
   }
 
@@ -107,38 +107,53 @@ export default function ProjectsPage() {
       setSelectedImageFile(file)
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreviewUrl(reader.result as string)
-        setFormData((prev) => ({
-          ...prev,
-          image: reader.result as string, // Store as Data URL
-        }))
+        setImagePreview(reader.result as string)
+        setFormData((prev) => ({ ...prev, image: reader.result as string }))
       }
       reader.readAsDataURL(file)
     } else {
       setSelectedImageFile(null)
-      setImagePreviewUrl(null)
-      setFormData((prev) => ({
-        ...prev,
-        image: "/placeholder.svg?height=200&width=300", // Reset to placeholder
-      }))
+      setImagePreview(null)
+      setFormData((prev) => ({ ...prev, image: "" }))
     }
   }
 
-  const handleCreate = () => {
-    createProject(formData)
-    setIsDialogOpen(false)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      if (editingProject) {
+        updateProject(editingProject.id, formData)
+        alert("Project updated successfully!")
+      } else {
+        createProject(formData)
+        alert("Project created successfully!")
+      }
+      setIsModalOpen(false)
+    } catch (error) {
+      console.error("Failed to save project:", error)
+      alert("Failed to save project. Please try again.")
+    }
   }
 
-  const handleUpdate = () => {
-    if (currentProject) {
-      updateProject(currentProject.id, formData)
-      setIsDialogOpen(false)
-    }
+  const openCreateModal = () => {
+    setEditingProject(null)
+    setIsModalOpen(true)
+  }
+
+  const openEditModal = (project: CMSProject) => {
+    setEditingProject(project)
+    setIsModalOpen(true)
   }
 
   const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      deleteProject(id)
+    if (confirm("Are you sure you want to delete this project?")) {
+      try {
+        deleteProject(id)
+        alert("Project deleted successfully!")
+      } catch (error) {
+        console.error("Failed to delete project:", error)
+        alert("Failed to delete project. Please try again.")
+      }
     }
   }
 
@@ -147,28 +162,85 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Project Management</h1>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Project Management</h1>
+          <p className="text-gray-600 mt-2">Manage your portfolio projects, add new ones, or edit existing entries.</p>
+        </div>
+        <Button onClick={openCreateModal}>
+          <PlusCircle className="mr-2 h-5 w-5" />
+          Add New Project
+        </Button>
+      </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <Button onClick={() => setCurrentProject(null)} className="mb-6">
-            Add New Project
-          </Button>
-        </DialogTrigger>
+      {/* Projects List */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => (
+          <Card key={project.id} className="flex flex-col">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>{project.title}</CardTitle>
+                <Badge variant={project.status === "published" ? "default" : "secondary"}>
+                  {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                </Badge>
+              </div>
+              <CardDescription>{project.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              {project.image && (
+                <img
+                  src={project.image || "/placeholder.svg"}
+                  alt={project.title}
+                  className="w-full h-40 object-cover rounded-md mb-4"
+                />
+              )}
+              <div className="flex flex-wrap gap-2 mb-4">
+                {project.tech.map((tech, index) => (
+                  <Badge key={index} variant="outline">
+                    {tech}
+                  </Badge>
+                ))}
+              </div>
+              <p className="text-sm text-gray-700">Category: {project.category}</p>
+              <p className="text-sm text-gray-700">Featured: {project.featured ? "Yes" : "No"}</p>
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => openEditModal(project)}>
+                <Edit className="h-4 w-4" />
+                <span className="sr-only">Edit</span>
+              </Button>
+              <Button variant="destructive" size="sm" onClick={() => handleDelete(project.id)}>
+                <Trash2 className="h-4 w-4" />
+                <span className="sr-only">Delete</span>
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+
+      {/* Project Add/Edit Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{currentProject ? "Edit Project" : "Add New Project"}</DialogTitle>
+            <DialogTitle>{editingProject ? "Edit Project" : "Add New Project"}</DialogTitle>
             <DialogDescription>
-              {currentProject ? "Make changes to your project here." : "Add a new project to your portfolio."}
+              {editingProject ? "Make changes to your project here." : "Add a new project to your portfolio."}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <form onSubmit={handleSubmit} className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
+              <Label htmlFor="title" className="text-right">
+                Title
               </Label>
-              <Input id="name" name="name" value={formData.name} onChange={handleInputChange} className="col-span-3" />
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => handleInputChange("title", e.target.value)}
+                className="col-span-3"
+                required
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="description" className="text-right">
@@ -176,10 +248,11 @@ export default function ProjectsPage() {
               </Label>
               <Textarea
                 id="description"
-                name="description"
                 value={formData.description}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange("description", e.target.value)}
                 className="col-span-3"
+                rows={2}
+                required
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -188,86 +261,58 @@ export default function ProjectsPage() {
               </Label>
               <Textarea
                 id="longDescription"
-                name="longDescription"
                 value={formData.longDescription}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange("longDescription", e.target.value)}
                 className="col-span-3"
+                rows={4}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="category" className="text-right">
                 Category
               </Label>
-              <Select
-                name="category"
-                value={formData.category}
-                onValueChange={(value) => handleSelectChange("category", value)}
-              >
+              <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Web Development">Web Development</SelectItem>
+                  <SelectItem value="Web Application">Web Application</SelectItem>
                   <SelectItem value="Mobile Application">Mobile Application</SelectItem>
                   <SelectItem value="Data Science">Data Science</SelectItem>
-                  <SelectItem value="Machine Learning">Machine Learning</SelectItem>
                   <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="status" className="text-right">
-                Status
+              <Label htmlFor="tech" className="text-right">
+                Technologies
               </Label>
-              <Select
-                name="status"
-                value={formData.status}
-                onValueChange={(value) => handleSelectChange("status", value)}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Completed">Completed</SelectItem>
-                  <SelectItem value="In Progress">In Progress</SelectItem>
-                  <SelectItem value="Planned">Planned</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="technologies" className="text-right">
-                Technologies (comma-separated)
-              </Label>
-              <Input
-                id="technologies"
-                name="technologies"
-                value={formData.technologies.join(", ")}
-                onChange={handleInputChange}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="image" className="text-right">
-                Image
-              </Label>
-              <div className="col-span-3 flex flex-col gap-2">
-                <Input id="image" name="image" type="file" accept="image/*" onChange={handleImageChange} />
-                {imagePreviewUrl && (
-                  <Image
-                    src={imagePreviewUrl || "/placeholder.svg"}
-                    alt="Project Preview"
-                    width={200}
-                    height={150}
-                    className="mt-2 rounded-md object-cover"
-                  />
-                )}
+              <div className="col-span-3">
+                <Input
+                  id="tech"
+                  value={techInput}
+                  onChange={(e) => setTechInput(e.target.value)}
+                  onKeyDown={handleTechAdd}
+                  placeholder="Type tech and press Enter (e.g., React, Node.js)"
+                />
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {formData.tech.map((tech, index) => (
+                    <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                      {tech}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0"
+                        onClick={() => handleTechRemove(tech)}
+                      >
+                        <XCircle className="h-3 w-3" />
+                        <span className="sr-only">Remove {tech}</span>
+                      </Button>
+                    </Badge>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="url" className="text-right">
-                Live URL
-              </Label>
-              <Input id="url" name="url" value={formData.url} onChange={handleInputChange} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="github" className="text-right">
@@ -275,95 +320,96 @@ export default function ProjectsPage() {
               </Label>
               <Input
                 id="github"
-                name="github"
                 value={formData.github}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange("github", e.target.value)}
                 className="col-span-3"
+                type="url"
+                placeholder="https://github.com/your-project"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="isFeatured" className="text-right">
-                Featured
+              <Label htmlFor="demo" className="text-right">
+                Demo URL
               </Label>
               <Input
-                id="isFeatured"
-                name="isFeatured"
-                type="checkbox"
-                checked={formData.isFeatured}
-                onChange={handleInputChange}
-                className="col-span-3 h-4 w-4"
+                id="demo"
+                value={formData.demo}
+                onChange={(e) => handleInputChange("demo", e.target.value)}
+                className="col-span-3"
+                type="url"
+                placeholder="https://your-project-demo.com"
               />
             </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" onClick={currentProject ? handleUpdate : handleCreate}>
-              {currentProject ? "Save Changes" : "Add Project"}
-            </Button>
-          </DialogFooter>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="image-upload" className="text-right">
+                Project Image
+              </Label>
+              <div className="col-span-3">
+                <Input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="col-span-3"
+                />
+                {imagePreview && (
+                  <div className="mt-2">
+                    <img
+                      src={imagePreview || "/placeholder.svg"}
+                      alt="Image Preview"
+                      className="w-32 h-auto rounded-md object-cover"
+                    />
+                  </div>
+                )}
+                {!imagePreview && formData.image && (
+                  <div className="mt-2">
+                    <img
+                      src={formData.image || "/placeholder.svg"}
+                      alt="Current Image"
+                      className="w-32 h-auto rounded-md object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="featured" className="text-right">
+                Featured
+              </Label>
+              <Switch
+                id="featured"
+                checked={formData.featured}
+                onCheckedChange={(checked) => handleInputChange("featured", checked)}
+                className="col-span-3 justify-self-start"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="status" className="text-right">
+                Status
+              </Label>
+              <Select
+                value={formData.status}
+                onValueChange={(value) => handleInputChange("status", value as "draft" | "published" | "archived")}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="published">Published</SelectItem>
+                  <SelectItem value="archived">Archived</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter>
+              <Button type="submit">
+                <Save className="mr-2 h-4 w-4" />
+                {editingProject ? "Save Changes" : "Create Project"}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <Card key={project.id}>
-            <CardHeader>
-              <CardTitle>{project.name}</CardTitle>
-              <CardDescription>{project.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {project.image && (
-                <Image
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.name}
-                  width={300}
-                  height={200}
-                  className="mb-4 rounded-md object-cover w-full h-48"
-                />
-              )}
-              <p className="text-sm text-gray-500 dark:text-gray-400">Category: {project.category}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Status: {project.status}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Technologies: {project.technologies.join(", ")}
-              </p>
-              {project.url && (
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline text-sm"
-                >
-                  Live Demo
-                </a>
-              )}
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline text-sm ml-2"
-                >
-                  GitHub
-                </a>
-              )}
-            </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setCurrentProject(project)
-                  setIsDialogOpen(true)
-                }}
-              >
-                Edit
-              </Button>
-              <Button variant="destructive" size="sm" onClick={() => handleDelete(project.id)}>
-                Delete
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
     </div>
   )
 }

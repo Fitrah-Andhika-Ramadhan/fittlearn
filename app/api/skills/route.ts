@@ -5,20 +5,19 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const mapSkill = (s: any) => ({
   id: s.id,
-  name: s.tech?.name || "",
-  level: s.proficiency || 50,
+  name: s.name || "",
+  level: s.level || 50,
   category: s.category || "other",
-  icon: s.tech?.icon_url || "",
+  icon: s.icon_url || "",
   order: s.sort_order || 0,
-  createdAt: s.created_at ? s.created_at.toISOString() : new Date().toISOString(),
-  updatedAt: s.updated_at ? s.updated_at.toISOString() : new Date().toISOString()
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 });
 
 export async function GET() {
   try {
-    const skills = await prisma.userSkill.findMany({
-      orderBy: { sort_order: "asc" },
-      include: { tech: true }
+    const skills = await prisma.skill.findMany({
+      orderBy: { sort_order: "asc" }
     });
     return NextResponse.json(skills.map(mapSkill));
   } catch (error) {
@@ -33,20 +32,14 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const skill = await prisma.userSkill.create({
+    const skill = await prisma.skill.create({
       data: {
-        proficiency: body.level || 50,
+        name: body.name,
         category: body.category || "other",
+        level: body.level || 50,
+        icon_url: body.icon || "",
         sort_order: body.order || 0,
-        user_id: (session.user as any).id,
-        tech: {
-          connectOrCreate: {
-            where: { name: body.name },
-            create: { name: body.name, slug: body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') }
-          }
-        }
-      },
-      include: { tech: true }
+      }
     });
 
     return NextResponse.json(mapSkill(skill), { status: 201 });

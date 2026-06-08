@@ -114,8 +114,22 @@ model Profile {
   linkedin_url     String?
   twitter_url      String?
   email_contact    String?
+  phone            String?
   meta_title       String?
   meta_description String?
+
+  // Homepage hero section
+  hero_tagline     String?   // Big background text e.g. "Development"
+  hero_intro       String?   // Small label e.g. "Hello, I Am"
+  cta_primary_text String?   // e.g. "See Portfolio"
+  cta_secondary_text String? // e.g. "Download CV"
+
+  // Contact section
+  contact_intro    String?   // Paragraph in contact box
+
+  // Portfolio page
+  portfolio_title  String?   // e.g. "My Portfolio"
+  portfolio_subtitle String? // Subtitle text
 }
 
 model StudyFile {

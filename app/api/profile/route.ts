@@ -11,7 +11,7 @@ const mapSettings = (p: any) => ({
   ownerTitle: p.headline || "",
   ownerBio: p.bio || "",
   email: p.email_contact || "",
-  phone: "", // No phone in schema
+  phone: p.phone || "",
   location: p.location || "",
   github: p.github_url || "",
   linkedin: p.linkedin_url || "",
@@ -19,6 +19,13 @@ const mapSettings = (p: any) => ({
   avatar: p.photo_url || "",
   heroImage: "",
   resumeUrl: p.cv_url || "",
+  heroTagline: p.hero_tagline || "Development",
+  heroIntro: p.hero_intro || "Hello, I Am",
+  ctaPrimaryText: p.cta_primary_text || "See Portfolio",
+  ctaSecondaryText: p.cta_secondary_text || "Download CV",
+  contactIntro: p.contact_intro || "I'm very approachable and would love to speak to you. Feel free to call, send me an email or simply complete this enquiry form.",
+  portfolioTitle: p.portfolio_title || "My recent work",
+  portfolioSubtitle: p.portfolio_subtitle || "View all projects",
   updatedAt: new Date().toISOString()
 });
 
@@ -47,6 +54,7 @@ export async function PUT(req: Request) {
       headline: body.ownerTitle || "",
       bio: body.ownerBio || "",
       email_contact: body.email || "",
+      phone: body.phone || "",
       location: body.location || "",
       github_url: body.github || "",
       linkedin_url: body.linkedin || "",
@@ -54,7 +62,14 @@ export async function PUT(req: Request) {
       photo_url: body.avatar || "",
       cv_url: body.resumeUrl || "",
       meta_title: body.siteName || "",
-      meta_description: body.siteDescription || ""
+      meta_description: body.siteDescription || "",
+      hero_tagline: body.heroTagline || "",
+      hero_intro: body.heroIntro || "",
+      cta_primary_text: body.ctaPrimaryText || "",
+      cta_secondary_text: body.ctaSecondaryText || "",
+      contact_intro: body.contactIntro || "",
+      portfolio_title: body.portfolioTitle || "",
+      portfolio_subtitle: body.portfolioSubtitle || ""
     };
 
     if (profile) {

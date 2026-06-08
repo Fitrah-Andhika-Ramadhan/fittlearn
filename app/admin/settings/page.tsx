@@ -25,6 +25,13 @@ const emptyForm = {
   avatar: "",
   heroImage: "",
   resumeUrl: "",
+  heroTagline: "",
+  heroIntro: "",
+  ctaPrimaryText: "",
+  ctaSecondaryText: "",
+  contactIntro: "",
+  portfolioTitle: "",
+  portfolioSubtitle: "",
 }
 
 export default function AdminSettings() {
@@ -53,6 +60,13 @@ export default function AdminSettings() {
         avatar: settings.avatar || "",
         heroImage: settings.heroImage || "",
         resumeUrl: settings.resumeUrl || "",
+        heroTagline: settings.heroTagline || "Development",
+        heroIntro: settings.heroIntro || "Hello, I Am",
+        ctaPrimaryText: settings.ctaPrimaryText || "See Portfolio",
+        ctaSecondaryText: settings.ctaSecondaryText || "Download CV",
+        contactIntro: settings.contactIntro || "I'm very approachable and would love to speak to you. Feel free to call, send me an email or simply complete this enquiry form.",
+        portfolioTitle: settings.portfolioTitle || "My recent work",
+        portfolioSubtitle: settings.portfolioSubtitle || "View all projects",
       })
       setFormInitialized(true)
     }
@@ -204,6 +218,70 @@ export default function AdminSettings() {
                 <MapPin className="h-3.5 w-3.5 text-yellow-400" /> Location
               </Label>
               <Input id="location" value={formData.location} onChange={(e) => handleInputChange("location", e.target.value)} placeholder="City, Country" className={inputClass} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="contactIntro" className={labelClass}>Contact Box Intro Text</Label>
+              <Textarea id="contactIntro" value={formData.contactIntro} onChange={(e) => handleInputChange("contactIntro", e.target.value)} placeholder="I'm very approachable..." rows={3} className={`${inputClass} resize-none`} />
+            </div>
+          </div>
+        </div>
+
+        {/* Homepage Configuration */}
+        <div className="bg-white/[0.07] border border-white/[0.12] rounded-2xl overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.08]">
+            <div className="p-2 rounded-lg bg-orange-500/20 border border-orange-500/30">
+              <Globe className="h-4 w-4 text-orange-400" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-white">Homepage Configuration</h2>
+              <p className="text-white/50 text-xs">Customize the hero section and buttons</p>
+            </div>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="heroIntro" className={labelClass}>Hero Intro Text</Label>
+                <Input id="heroIntro" value={formData.heroIntro} onChange={(e) => handleInputChange("heroIntro", e.target.value)} placeholder="e.g. Hello, I Am" className={inputClass} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="heroTagline" className={labelClass}>Background Tagline</Label>
+                <Input id="heroTagline" value={formData.heroTagline} onChange={(e) => handleInputChange("heroTagline", e.target.value)} placeholder="e.g. Development" className={inputClass} />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="ctaPrimaryText" className={labelClass}>Primary Button Text</Label>
+                <Input id="ctaPrimaryText" value={formData.ctaPrimaryText} onChange={(e) => handleInputChange("ctaPrimaryText", e.target.value)} placeholder="e.g. See Portfolio" className={inputClass} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ctaSecondaryText" className={labelClass}>Secondary Button Text</Label>
+                <Input id="ctaSecondaryText" value={formData.ctaSecondaryText} onChange={(e) => handleInputChange("ctaSecondaryText", e.target.value)} placeholder="e.g. Download CV" className={inputClass} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Portfolio Section Configuration */}
+        <div className="bg-white/[0.07] border border-white/[0.12] rounded-2xl overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.08]">
+            <div className="p-2 rounded-lg bg-indigo-500/20 border border-indigo-500/30">
+              <Globe className="h-4 w-4 text-indigo-400" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-white">Portfolio Section Settings</h2>
+              <p className="text-white/50 text-xs">Customize the portfolio area on the homepage</p>
+            </div>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="portfolioTitle" className={labelClass}>Section Title</Label>
+                <Input id="portfolioTitle" value={formData.portfolioTitle} onChange={(e) => handleInputChange("portfolioTitle", e.target.value)} placeholder="e.g. My recent work" className={inputClass} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="portfolioSubtitle" className={labelClass}>Link Text</Label>
+                <Input id="portfolioSubtitle" value={formData.portfolioSubtitle} onChange={(e) => handleInputChange("portfolioSubtitle", e.target.value)} placeholder="e.g. View all projects →" className={inputClass} />
+              </div>
             </div>
           </div>
         </div>

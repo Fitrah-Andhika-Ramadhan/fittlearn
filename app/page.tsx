@@ -10,9 +10,19 @@ export default async function HomePage() {
   const name = profile?.name || "Fitrah Andhika Ramadhan";
   const title = profile?.headline || "Web Developer & System Analyst";
   const bio = profile?.bio || "A passionate Web Developer & System Analyst based in Bandung, Indonesia. I build modern, beautiful, and intelligent web applications.";
-  const phone = "+62 877 6028 7039";
+  const phone = profile?.phone || "+62 877 6028 7039";
   const email = profile?.email_contact || "fitrah.andhika@email.com";
   const cvUrl = profile?.cv_url || "#";
+  
+  const heroIntro = profile?.hero_intro || "Hello, I Am";
+  const heroTagline = profile?.hero_tagline || "Development";
+  const ctaPrimaryText = profile?.cta_primary_text || "See Portfolio";
+  const ctaSecondaryText = profile?.cta_secondary_text || "Download CV";
+  
+  const contactIntro = profile?.contact_intro || "I'm very approachable and would love to speak to you. Feel free to call, send me an email or simply complete this enquiry form.";
+  
+  const portfolioTitle = profile?.portfolio_title || "My recent work";
+  const portfolioSubtitle = profile?.portfolio_subtitle || "View all projects →";
 
   return (
     <div className="flex relative w-full">
@@ -21,7 +31,7 @@ export default async function HomePage() {
         <div className="space-y-4 mb-10">
           <p className="text-purple-400 text-lg font-medium tracking-wide uppercase flex items-center">
             <span className="w-10 h-px bg-purple-400 mr-4"></span>
-            Hello, I Am
+            {heroIntro}
           </p>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight text-white drop-shadow-lg">
             {name.split(" ").slice(0, 2).join(" ")}<br/>
@@ -37,21 +47,21 @@ export default async function HomePage() {
         
         <div className="flex space-x-6">
           <Link href="/portfolio" className="px-8 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition font-medium text-sm">
-            See Portfolio
+            {ctaPrimaryText}
           </Link>
           {cvUrl !== "#" ? (
             <Link href={cvUrl} target="_blank" className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition font-medium text-sm shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-              Download CV
+              {ctaSecondaryText}
             </Link>
           ) : (
             <button className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition font-medium text-sm shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-              Download CV
+              {ctaSecondaryText}
             </button>
           )}
         </div>
 
         <div className="mt-24 relative z-20">
-          <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white/80 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] -mt-4 ml-8 tracking-tighter">Development</h2>
+          <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white/80 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] -mt-4 ml-8 tracking-tighter">{heroTagline}</h2>
         </div>
       </div>
 
@@ -61,7 +71,7 @@ export default async function HomePage() {
         {/* Work Preview */}
         <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
-          <h3 className="text-center text-lg font-semibold mb-8">My recent work</h3>
+          <h3 className="text-center text-lg font-semibold mb-8">{portfolioTitle}</h3>
           <div className="flex justify-center items-end space-x-6">
             <div className="w-28 h-40 bg-gradient-to-b from-blue-900/40 to-purple-900/40 rounded-xl flex flex-col items-center justify-center p-3 opacity-60 scale-90 border border-white/5 shadow-inner">
               <div className="w-full h-full bg-black/40 rounded-lg mb-2 overflow-hidden flex items-center justify-center">
@@ -88,7 +98,7 @@ export default async function HomePage() {
           </div>
           <div className="text-center mt-6">
             <Link href="/portfolio" className="text-sm text-purple-300 hover:text-purple-200 transition underline underline-offset-4">
-              View all projects →
+              {portfolioSubtitle}
             </Link>
           </div>
         </div>
@@ -98,7 +108,7 @@ export default async function HomePage() {
           <div className="w-5/12">
             <h3 className="text-xl font-bold mb-4 text-white">Get in touch</h3>
             <p className="text-xs text-gray-400 leading-relaxed mb-6">
-              I&apos;m very approachable and would love to speak to you. Feel free to call, send me an email or simply complete this enquiry form.
+              {contactIntro}
             </p>
             <div className="text-xs font-medium text-white/80 space-y-1.5">
               <p>📞 {phone}</p>

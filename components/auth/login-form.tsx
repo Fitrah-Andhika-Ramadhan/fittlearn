@@ -8,13 +8,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Brain, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react"
-import { useAuth } from "@/hooks/useAuth"
+import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 export function LoginForm() {
-  const { login, loading } = useAuth()
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [formData, setFormData] = useState({
     email: "",
@@ -30,11 +30,24 @@ export function LoginForm() {
       return
     }
 
-    const result = await login(formData)
-    if (result.success) {
-      router.push("/admin")
-    } else {
-      setError(result.error || "Login failed")
+    setLoading(true)
+
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      })
+
+      if (res?.error) {
+        setError("Invalid email or password")
+        setLoading(false)
+      } else {
+        router.push("/admin")
+      }
+    } catch (err) {
+      setError("An unexpected error occurred")
+      setLoading(false)
     }
   }
 

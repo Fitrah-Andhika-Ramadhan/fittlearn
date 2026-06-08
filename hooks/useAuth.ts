@@ -1,68 +1,35 @@
 "use client"
 
-import React, { useState, useEffect, createContext, useContext, type ReactNode } from "react"
-import { authService, type AuthUser, type LoginCredentials } from "@/lib/auth"
+import { useSession, signOut } from "next-auth/react"
 
-interface AuthContextType {
-  user: AuthUser | null
-  loading: boolean
-  login: (credentials: LoginCredentials) => Promise<{ success: boolean; error?: string }>
-  logout: () => void
-  isAuthenticated: boolean
-  isAdmin: boolean
+export interface AuthUser {
+  id: string
+  email: string
+  name: string
+  role?: string
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export function useAuth() {
+  const { data: session, status } = useSession()
+  const loading = status === "loading"
+  const isAuthenticated = status === "authenticated"
+  const user = session?.user as AuthUser | null
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    // Initialize auth and check for existing session
-    authService.initializeAuth()
-    const currentUser = authService.getCurrentUser()
-    setUser(currentUser)
-    setLoading(false)
-  }, [])
-
-  const login = async (credentials: LoginCredentials) => {
-    setLoading(true)
-    try {
-      const result = await authService.login(credentials)
-      if (result.success && result.user) {
-        setUser(result.user)
-        return { success: true }
-      }
-      return { success: false, error: result.error }
-    } catch (error) {
-      return { success: false, error: "Login failed" }
-    } finally {
-      setLoading(false)
-    }
-  }
-
+  // Since NextAuth logic handles login, the useAuth `login` isn't strictly needed, 
+  // but we keep the stub to prevent breaking changes if it's called elsewhere.
+  const login = async () => { return { success: false } }
+  
   const logout = () => {
-    authService.logout()
-    setUser(null)
+    signOut({ callbackUrl: "/login" })
   }
 
-  const value: AuthContextType = {
+  return {
     user,
     loading,
     login,
     logout,
-    isAuthenticated: !!user,
-    isAdmin: user?.role === "admin",
+    isAuthenticated,
+    // By default all valid database users are admins in this simple setup
+    isAdmin: isAuthenticated
   }
-
-  return React.createElement(AuthContext.Provider, { value }, children)
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
-  return context
 }

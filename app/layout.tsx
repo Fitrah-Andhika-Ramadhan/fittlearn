@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { AuthProvider } from "@/hooks/useAuth"
+import { NextAuthProvider } from "@/components/auth/session-provider"
 import { CMSDataSync } from "@/components/cms-data-sync"
 import { ThemeProvider } from "@/components/theme-provider"
 import Link from "next/link";
@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} dark min-h-screen bg-[#0f0c29] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#2e1a47] via-[#0b0914] to-[#05040a] text-white overflow-x-hidden relative font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <AuthProvider>
+          <NextAuthProvider>
             <CMSDataSync />
             
             {/* Glow Effects */}
@@ -62,7 +62,7 @@ export default function RootLayout({
             <div className="fixed top-[30%] left-[35%] w-16 h-16 rounded-full bg-[radial-gradient(circle_at_30%_30%,_#fff,_#93c5fd,_#3b82f6,_#1e3a8a)] shadow-[0_0_30px_rgba(96,165,250,0.6)] z-10 opacity-80 pointer-events-none"></div>
             <div className="fixed bottom-[5%] right-[10%] w-48 h-48 rounded-full bg-[radial-gradient(circle_at_30%_30%,_#e0e7ff,_#818cf8,_#4338ca,_#111827)] shadow-[0_0_60px_rgba(99,102,241,0.5)] z-20 pointer-events-none"></div>
 
-          </AuthProvider>
+          </NextAuthProvider>
         </ThemeProvider>
       </body>
     </html>

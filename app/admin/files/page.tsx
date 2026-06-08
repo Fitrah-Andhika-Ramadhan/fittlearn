@@ -95,12 +95,11 @@ export default function FilesPage() {
 
     setIsUploading(true)
 
-    // Simulate upload delay
-    setTimeout(() => {
+    try {
       const fileType = uploadForm.file!.name.split(".").pop()?.toUpperCase() || "UNKNOWN"
       const fileSize = `${(uploadForm.file!.size / 1024 / 1024).toFixed(1)} MB`
 
-      createFile({
+      await createFile({
         name: uploadForm.name,
         type: fileType,
         subject: uploadForm.subject,
@@ -121,8 +120,9 @@ export default function FilesPage() {
       })
 
       setIsUploadDialogOpen(false)
+    } finally {
       setIsUploading(false)
-    }, 1000)
+    }
   }
 
   const handleEdit = (file: StudyFile) => {
@@ -149,12 +149,11 @@ export default function FilesPage() {
     if (!confirm("Are you sure you want to delete this file?")) return
 
     setIsDeleting(id)
-
-    // Simulate deletion delay
-    setTimeout(() => {
-      deleteFile(id)
+    try {
+      await deleteFile(id)
+    } finally {
       setIsDeleting(null)
-    }, 500)
+    }
   }
 
   const handleDownload = (file: StudyFile) => {
@@ -204,8 +203,8 @@ export default function FilesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
       </div>
     )
   }

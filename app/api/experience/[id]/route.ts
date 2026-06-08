@@ -23,16 +23,47 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
-    const updateData: any = { ...body };
-    if (updateData.start_date) updateData.start_date = new Date(updateData.start_date);
-    if (updateData.end_date) updateData.end_date = new Date(updateData.end_date);
+    
+    const updateData: any = {};
+    if (body.title !== undefined) updateData.title = body.title;
+    if (body.company !== undefined) updateData.organization = body.company;
+    if (body.description !== undefined) updateData.description = body.description;
+    if (body.order !== undefined) updateData.sort_order = body.order;
+
+    if (body.period) {
+      const parts = body.period.split("-").map((p: string) => p.trim());
+      if (parts[0]) {
+        const year = parseInt(parts[0]);
+        if (!isNaN(year)) updateData.start_date = new Date(`${year}-01-01`);
+      }
+      if (parts.length > 1 && parts[1].toLowerCase() !== "present" && !body.current) {
+        const year = parseInt(parts[1]);
+        if (!isNaN(year)) updateData.end_date = new Date(`${year}-01-01`);
+      }
+    }
+    
+    if (body.current === true) {
+      updateData.end_date = null;
+    }
 
     const experience = await prisma.experience.update({
       where: { id: params.id },
       data: updateData
     });
 
-    return NextResponse.json(experience);
+    // We must map it back to the format the frontend expects (CMSExperience)
+    const mapExperience = (e: any) => ({
+      id: e.id,
+      title: e.title,
+      company: e.organization || "",
+      period: (e.start_date ? new Date(e.start_date).getFullYear().toString() : "") + (e.end_date ? " - " + new Date(e.end_date).getFullYear().toString() : " - Present"),
+      description: e.description || "",
+      achievements: [],
+      current: !e.end_date,
+      order: e.sort_order || 0,
+    });
+
+    return NextResponse.json(mapExperience(experience));
   } catch (error) {
     return NextResponse.json({ error: "Failed to update experience" }, { status: 500 });
   }

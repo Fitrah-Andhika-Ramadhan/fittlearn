@@ -36,14 +36,31 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
+    // Parse period to dates (e.g., "2020 - 2023")
+    let start_date = new Date();
+    let end_date: Date | null = null;
+    
+    if (body.period) {
+      const parts = body.period.split("-").map((p: string) => p.trim());
+      if (parts[0]) {
+        // Just use January 1st of the year to satisfy DateTime
+        const year = parseInt(parts[0]);
+        if (!isNaN(year)) start_date = new Date(`${year}-01-01`);
+      }
+      if (parts.length > 1 && parts[1].toLowerCase() !== "present" && !body.current) {
+        const year = parseInt(parts[1]);
+        if (!isNaN(year)) end_date = new Date(`${year}-01-01`);
+      }
+    }
+
     const experience = await prisma.experience.create({
       data: {
         type: "work",
         title: body.title,
-        organization: body.company,
-        description: body.description,
-        start_date: new Date(),
-        end_date: body.current ? null : new Date(),
+        organization: body.company || body.organization || "",
+        description: body.description || "",
+        start_date,
+        end_date: body.current ? null : (end_date || new Date()),
         sort_order: body.order || 0,
       }
     });

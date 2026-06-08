@@ -29,15 +29,17 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
   }, [loading, isAuthenticated, isAdmin, requireAdmin, router])
 
   if (loading) {
-    return React.createElement(
-      "div",
-      { className: "min-h-screen bg-gray-50 flex items-center justify-center" },
-      React.createElement(
-        "div",
-        { className: "text-center" },
-        React.createElement(Loader2, { className: "h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" }),
-        React.createElement("p", { className: "text-gray-600" }, "Loading..."),
-      ),
+    return (
+      <div className="fixed inset-0 bg-[#0f0c29] flex items-center justify-center z-50">
+        <div className="text-center">
+          <div className="relative mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(168,85,247,0.5)]">
+              <Loader2 className="h-8 w-8 animate-spin text-white" />
+            </div>
+          </div>
+          <p className="text-white/60 text-sm font-medium">Loading admin panel...</p>
+        </div>
+      </div>
     )
   }
 

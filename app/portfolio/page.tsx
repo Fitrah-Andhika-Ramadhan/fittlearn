@@ -61,7 +61,17 @@ export default async function PortfolioPage() {
     }
   ];
 
-  const profile = {
+  const dbProfile = await prisma.profile.findFirst();
+
+  const profile = dbProfile ? {
+    name: dbProfile.owner_name || "Fitrah Andhika Ramadhan",
+    title: dbProfile.owner_title || "Web Developer & System Analyst",
+    bio: dbProfile.owner_bio || "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern.",
+    email: dbProfile.email || "fitrah.andhika@email.com",
+    phone: dbProfile.phone || "+62 877 6028 7039",
+    location: dbProfile.location || "Bandung, Indonesia",
+    github_url: dbProfile.github_url || "https://github.com/Fitrah-Andhika-Ramadhan/"
+  } : {
     name: "Fitrah Andhika Ramadhan",
     title: "Web Developer & System Analyst",
     bio: "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern.",

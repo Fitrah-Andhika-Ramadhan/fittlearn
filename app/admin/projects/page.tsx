@@ -4,7 +4,7 @@ import { CardFooter } from "@/components/ui/card"
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { PlusCircle, Edit, Trash2, Save, XCircle } from "lucide-react"
+import { PlusCircle, Edit, Trash2, Save, XCircle, Loader2 } from "lucide-react"
 import {
   Button,
   Card,
@@ -31,6 +31,7 @@ import {
 } from "@/components/ui"
 import { useCMSProjects } from "@/hooks/useCMS"
 import type { CMSProject } from "@/lib/types"
+import { uploadFile } from "@/lib/supabase"
 
 type ProjectFormState = Omit<CMSProject, "id" | "createdAt" | "updatedAt" | "views" | "likes">
 
@@ -55,6 +56,7 @@ export default function AdminProjects() {
   const [techInput, setTechInput] = useState("")
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   useEffect(() => {
     if (editingProject) {
@@ -108,7 +110,6 @@ export default function AdminProjects() {
       const reader = new FileReader()
       reader.onloadend = () => {
         setImagePreview(reader.result as string)
-        setFormData((prev) => ({ ...prev, image: reader.result as string }))
       }
       reader.readAsDataURL(file)
     } else {
@@ -118,20 +119,38 @@ export default function AdminProjects() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsUploading(true)
     try {
+      let finalImageUrl = formData.image
+
+      if (selectedImageFile) {
+        try {
+          finalImageUrl = await uploadFile(selectedImageFile, "portfolio-storage", "projects")
+        } catch (uploadError) {
+          console.error("Upload failed", uploadError)
+          alert("Failed to upload image to Supabase. Check if the bucket exists and is public.")
+          setIsUploading(false)
+          return
+        }
+      }
+
+      const finalData = { ...formData, image: finalImageUrl }
+
       if (editingProject) {
-        updateProject(editingProject.id, formData)
+        updateProject(editingProject.id, finalData)
         alert("Project updated successfully!")
       } else {
-        createProject(formData)
+        createProject(finalData)
         alert("Project created successfully!")
       }
       setIsModalOpen(false)
     } catch (error) {
       console.error("Failed to save project:", error)
       alert("Failed to save project. Please try again.")
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -402,8 +421,12 @@ export default function AdminProjects() {
               </Select>
             </div>
             <DialogFooter>
-              <Button type="submit">
-                <Save className="mr-2 h-4 w-4" />
+              <Button type="submit" disabled={isUploading}>
+                {isUploading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                )}
                 {editingProject ? "Save Changes" : "Create Project"}
               </Button>
             </DialogFooter>

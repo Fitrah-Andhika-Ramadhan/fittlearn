@@ -25,15 +25,15 @@ export default async function HomePage() {
   const portfolioSubtitle = profile?.portfolio_subtitle || "View all projects →";
 
   return (
-    <div className="flex relative w-full">
+    <div className="flex flex-col lg:flex-row relative w-full gap-12 lg:gap-0">
       {/* Left Section (Hero) */}
-      <div className="w-1/2 flex flex-col justify-center relative pb-20">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center relative pb-10 lg:pb-20 pt-10 lg:pt-0">
         <div className="space-y-4 mb-10">
           <p className="text-purple-400 text-lg font-medium tracking-wide uppercase flex items-center">
             <span className="w-10 h-px bg-purple-400 mr-4"></span>
             {heroIntro}
           </p>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight text-white drop-shadow-lg">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight text-white drop-shadow-lg">
             {name.split(" ").slice(0, 2).join(" ")}<br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-500">
               {name.split(" ").slice(2).join(" ") || "Ramadhan"}
@@ -60,13 +60,13 @@ export default async function HomePage() {
           )}
         </div>
 
-        <div className="mt-24 relative z-20">
-          <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white/80 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] -mt-4 ml-8 tracking-tighter">{heroTagline}</h2>
+        <div className="mt-16 lg:mt-24 relative z-20 hidden md:block">
+          <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white/80 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] -mt-4 ml-8 tracking-tighter">{heroTagline}</h2>
         </div>
       </div>
 
       {/* Right Section */}
-      <div className="w-1/2 flex flex-col justify-center items-center space-y-16 pb-20">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center space-y-12 lg:space-y-16 pb-20">
         
         {/* Work Preview */}
         <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
@@ -104,8 +104,8 @@ export default async function HomePage() {
         </div>
 
         {/* Contact */}
-        <div className="w-full max-w-lg bg-[#1a153a]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-10 flex space-x-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-          <div className="w-5/12">
+        <div className="w-full max-w-lg bg-[#1a153a]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row gap-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+          <div className="w-full sm:w-5/12">
             <h3 className="text-xl font-bold mb-4 text-white">Get in touch</h3>
             <p className="text-xs text-gray-400 leading-relaxed mb-6">
               {contactIntro}
@@ -115,7 +115,7 @@ export default async function HomePage() {
               <p>✉️ {email}</p>
             </div>
           </div>
-          <div className="w-7/12 space-y-3">
+          <div className="w-full sm:w-7/12 space-y-3">
             <h3 className="text-sm font-bold mb-4 text-white">Send me a message</h3>
             <input type="text" placeholder="Name" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10" />
             <input type="email" placeholder="Email Address" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10" />

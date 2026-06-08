@@ -26,6 +26,12 @@ const mapSettings = (p: any) => ({
   contactIntro: p.contact_intro || "I'm very approachable and would love to speak to you. Feel free to call, send me an email or simply complete this enquiry form.",
   portfolioTitle: p.portfolio_title || "My recent work",
   portfolioSubtitle: p.portfolio_subtitle || "View all projects",
+  portfolioSkillsTitle: p.portfolio_skills_title || "Technical Skills",
+  portfolioProjectsTitle: p.portfolio_projects_title || "Featured Projects",
+  portfolioExperienceTitle: p.portfolio_experience_title || "Experience & Education",
+  portfolioBtnContact: p.portfolio_btn_contact || "Contact Me",
+  portfolioBtnGithub: p.portfolio_btn_github || "GitHub",
+  portfolioBtnFiles: p.portfolio_btn_files || "My Study Files",
   updatedAt: new Date().toISOString()
 });
 
@@ -69,7 +75,13 @@ export async function PUT(req: Request) {
       cta_secondary_text: body.ctaSecondaryText || "",
       contact_intro: body.contactIntro || "",
       portfolio_title: body.portfolioTitle || "",
-      portfolio_subtitle: body.portfolioSubtitle || ""
+      portfolio_subtitle: body.portfolioSubtitle || "",
+      portfolio_skills_title: body.portfolioSkillsTitle || "",
+      portfolio_projects_title: body.portfolioProjectsTitle || "",
+      portfolio_experience_title: body.portfolioExperienceTitle || "",
+      portfolio_btn_contact: body.portfolioBtnContact || "",
+      portfolio_btn_github: body.portfolioBtnGithub || "",
+      portfolio_btn_files: body.portfolioBtnFiles || ""
     };
 
     if (profile) {

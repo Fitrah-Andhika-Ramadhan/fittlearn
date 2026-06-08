@@ -286,7 +286,22 @@ export default function FilesPage() {
             </Card>
           </div>
 
-          {/* Upload Section - Moved to Admin */}
+          {/* Upload Section */}
+          <Card className="mb-6 bg-white/5 border-white/10 backdrop-blur-md shadow-xl text-white">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Upload className="mr-2 h-5 w-5" />
+                Upload New File
+              </CardTitle>
+              <CardDescription>Add new study materials to your collection</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => setIsUploadDialogOpen(true)}>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload File
+              </Button>
+            </CardContent>
+          </Card>
 
           {/* Search and Filters */}
           <Card className="mb-6 bg-white/5 border-white/10 backdrop-blur-md shadow-xl text-white">
@@ -384,11 +399,26 @@ export default function FilesPage() {
                       <Button size="sm" variant="outline" onClick={() => handleDownload(file)}>
                         <Download className="h-4 w-4" />
                       </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleEdit(file)}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
                       <Link href={`/summarizer?file=${file.id}`}>
                         <Button size="sm" variant="outline">
                           <Brain className="h-4 w-4" />
                         </Button>
                       </Link>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDelete(file.id)}
+                        disabled={isDeleting === file.id}
+                      >
+                        {isDeleting === file.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -404,15 +434,194 @@ export default function FilesPage() {
                 <p className="text-gray-500 mb-6">
                   {searchTerm || selectedSubject !== "all" || selectedSemester !== "all" || selectedCategory !== "all"
                     ? "Try adjusting your search or filter criteria"
-                    : "No study files have been uploaded yet"}
+                    : "Start by uploading your first study file"}
                 </p>
+                <Button onClick={() => setIsUploadDialogOpen(true)}>
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload Your First File
+                </Button>
               </CardContent>
             </Card>
           )}
         </div>
       </div>
 
+      {/* Upload Dialog */}
+      <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Upload New File</DialogTitle>
+            <DialogDescription>Add a new study file to your collection</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="upload-file">Choose File</Label>
+              <Input id="upload-file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx" onChange={handleFileUpload} />
+            </div>
+            <div>
+              <Label htmlFor="upload-name">File Name</Label>
+              <Input
+                id="upload-name"
+                value={uploadForm.name}
+                onChange={(e) => setUploadForm((prev) => ({ ...prev, name: e.target.value }))}
+                placeholder="Enter file name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="upload-subject">Subject</Label>
+              <Input
+                id="upload-subject"
+                value={uploadForm.subject}
+                onChange={(e) => setUploadForm((prev) => ({ ...prev, subject: e.target.value }))}
+                placeholder="e.g., Algoritma dan Struktur Data"
+              />
+            </div>
+            <div>
+              <Label htmlFor="upload-semester">Semester</Label>
+              <Select
+                value={uploadForm.semester}
+                onValueChange={(value) => setUploadForm((prev) => ({ ...prev, semester: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                    <SelectItem key={sem} value={`Semester ${sem}`}>
+                      Semester {sem}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="upload-category">Category</Label>
+              <Select
+                value={uploadForm.category}
+                onValueChange={(value) => setUploadForm((prev) => ({ ...prev, category: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Materi Kuliah">Materi Kuliah</SelectItem>
+                  <SelectItem value="Tugas">Tugas</SelectItem>
+                  <SelectItem value="Catatan">Catatan</SelectItem>
+                  <SelectItem value="Tutorial">Tutorial</SelectItem>
+                  <SelectItem value="Presentasi">Presentasi</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="upload-description">Description</Label>
+              <Textarea
+                id="upload-description"
+                value={uploadForm.description}
+                onChange={(e) => setUploadForm((prev) => ({ ...prev, description: e.target.value }))}
+                placeholder="Brief description of the file content"
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsUploadDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpload} disabled={isUploading}>
+              {isUploading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload File
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit File</DialogTitle>
+            <DialogDescription>Update file information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-name">File Name</Label>
+              <Input
+                id="edit-name"
+                value={editingFile?.name || ""}
+                onChange={(e) => setEditingFile((prev) => (prev ? { ...prev, name: e.target.value } : null))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-subject">Subject</Label>
+              <Input
+                id="edit-subject"
+                value={editingFile?.subject || ""}
+                onChange={(e) => setEditingFile((prev) => (prev ? { ...prev, subject: e.target.value } : null))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-semester">Semester</Label>
+              <Select
+                value={editingFile?.semester || ""}
+                onValueChange={(value) => setEditingFile((prev) => (prev ? { ...prev, semester: value } : null))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                    <SelectItem key={sem} value={`Semester ${sem}`}>
+                      Semester {sem}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="edit-category">Category</Label>
+              <Select
+                value={editingFile?.category || ""}
+                onValueChange={(value) => setEditingFile((prev) => (prev ? { ...prev, category: value } : null))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Materi Kuliah">Materi Kuliah</SelectItem>
+                  <SelectItem value="Tugas">Tugas</SelectItem>
+                  <SelectItem value="Catatan">Catatan</SelectItem>
+                  <SelectItem value="Tutorial">Tutorial</SelectItem>
+                  <SelectItem value="Presentasi">Presentasi</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="edit-description">Description</Label>
+              <Textarea
+                id="edit-description"
+                value={editingFile?.description || ""}
+                onChange={(e) => setEditingFile((prev) => (prev ? { ...prev, description: e.target.value } : null))}
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveEdit}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

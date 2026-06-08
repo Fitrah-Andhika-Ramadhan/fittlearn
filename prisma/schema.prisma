@@ -127,9 +127,17 @@ model Profile {
   // Contact section
   contact_intro    String?   // Paragraph in contact box
 
-  // Portfolio page
+  // Portfolio page (homepage section)
   portfolio_title  String?   // e.g. "My Portfolio"
   portfolio_subtitle String? // Subtitle text
+
+  // Portfolio page (actual page)
+  portfolio_skills_title      String? // e.g. "Technical Skills"
+  portfolio_projects_title    String? // e.g. "Featured Projects"
+  portfolio_experience_title  String? // e.g. "Experience & Education"
+  portfolio_btn_contact       String? // e.g. "Contact Me"
+  portfolio_btn_github        String? // e.g. "GitHub"
+  portfolio_btn_files         String? // e.g. "My Study Files"
 }
 
 model StudyFile {

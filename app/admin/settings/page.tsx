@@ -32,6 +32,12 @@ const emptyForm = {
   contactIntro: "",
   portfolioTitle: "",
   portfolioSubtitle: "",
+  portfolioSkillsTitle: "",
+  portfolioProjectsTitle: "",
+  portfolioExperienceTitle: "",
+  portfolioBtnContact: "",
+  portfolioBtnGithub: "",
+  portfolioBtnFiles: "",
 }
 
 export default function AdminSettings() {
@@ -67,10 +73,17 @@ export default function AdminSettings() {
         contactIntro: settings.contactIntro || "I'm very approachable and would love to speak to you. Feel free to call, send me an email or simply complete this enquiry form.",
         portfolioTitle: settings.portfolioTitle || "My recent work",
         portfolioSubtitle: settings.portfolioSubtitle || "View all projects",
+        portfolioSkillsTitle: settings.portfolioSkillsTitle || "Technical Skills",
+        portfolioProjectsTitle: settings.portfolioProjectsTitle || "Featured Projects",
+        portfolioExperienceTitle: settings.portfolioExperienceTitle || "Experience & Education",
+        portfolioBtnContact: settings.portfolioBtnContact || "Contact Me",
+        portfolioBtnGithub: settings.portfolioBtnGithub || "GitHub",
+        portfolioBtnFiles: settings.portfolioBtnFiles || "My Study Files",
       })
       setFormInitialized(true)
     }
   }, [settings, formInitialized])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -281,6 +294,49 @@ export default function AdminSettings() {
               <div className="space-y-2">
                 <Label htmlFor="portfolioSubtitle" className={labelClass}>Link Text</Label>
                 <Input id="portfolioSubtitle" value={formData.portfolioSubtitle} onChange={(e) => handleInputChange("portfolioSubtitle", e.target.value)} placeholder="e.g. View all projects →" className={inputClass} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Full Portfolio Page Configuration */}
+        <div className="bg-white/[0.07] border border-white/[0.12] rounded-2xl overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.08]">
+            <div className="p-2 rounded-lg bg-teal-500/20 border border-teal-500/30">
+              <Globe className="h-4 w-4 text-teal-400" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-white">Full Portfolio Page Settings</h2>
+              <p className="text-white/50 text-xs">Customize the /portfolio page sections and buttons</p>
+            </div>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="portfolioBtnContact" className={labelClass}>Contact Button</Label>
+                <Input id="portfolioBtnContact" value={formData.portfolioBtnContact} onChange={(e) => handleInputChange("portfolioBtnContact", e.target.value)} placeholder="e.g. Contact Me" className={inputClass} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="portfolioBtnGithub" className={labelClass}>GitHub Button</Label>
+                <Input id="portfolioBtnGithub" value={formData.portfolioBtnGithub} onChange={(e) => handleInputChange("portfolioBtnGithub", e.target.value)} placeholder="e.g. GitHub" className={inputClass} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="portfolioBtnFiles" className={labelClass}>Study Files Button</Label>
+                <Input id="portfolioBtnFiles" value={formData.portfolioBtnFiles} onChange={(e) => handleInputChange("portfolioBtnFiles", e.target.value)} placeholder="e.g. My Study Files" className={inputClass} />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="portfolioSkillsTitle" className={labelClass}>Skills Section Title</Label>
+                <Input id="portfolioSkillsTitle" value={formData.portfolioSkillsTitle} onChange={(e) => handleInputChange("portfolioSkillsTitle", e.target.value)} placeholder="e.g. Technical Skills" className={inputClass} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="portfolioProjectsTitle" className={labelClass}>Projects Section Title</Label>
+                <Input id="portfolioProjectsTitle" value={formData.portfolioProjectsTitle} onChange={(e) => handleInputChange("portfolioProjectsTitle", e.target.value)} placeholder="e.g. Featured Projects" className={inputClass} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="portfolioExperienceTitle" className={labelClass}>Experience Section Title</Label>
+                <Input id="portfolioExperienceTitle" value={formData.portfolioExperienceTitle} onChange={(e) => handleInputChange("portfolioExperienceTitle", e.target.value)} placeholder="e.g. Experience & Education" className={inputClass} />
               </div>
             </div>
           </div>

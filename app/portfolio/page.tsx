@@ -70,7 +70,13 @@ export default async function PortfolioPage() {
     email: dbProfile.email_contact || "fitrah.andhika@email.com",
     phone: dbProfile.phone || "+62 877 6028 7039",
     location: dbProfile.location || "Bandung, Indonesia",
-    github_url: dbProfile.github_url || "https://github.com/Fitrah-Andhika-Ramadhan/"
+    github_url: dbProfile.github_url || "https://github.com/Fitrah-Andhika-Ramadhan/",
+    btn_contact: dbProfile.portfolio_btn_contact || "Contact Me",
+    btn_github: dbProfile.portfolio_btn_github || "GitHub",
+    btn_files: dbProfile.portfolio_btn_files || "My Study Files",
+    skills_title: dbProfile.portfolio_skills_title || "Technical Skills",
+    projects_title: dbProfile.portfolio_projects_title || "Featured Projects",
+    experience_title: dbProfile.portfolio_experience_title || "Experience & Education"
   } : {
     name: "Fitrah Andhika Ramadhan",
     title: "Web Developer & System Analyst",
@@ -78,7 +84,13 @@ export default async function PortfolioPage() {
     email: "fitrah.andhika@email.com",
     phone: "+62 877 6028 7039",
     location: "Bandung, Indonesia",
-    github_url: "https://github.com/Fitrah-Andhika-Ramadhan/"
+    github_url: "https://github.com/Fitrah-Andhika-Ramadhan/",
+    btn_contact: "Contact Me",
+    btn_github: "GitHub",
+    btn_files: "My Study Files",
+    skills_title: "Technical Skills",
+    projects_title: "Featured Projects",
+    experience_title: "Experience & Education"
   };
 
   const education = dbExperiences.filter(e => e.type === "education").length > 0
@@ -121,21 +133,21 @@ export default async function PortfolioPage() {
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
                 <Link href={`mailto:${profile.email}`}>
                   <Mail className="mr-2 h-5 w-5" />
-                  Contact Me
+                  {profile.btn_contact}
                 </Link>
               </Button>
               {profile.github_url && (
                 <Button size="lg" variant="outline" className="bg-transparent" asChild>
                   <Link href={profile.github_url} target="_blank" rel="noopener noreferrer">
                     <Github className="mr-2 h-5 w-5" />
-                    GitHub
+                    {profile.btn_github}
                   </Link>
                 </Button>
               )}
               <Link href="/files">
                 <Button size="lg" variant="outline" className="bg-transparent">
                   <BookOpen className="mr-2 h-5 w-5" />
-                  My Study Files
+                  {profile.btn_files}
                 </Button>
               </Link>
             </div>
@@ -167,7 +179,7 @@ export default async function PortfolioPage() {
       {/* Skills Section */}
       <section className="py-16 px-4 bg-white/5 backdrop-blur-sm border-y border-white/10">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">Technical Skills</h2>
+          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">{profile.skills_title}</h2>
           <div className="grid md:grid-cols-2 gap-8">
             {skills.map((skill, index) => (
               <div key={index} className="space-y-2">
@@ -190,7 +202,7 @@ export default async function PortfolioPage() {
       {/* Projects Section */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">Featured Projects</h2>
+          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">{profile.projects_title}</h2>
           <div className="grid md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
               <Card key={index} className="overflow-hidden hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] transition-shadow bg-white/5 border-white/10 backdrop-blur-md text-white">
@@ -233,7 +245,7 @@ export default async function PortfolioPage() {
       {/* Experience Section */}
       <section className="py-16 px-4 bg-white/5 backdrop-blur-sm border-y border-white/10">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">Experience & Education</h2>
+          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">{profile.experience_title}</h2>
           <div className="space-y-8">
             {experiences.map((exp, index) => (
               <Card key={index} className="bg-white/5 border-white/10 backdrop-blur-md text-white shadow-xl">

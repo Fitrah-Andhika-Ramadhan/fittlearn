@@ -3,12 +3,25 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
+const mapExperience = (e: any) => ({
+  id: e.id,
+  title: e.title,
+  company: e.organization || "",
+  period: (e.start_date ? new Date(e.start_date).getFullYear().toString() : "") + (e.end_date ? " - " + new Date(e.end_date).getFullYear().toString() : " - Present"),
+  description: e.description || "",
+  achievements: [],
+  current: !e.end_date,
+  order: e.sort_order || 0,
+  createdAt: e.created_at ? e.created_at.toISOString() : new Date().toISOString(),
+  updatedAt: e.updated_at ? e.updated_at.toISOString() : new Date().toISOString()
+});
+
 export async function GET() {
   try {
     const experiences = await prisma.experience.findMany({
       orderBy: { sort_order: "asc" },
     });
-    return NextResponse.json(experiences);
+    return NextResponse.json(experiences.map(mapExperience));
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch experience" }, { status: 500 });
   }
@@ -23,17 +36,17 @@ export async function POST(req: Request) {
 
     const experience = await prisma.experience.create({
       data: {
-        type: body.type, // work / education / achievement
+        type: "work",
         title: body.title,
-        organization: body.organization,
+        organization: body.company,
         description: body.description,
-        start_date: new Date(body.start_date),
-        end_date: body.end_date ? new Date(body.end_date) : null,
-        sort_order: body.sort_order || 0,
+        start_date: new Date(),
+        end_date: body.current ? null : new Date(),
+        sort_order: body.order || 0,
       }
     });
 
-    return NextResponse.json(experience, { status: 201 });
+    return NextResponse.json(mapExperience(experience), { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to create experience" }, { status: 500 });
   }

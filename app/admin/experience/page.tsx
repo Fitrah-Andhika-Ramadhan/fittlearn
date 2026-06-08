@@ -501,8 +501,8 @@ export default function AdminExperience() {
 
         return (
           <>
-            <DialogForm isOpen={isCreateDialogOpen} setIsOpen={setIsCreateDialogOpen} isEdit={false} />
-            <DialogForm isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />
+            {DialogForm({ isOpen: isCreateDialogOpen, setIsOpen: setIsCreateDialogOpen, isEdit: false })}
+            {DialogForm({ isOpen: isEditDialogOpen, setIsOpen: setIsEditDialogOpen, isEdit: true })}
           </>
         )
       })()}

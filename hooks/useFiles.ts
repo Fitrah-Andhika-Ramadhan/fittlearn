@@ -1,38 +1,89 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { fileStorage, type StudyFile, initializeData } from "@/lib/storage"
+import type { StudyFile } from "@/lib/storage"
 
 export function useFiles() {
   const [files, setFiles] = useState<StudyFile[]>([])
   const [loading, setLoading] = useState(true)
 
+  const fetchFiles = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch("/api/files")
+      if (res.ok) {
+        const data = await res.json()
+        setFiles(data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          type: item.type,
+          subject: item.subject,
+          semester: item.semester,
+          category: item.category,
+          size: item.size,
+          uploadDate: item.created_at,
+          description: item.description,
+          fileUrl: item.file_url
+        })))
+      }
+    } catch (error) {
+      console.error("Failed to fetch files:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    initializeData()
-    setFiles(fileStorage.getAll())
-    setLoading(false)
+    fetchFiles()
   }, [])
 
-  const createFile = (file: Omit<StudyFile, "id" | "uploadDate">) => {
-    const newFile = fileStorage.create(file)
-    setFiles((prev) => [...prev, newFile])
-    return newFile
+  const createFile = async (file: Omit<StudyFile, "id" | "uploadDate">) => {
+    try {
+      const res = await fetch("/api/files", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(file),
+      })
+      if (res.ok) {
+        fetchFiles()
+        return await res.json()
+      }
+    } catch (error) {
+      console.error("Failed to create file:", error)
+    }
+    return null
   }
 
-  const updateFile = (id: string, updates: Partial<StudyFile>) => {
-    const updated = fileStorage.update(id, updates)
-    if (updated) {
-      setFiles((prev) => prev.map((f) => (f.id === id ? updated : f)))
+  const updateFile = async (id: string, updates: Partial<StudyFile>) => {
+    try {
+      const res = await fetch(`/api/files/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      })
+      if (res.ok) {
+        fetchFiles()
+        return await res.json()
+      }
+    } catch (error) {
+      console.error("Failed to update file:", error)
     }
-    return updated
+    return null
   }
 
-  const deleteFile = (id: string) => {
-    const success = fileStorage.delete(id)
-    if (success) {
-      setFiles((prev) => prev.filter((f) => f.id !== id))
+  const deleteFile = async (id: string) => {
+    try {
+      const res = await fetch(`/api/files/${id}`, {
+        method: "DELETE",
+      })
+      if (res.ok) {
+        setFiles((prev) => prev.filter((f) => f.id !== id))
+        return true
+      }
+    } catch (error) {
+      console.error("Failed to delete file:", error)
     }
-    return success
+    return false
   }
 
   const getFile = (id: string) => {
@@ -46,6 +97,6 @@ export function useFiles() {
     updateFile,
     deleteFile,
     getFile,
-    refreshFiles: () => setFiles(fileStorage.getAll()),
+    refreshFiles: fetchFiles,
   }
 }

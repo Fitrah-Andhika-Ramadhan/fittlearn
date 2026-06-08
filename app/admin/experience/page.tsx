@@ -153,12 +153,12 @@ export default function AdminExperience() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Experience Management</h1>
-          <p className="text-gray-600 mt-2">Manage your work experience and career history</p>
+          <h1 className="text-3xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">Experience Management</h1>
+          <p className="text-white/60 mt-2">Manage your work experience and career history</p>
         </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
+        <Button onClick={() => setIsCreateDialogOpen(true)} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
           <Plus className="mr-2 h-4 w-4" />
           Add Experience
         </Button>
@@ -166,50 +166,59 @@ export default function AdminExperience() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Experience</CardTitle>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-white/60">Total Experience</CardTitle>
+            <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+              <Briefcase className="h-4 w-4 text-purple-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{experiences.length}</div>
-            <p className="text-xs text-muted-foreground">Work experiences</p>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-white">{experiences.length}</div>
+            <p className="text-xs text-white/40 mt-1">Work experiences</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Current Roles</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-white/60">Current Roles</CardTitle>
+            <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+              <Clock className="h-4 w-4 text-blue-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{currentExperiences.length}</div>
-            <p className="text-xs text-muted-foreground">Active positions</p>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-white">{currentExperiences.length}</div>
+            <p className="text-xs text-white/40 mt-1">Active positions</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Companies</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-white/60">Companies</CardTitle>
+            <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+              <Building className="h-4 w-4 text-green-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{new Set(experiences.map((exp) => exp.company)).size}</div>
-            <p className="text-xs text-muted-foreground">Different organizations</p>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-white">{new Set(experiences.map((exp) => exp.company)).size}</div>
+            <p className="text-xs text-white/40 mt-1">Different organizations</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Search */}
-      <Card>
+      <Card className="bg-white/5 backdrop-blur-xl border-white/10">
         <CardContent className="pt-6">
           <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-white/40" />
             <Input
               placeholder="Search experiences..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-black/40 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
             />
           </div>
         </CardContent>
@@ -218,50 +227,55 @@ export default function AdminExperience() {
       {/* Current Experience */}
       {currentExperiences.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <Clock className="h-5 w-5 mr-2 text-green-600" />
+          <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
+            <div className="p-2 rounded-lg bg-green-500/20 border border-green-500/30 mr-3">
+              <Clock className="h-5 w-5 text-green-400" />
+            </div>
             Current Experience
           </h2>
           <div className="space-y-4">
             {currentExperiences.map((experience) => (
-              <Card key={experience.id} className="border-l-4 border-l-green-500">
+              <Card key={experience.id} className="bg-white/5 backdrop-blur-xl border-white/10 border-l-4 border-l-green-500 hover:border-white/30 hover:border-l-green-400 transition-all duration-300">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle className="flex items-center text-lg">
-                        <Briefcase className="h-5 w-5 mr-2 text-blue-600" />
+                      <CardTitle className="flex items-center text-xl text-white">
+                        <Briefcase className="h-5 w-5 mr-3 text-purple-400" />
                         {experience.title}
                       </CardTitle>
-                      <div className="flex items-center gap-4 mt-2 text-gray-600">
-                        <div className="flex items-center">
-                          <Building className="h-4 w-4 mr-1" />
+                      <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-white/60">
+                        <div className="flex items-center bg-black/20 px-3 py-1 rounded-full border border-white/5">
+                          <Building className="h-4 w-4 mr-2 text-blue-400" />
                           {experience.company}
                         </div>
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
+                        <div className="flex items-center bg-black/20 px-3 py-1 rounded-full border border-white/5">
+                          <Calendar className="h-4 w-4 mr-2 text-yellow-400" />
                           {experience.period}
                         </div>
-                        <Badge className="bg-green-100 text-green-800">Current</Badge>
+                        <Badge className="bg-green-500/20 text-green-300 border-green-500/30">Current</Badge>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(experience)}>
+                      <Button size="icon" variant="outline" onClick={() => handleEdit(experience)} className="bg-transparent border-blue-500/50 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 h-8 w-8">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleDelete(experience.id, experience.title)}>
+                      <Button size="icon" variant="destructive" onClick={() => handleDelete(experience.id, experience.title)} className="bg-transparent border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 mb-4">{experience.description}</p>
+                  <p className="text-white/70 mb-5 leading-relaxed bg-black/20 p-4 rounded-xl border border-white/5">{experience.description}</p>
                   <div>
-                    <h4 className="font-medium mb-2">Key Achievements:</h4>
-                    <ul className="space-y-1">
+                    <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                      <div className="w-1.5 h-4 bg-purple-500 rounded-full"></div>
+                      Key Achievements:
+                    </h4>
+                    <ul className="space-y-2">
                       {experience.achievements.map((achievement, index) => (
-                        <li key={index} className="flex items-start text-sm text-gray-600">
-                          <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <li key={index} className="flex items-start text-sm text-white/70 bg-white/5 p-3 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                          <span className="inline-block w-2 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mt-1.5 mr-3 flex-shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.6)]"></span>
                           {achievement}
                         </li>
                       ))}
@@ -276,50 +290,55 @@ export default function AdminExperience() {
 
       {/* Past Experience */}
       {pastExperiences.length > 0 && (
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <Briefcase className="h-5 w-5 mr-2 text-gray-600" />
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
+            <div className="p-2 rounded-lg bg-blue-500/20 border border-blue-500/30 mr-3">
+              <Briefcase className="h-5 w-5 text-blue-400" />
+            </div>
             Past Experience
           </h2>
           <div className="space-y-4">
             {pastExperiences.map((experience) => (
-              <Card key={experience.id}>
+              <Card key={experience.id} className="bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/30 transition-all duration-300">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle className="flex items-center text-lg">
-                        <Briefcase className="h-5 w-5 mr-2 text-blue-600" />
+                      <CardTitle className="flex items-center text-xl text-white">
+                        <Briefcase className="h-5 w-5 mr-3 text-blue-400" />
                         {experience.title}
                       </CardTitle>
-                      <div className="flex items-center gap-4 mt-2 text-gray-600">
-                        <div className="flex items-center">
-                          <Building className="h-4 w-4 mr-1" />
+                      <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-white/60">
+                        <div className="flex items-center bg-black/20 px-3 py-1 rounded-full border border-white/5">
+                          <Building className="h-4 w-4 mr-2 text-purple-400" />
                           {experience.company}
                         </div>
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
+                        <div className="flex items-center bg-black/20 px-3 py-1 rounded-full border border-white/5">
+                          <Calendar className="h-4 w-4 mr-2 text-yellow-400" />
                           {experience.period}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(experience)}>
+                      <Button size="icon" variant="outline" onClick={() => handleEdit(experience)} className="bg-transparent border-blue-500/50 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 h-8 w-8">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleDelete(experience.id, experience.title)}>
+                      <Button size="icon" variant="destructive" onClick={() => handleDelete(experience.id, experience.title)} className="bg-transparent border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 mb-4">{experience.description}</p>
+                  <p className="text-white/70 mb-5 leading-relaxed bg-black/20 p-4 rounded-xl border border-white/5">{experience.description}</p>
                   <div>
-                    <h4 className="font-medium mb-2">Key Achievements:</h4>
-                    <ul className="space-y-1">
+                    <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                      <div className="w-1.5 h-4 bg-blue-500 rounded-full"></div>
+                      Key Achievements:
+                    </h4>
+                    <ul className="space-y-2">
                       {experience.achievements.map((achievement, index) => (
-                        <li key={index} className="flex items-start text-sm text-gray-600">
-                          <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <li key={index} className="flex items-start text-sm text-white/70 bg-white/5 p-3 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                          <span className="inline-block w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mt-1.5 mr-3 flex-shrink-0 shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
                           {achievement}
                         </li>
                       ))}
@@ -333,14 +352,16 @@ export default function AdminExperience() {
       )}
 
       {filteredExperiences.length === 0 && (
-        <Card>
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 border-dashed border-2">
           <CardContent className="text-center py-12">
-            <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No experience found</h3>
-            <p className="text-gray-500 mb-6">
-              {searchTerm ? "Try adjusting your search terms" : "Start by adding your first work experience"}
+            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Briefcase className="h-10 w-10 text-white/20" />
+            </div>
+            <h3 className="text-xl font-medium text-white mb-2">No experience found</h3>
+            <p className="text-white/50 mb-8 max-w-md mx-auto">
+              {searchTerm ? "Try adjusting your search terms" : "Start by adding your first work experience to showcase your career history."}
             </p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <Button onClick={() => setIsCreateDialogOpen(true)} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
               <Plus className="mr-2 h-4 w-4" />
               Add Your First Experience
             </Button>
@@ -348,223 +369,143 @@ export default function AdminExperience() {
         </Card>
       )}
 
-      {/* Create Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Add New Experience</DialogTitle>
-            <DialogDescription>Add a new work experience to your portfolio</DialogDescription>
-          </DialogHeader>
+      {/* Create / Edit Dialog */}
+      {(() => {
+        const DialogForm = ({ isOpen, setIsOpen, isEdit }: { isOpen: boolean, setIsOpen: (val: boolean) => void, isEdit: boolean }) => (
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#1a142c] border border-purple-500/30 text-white shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+                  {isEdit ? "Edit Experience" : "Add New Experience"}
+                </DialogTitle>
+                <DialogDescription className="text-white/50">
+                  {isEdit ? "Update experience information" : "Add a new work experience to your portfolio"}
+                </DialogDescription>
+              </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="title">Job Title *</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-                  placeholder="e.g., Frontend Developer"
-                />
-              </div>
-              <div>
-                <Label htmlFor="company">Company *</Label>
-                <Input
-                  id="company"
-                  value={formData.company}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
-                  placeholder="e.g., Telkom University"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="period">Period *</Label>
-              <Input
-                id="period"
-                value={formData.period}
-                onChange={(e) => setFormData((prev) => ({ ...prev, period: e.target.value }))}
-                placeholder="e.g., Jan 2023 - Present"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                placeholder="Brief description of your role and responsibilities"
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label>Key Achievements</Label>
-              <div className="space-y-2 mt-2">
-                {formData.achievements.map((achievement, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <Input
-                      value={achievement}
-                      onChange={(e) => updateAchievement(index, e.target.value)}
-                      placeholder="Describe an achievement or responsibility"
-                    />
-                    {formData.achievements.length > 1 && (
-                      <Button size="sm" variant="outline" onClick={() => removeAchievement(index)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
+              <div className="space-y-6 py-4">
+                <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="title" className="text-white/80">Job Title <span className="text-red-400">*</span></Label>
+                      <Input
+                        id="title"
+                        value={formData.title}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+                        placeholder="e.g., Frontend Developer"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="company" className="text-white/80">Company <span className="text-red-400">*</span></Label>
+                      <Input
+                        id="company"
+                        value={formData.company}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
+                        placeholder="e.g., Telkom University"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                      />
+                    </div>
                   </div>
-                ))}
-                <Button variant="outline" size="sm" onClick={addAchievement}>
-                  Add Achievement
-                </Button>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="order">Display Order</Label>
-                <Input
-                  id="order"
-                  type="number"
-                  value={formData.order}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, order: Number.parseInt(e.target.value) || 0 }))}
-                  placeholder="1"
-                />
-              </div>
-              <div className="flex items-center space-x-2 pt-6">
-                <input
-                  type="checkbox"
-                  id="current"
-                  checked={formData.current}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, current: e.target.checked }))}
-                  className="rounded"
-                />
-                <Label htmlFor="current">Current Position</Label>
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreate} disabled={isSubmitting}>
-              {isSubmitting ? "Adding..." : "Add Experience"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Experience</DialogTitle>
-            <DialogDescription>Update experience information</DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="edit-title">Job Title *</Label>
-                <Input
-                  id="edit-title"
-                  value={formData.title}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-                  placeholder="e.g., Frontend Developer"
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-company">Company *</Label>
-                <Input
-                  id="edit-company"
-                  value={formData.company}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
-                  placeholder="e.g., Telkom University"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="edit-period">Period *</Label>
-              <Input
-                id="edit-period"
-                value={formData.period}
-                onChange={(e) => setFormData((prev) => ({ ...prev, period: e.target.value }))}
-                placeholder="e.g., Jan 2023 - Present"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="edit-description">Description</Label>
-              <Textarea
-                id="edit-description"
-                value={formData.description}
-                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                placeholder="Brief description of your role and responsibilities"
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label>Key Achievements</Label>
-              <div className="space-y-2 mt-2">
-                {formData.achievements.map((achievement, index) => (
-                  <div key={index} className="flex items-center space-x-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="period" className="text-white/80">Period <span className="text-red-400">*</span></Label>
                     <Input
-                      value={achievement}
-                      onChange={(e) => updateAchievement(index, e.target.value)}
-                      placeholder="Describe an achievement or responsibility"
+                      id="period"
+                      value={formData.period}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, period: e.target.value }))}
+                      placeholder="e.g., Jan 2023 - Present"
+                      className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
                     />
-                    {formData.achievements.length > 1 && (
-                      <Button size="sm" variant="outline" onClick={() => removeAchievement(index)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
                   </div>
-                ))}
-                <Button variant="outline" size="sm" onClick={addAchievement}>
-                  Add Achievement
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="text-white/80">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+                      placeholder="Brief description of your role and responsibilities"
+                      rows={3}
+                      className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-4">
+                  <Label className="text-white/80 block mb-3">Key Achievements</Label>
+                  <div className="space-y-3">
+                    {formData.achievements.map((achievement, index) => (
+                      <div key={index} className="flex items-start space-x-3">
+                        <div className="pt-2">
+                          <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                        </div>
+                        <Input
+                          value={achievement}
+                          onChange={(e) => updateAchievement(index, e.target.value)}
+                          placeholder="Describe an achievement or responsibility"
+                          className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                        />
+                        {formData.achievements.length > 1 && (
+                          <Button size="icon" variant="outline" onClick={() => removeAchievement(index)} className="bg-transparent border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 flex-shrink-0">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                    <Button variant="outline" size="sm" onClick={addAchievement} className="mt-2 bg-purple-500/10 border-purple-500/30 text-purple-300 hover:bg-purple-500/20 hover:text-purple-200">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Achievement
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="bg-black/30 p-5 rounded-xl border border-white/5">
+                  <div className="grid grid-cols-2 gap-4 items-center">
+                    <div className="space-y-2">
+                      <Label htmlFor="order" className="text-white/80">Display Order</Label>
+                      <Input
+                        id="order"
+                        type="number"
+                        value={formData.order}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, order: Number.parseInt(e.target.value) || 0 }))}
+                        placeholder="1"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-3 bg-purple-500/10 border border-purple-500/20 p-4 rounded-lg mt-6">
+                      <input
+                        type="checkbox"
+                        id="current"
+                        checked={formData.current}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, current: e.target.checked }))}
+                        className="rounded w-5 h-5 accent-purple-500 bg-black/50 border-white/20"
+                      />
+                      <Label htmlFor="current" className="text-white font-medium cursor-pointer">Current Position</Label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsOpen(false)} className="bg-transparent border-white/20 text-white hover:bg-white/10">
+                  Cancel
                 </Button>
-              </div>
-            </div>
+                <Button onClick={isEdit ? handleUpdate : handleCreate} disabled={isSubmitting} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+                  {isSubmitting ? (isEdit ? "Updating..." : "Adding...") : (isEdit ? "Update Experience" : "Add Experience")}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="edit-order">Display Order</Label>
-                <Input
-                  id="edit-order"
-                  type="number"
-                  value={formData.order}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, order: Number.parseInt(e.target.value) || 0 }))}
-                  placeholder="1"
-                />
-              </div>
-              <div className="flex items-center space-x-2 pt-6">
-                <input
-                  type="checkbox"
-                  id="edit-current"
-                  checked={formData.current}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, current: e.target.checked }))}
-                  className="rounded"
-                />
-                <Label htmlFor="edit-current">Current Position</Label>
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleUpdate} disabled={isSubmitting}>
-              {isSubmitting ? "Updating..." : "Update Experience"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        return (
+          <>
+            <DialogForm isOpen={isCreateDialogOpen} setIsOpen={setIsCreateDialogOpen} isEdit={false} />
+            <DialogForm isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />
+          </>
+        )
+      })()}
     </div>
   )
 }

@@ -161,11 +161,11 @@ export default function AdminBlog() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "published":
-        return "bg-green-100 text-green-800"
+        return "bg-green-500/20 text-green-300 border-green-500/30"
       case "draft":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-white/10 text-white/70 border-white/20"
     }
   }
 
@@ -177,12 +177,12 @@ export default function AdminBlog() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Blog Management</h1>
-          <p className="text-gray-600 mt-2">Create and manage your blog posts</p>
+          <h1 className="text-3xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">Blog Management</h1>
+          <p className="text-white/60 mt-2">Create and manage your blog posts</p>
         </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
+        <Button onClick={() => setIsCreateDialogOpen(true)} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
           <Plus className="mr-2 h-4 w-4" />
           New Post
         </Button>
@@ -190,73 +190,85 @@ export default function AdminBlog() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-white/60">Total Posts</CardTitle>
+            <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+              <FileText className="h-4 w-4 text-purple-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{posts.length}</div>
-            <p className="text-xs text-muted-foreground">All blog posts</p>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-white">{posts.length}</div>
+            <p className="text-xs text-white/40 mt-1">All blog posts</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Published</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-white/60">Published</CardTitle>
+            <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+              <Eye className="h-4 w-4 text-green-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{publishedPosts.length}</div>
-            <p className="text-xs text-muted-foreground">Live posts</p>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-white">{publishedPosts.length}</div>
+            <p className="text-xs text-white/40 mt-1">Live posts</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-white/60">Total Views</CardTitle>
+            <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+              <Eye className="h-4 w-4 text-blue-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalViews.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Post views</p>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-white">{totalViews.toLocaleString()}</div>
+            <p className="text-xs text-white/40 mt-1">Post views</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Likes</CardTitle>
-            <Heart className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-white/60">Total Likes</CardTitle>
+            <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+              <Heart className="h-4 w-4 text-pink-400" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalLikes.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Post likes</p>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-white">{totalLikes.toLocaleString()}</div>
+            <p className="text-xs text-white/40 mt-1">Post likes</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="bg-white/5 backdrop-blur-xl border-white/10">
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-white/40" />
               <Input
                 placeholder="Search posts..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-black/40 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-48">
-                <Filter className="mr-2 h-4 w-4" />
+              <SelectTrigger className="w-full sm:w-48 bg-black/40 border-white/10 text-white">
+                <Filter className="mr-2 h-4 w-4 text-white/40" />
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
+              <SelectContent className="bg-[#1a142c] border-white/10 text-white">
+                <SelectItem value="all" className="focus:bg-purple-600/30 focus:text-white">All Status</SelectItem>
+                <SelectItem value="published" className="focus:bg-purple-600/30 focus:text-white">Published</SelectItem>
+                <SelectItem value="draft" className="focus:bg-purple-600/30 focus:text-white">Draft</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -266,52 +278,53 @@ export default function AdminBlog() {
       {/* Posts List */}
       <div className="space-y-4">
         {filteredPosts.map((post) => (
-          <Card key={post.id} className="hover:shadow-md transition-shadow">
+          <Card key={post.id} className="bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/30 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
-                <div className="flex-1">
+                <div className="flex-1 mr-6">
                   <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-xl font-semibold text-gray-900">{post.title}</h3>
-                    <Badge className={getStatusColor(post.status)}>{post.status}</Badge>
+                    <h3 className="text-xl font-semibold text-white">{post.title}</h3>
+                    <Badge variant="outline" className={getStatusColor(post.status)}>{post.status}</Badge>
                   </div>
 
-                  <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
+                  <p className="text-white/60 mb-4 line-clamp-2 leading-relaxed">{post.excerpt}</p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     {post.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
+                      <Badge key={index} variant="secondary" className="text-xs bg-purple-500/20 text-purple-300 border border-purple-500/30">
                         <Tag className="h-3 w-3 mr-1" />
                         {tag}
                       </Badge>
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-6 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-white/40">
+                    <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
+                      <Calendar className="h-4 w-4 text-blue-400" />
                       <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
+                    <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
+                      <Eye className="h-4 w-4 text-green-400" />
                       <span>{post.views} views</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Heart className="h-4 w-4" />
+                    <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
+                      <Heart className="h-4 w-4 text-pink-400" />
                       <span>{post.likes} likes</span>
                     </div>
                     {post.category && (
-                      <div className="flex items-center gap-1">
-                        <span>Category: {post.category}</span>
+                      <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
+                        <span className="text-purple-400">Category:</span>
+                        <span>{post.category}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 ml-4">
-                  <Button size="sm" variant="outline" onClick={() => handleEdit(post)}>
+                <div className="flex flex-col gap-2">
+                  <Button size="icon" variant="outline" onClick={() => handleEdit(post)} className="bg-transparent border-blue-500/50 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 h-9 w-9">
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleDelete(post.id, post.title)}>
+                  <Button size="icon" variant="destructive" onClick={() => handleDelete(post.id, post.title)} className="bg-transparent border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-9 w-9">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -322,16 +335,18 @@ export default function AdminBlog() {
       </div>
 
       {filteredPosts.length === 0 && (
-        <Card>
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 border-dashed border-2">
           <CardContent className="text-center py-12">
-            <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No posts found</h3>
-            <p className="text-gray-500 mb-6">
+            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FileText className="h-10 w-10 text-white/20" />
+            </div>
+            <h3 className="text-xl font-medium text-white mb-2">No posts found</h3>
+            <p className="text-white/50 mb-8 max-w-md mx-auto">
               {searchTerm || statusFilter !== "all"
                 ? "Try adjusting your search or filter criteria"
-                : "Start by creating your first blog post"}
+                : "Start by creating your first blog post to share your thoughts"}
             </p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <Button onClick={() => setIsCreateDialogOpen(true)} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
               <Plus className="mr-2 h-4 w-4" />
               Create Your First Post
             </Button>
@@ -339,241 +354,149 @@ export default function AdminBlog() {
         </Card>
       )}
 
-      {/* Create Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Create New Blog Post</DialogTitle>
-            <DialogDescription>Write a new blog post for your portfolio</DialogDescription>
-          </DialogHeader>
+      {/* Create / Edit Dialog */}
+      {(() => {
+        const DialogForm = ({ isOpen, setIsOpen, isEdit }: { isOpen: boolean, setIsOpen: (val: boolean) => void, isEdit: boolean }) => (
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#1a142c] border border-purple-500/30 text-white shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+                  {isEdit ? "Edit Blog Post" : "Create New Blog Post"}
+                </DialogTitle>
+                <DialogDescription className="text-white/50">
+                  {isEdit ? "Update your blog post" : "Write a new blog post for your portfolio"}
+                </DialogDescription>
+              </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="title">Title *</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      title: e.target.value,
-                      slug: generateSlug(e.target.value),
-                    }))
-                  }}
-                  placeholder="Enter post title"
-                />
+              <div className="space-y-6 py-4">
+                <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={isEdit ? "edit-title" : "title"} className="text-white/80">Title <span className="text-red-400">*</span></Label>
+                      <Input
+                        id={isEdit ? "edit-title" : "title"}
+                        value={formData.title}
+                        onChange={(e) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                            slug: generateSlug(e.target.value),
+                          }))
+                        }}
+                        placeholder="Enter post title"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={isEdit ? "edit-slug" : "slug"} className="text-white/80">Slug</Label>
+                      <Input
+                        id={isEdit ? "edit-slug" : "slug"}
+                        value={formData.slug}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
+                        placeholder="post-url-slug"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20 font-mono text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor={isEdit ? "edit-excerpt" : "excerpt"} className="text-white/80">Excerpt</Label>
+                    <Textarea
+                      id={isEdit ? "edit-excerpt" : "excerpt"}
+                      value={formData.excerpt}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, excerpt: e.target.value }))}
+                      placeholder="Brief description of the post"
+                      rows={2}
+                      className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor={isEdit ? "edit-content" : "content"} className="text-white/80">Content <span className="text-red-400">*</span></Label>
+                    <Textarea
+                      id={isEdit ? "edit-content" : "content"}
+                      value={formData.content}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
+                      placeholder="Write your blog post content here (Markdown supported)..."
+                      rows={12}
+                      className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20 font-mono text-sm leading-relaxed"
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={isEdit ? "edit-category" : "category"} className="text-white/80">Category</Label>
+                      <Input
+                        id={isEdit ? "edit-category" : "category"}
+                        value={formData.category}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+                        placeholder="e.g., Technology, Tutorial"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={isEdit ? "edit-tags" : "tags"} className="text-white/80">Tags</Label>
+                      <Input
+                        id={isEdit ? "edit-tags" : "tags"}
+                        value={formData.tags}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, tags: e.target.value }))}
+                        placeholder="react, javascript (comma separated)"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={isEdit ? "edit-image" : "image"} className="text-white/80">Featured Image URL</Label>
+                      <Input
+                        id={isEdit ? "edit-image" : "image"}
+                        value={formData.image}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, image: e.target.value }))}
+                        placeholder="https://example.com/image.jpg"
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={isEdit ? "edit-status" : "status"} className="text-white/80">Status</Label>
+                      <Select
+                        value={formData.status}
+                        onValueChange={(value: "draft" | "published") => setFormData((prev) => ({ ...prev, status: value }))}
+                      >
+                        <SelectTrigger className="bg-black/50 border-white/10 text-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#1a142c] border-white/10 text-white">
+                          <SelectItem value="draft" className="focus:bg-purple-600/30 focus:text-white">Draft</SelectItem>
+                          <SelectItem value="published" className="focus:bg-purple-600/30 focus:text-white text-green-400">Published</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <Label htmlFor="slug">Slug</Label>
-                <Input
-                  id="slug"
-                  value={formData.slug}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
-                  placeholder="post-url-slug"
-                />
-              </div>
-            </div>
 
-            <div>
-              <Label htmlFor="excerpt">Excerpt</Label>
-              <Textarea
-                id="excerpt"
-                value={formData.excerpt}
-                onChange={(e) => setFormData((prev) => ({ ...prev, excerpt: e.target.value }))}
-                placeholder="Brief description of the post"
-                rows={2}
-              />
-            </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsOpen(false)} className="bg-transparent border-white/20 text-white hover:bg-white/10">
+                  Cancel
+                </Button>
+                <Button onClick={isEdit ? handleUpdate : handleCreate} disabled={isSubmitting} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+                  {isSubmitting ? (isEdit ? "Updating..." : "Creating...") : (isEdit ? "Update Post" : "Create Post")}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )
 
-            <div>
-              <Label htmlFor="content">Content *</Label>
-              <Textarea
-                id="content"
-                value={formData.content}
-                onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
-                placeholder="Write your blog post content here..."
-                rows={10}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <Input
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-                  placeholder="e.g., Technology, Tutorial"
-                />
-              </div>
-              <div>
-                <Label htmlFor="tags">Tags</Label>
-                <Input
-                  id="tags"
-                  value={formData.tags}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, tags: e.target.value }))}
-                  placeholder="react, javascript, tutorial (comma separated)"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="image">Featured Image URL</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, image: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-              <div>
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value: "draft" | "published") => setFormData((prev) => ({ ...prev, status: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreate} disabled={isSubmitting}>
-              {isSubmitting ? "Creating..." : "Create Post"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Blog Post</DialogTitle>
-            <DialogDescription>Update your blog post</DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="edit-title">Title *</Label>
-                <Input
-                  id="edit-title"
-                  value={formData.title}
-                  onChange={(e) => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      title: e.target.value,
-                      slug: generateSlug(e.target.value),
-                    }))
-                  }}
-                  placeholder="Enter post title"
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-slug">Slug</Label>
-                <Input
-                  id="edit-slug"
-                  value={formData.slug}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
-                  placeholder="post-url-slug"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="edit-excerpt">Excerpt</Label>
-              <Textarea
-                id="edit-excerpt"
-                value={formData.excerpt}
-                onChange={(e) => setFormData((prev) => ({ ...prev, excerpt: e.target.value }))}
-                placeholder="Brief description of the post"
-                rows={2}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="edit-content">Content *</Label>
-              <Textarea
-                id="edit-content"
-                value={formData.content}
-                onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
-                placeholder="Write your blog post content here..."
-                rows={10}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="edit-category">Category</Label>
-                <Input
-                  id="edit-category"
-                  value={formData.category}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-                  placeholder="e.g., Technology, Tutorial"
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-tags">Tags</Label>
-                <Input
-                  id="edit-tags"
-                  value={formData.tags}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, tags: e.target.value }))}
-                  placeholder="react, javascript, tutorial (comma separated)"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="edit-image">Featured Image URL</Label>
-                <Input
-                  id="edit-image"
-                  value={formData.image}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, image: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-status">Status</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value: "draft" | "published") => setFormData((prev) => ({ ...prev, status: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleUpdate} disabled={isSubmitting}>
-              {isSubmitting ? "Updating..." : "Update Post"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        return (
+          <>
+            <DialogForm isOpen={isCreateDialogOpen} setIsOpen={setIsCreateDialogOpen} isEdit={false} />
+            <DialogForm isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />
+          </>
+        )
+      })()}
     </div>
   )
 }

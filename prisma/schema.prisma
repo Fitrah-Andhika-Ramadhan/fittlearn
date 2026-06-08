@@ -1,96 +1,89 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
-  email         String    @unique
+  email         String   @unique
   password_hash String
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 }
 
 model Project {
-  id             String    @id @default(uuid())
-  title          String
-  slug           String    @unique
-  short_desc     String
-  long_desc      String?
-  thumbnail_url  String?
-  gallery_urls   String    // SQLite doesn't support String[] natively, we will store JSON string
-  github_url     String?
-  demo_url       String?
-  status         String    @default("draft") // draft / published / featured
-  is_featured    Boolean   @default(false)
-  sort_order     Int       @default(0)
-  start_date     DateTime?
-  end_date       DateTime?
-  created_at     DateTime  @default(now())
-  updated_at     DateTime  @updatedAt
-
-  categories     ProjectCategory[]
-  techs          ProjectTech[]
+  id            String            @id @default(uuid())
+  title         String
+  slug          String            @unique
+  short_desc    String
+  long_desc     String?
+  thumbnail_url String?
+  gallery_urls  String
+  github_url    String?
+  demo_url      String?
+  status        String            @default("draft")
+  is_featured   Boolean           @default(false)
+  sort_order    Int               @default(0)
+  start_date    DateTime?
+  end_date      DateTime?
+  created_at    DateTime          @default(now())
+  updated_at    DateTime          @updatedAt
+  categories    ProjectCategory[]
+  techs         ProjectTech[]
 }
 
 model Category {
-  id    String @id @default(uuid())
-  name  String @unique
-  slug  String @unique
-  color String
-
+  id       String            @id @default(uuid())
+  name     String            @unique
+  slug     String            @unique
+  color    String
   projects ProjectCategory[]
 }
 
 model ProjectCategory {
   project_id  String
   category_id String
-  
-  project  Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@id([project_id, category_id])
 }
 
 model TechStack {
-  id       String @id @default(uuid())
-  name     String @unique
+  id       String        @id @default(uuid())
+  name     String        @unique
   icon_url String?
   color    String?
-
   projects ProjectTech[]
 }
 
 model ProjectTech {
   project_id String
   tech_id    String
-  
-  project Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  tech    TechStack @relation(fields: [tech_id], references: [id], onDelete: Cascade)
+  project    Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  tech       TechStack @relation(fields: [tech_id], references: [id], onDelete: Cascade)
 
   @@id([project_id, tech_id])
 }
 
 model Skill {
-  id         String @id @default(uuid())
+  id         String  @id @default(uuid())
   name       String
-  category   String // Frontend/Backend/dll
-  level      Int    // 1-100
+  category   String
+  level      Int
   icon_url   String?
-  sort_order Int    @default(0)
+  sort_order Int     @default(0)
 }
 
 model Experience {
   id           String    @id @default(uuid())
-  type         String    // work / education / achievement
+  type         String
   title        String
   organization String
   description  String?
@@ -134,7 +127,7 @@ model StudyFile {
   category    String?
   size        String
   description String?
-  file_url    String   // Path to the actual file
+  file_url    String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 }
@@ -143,7 +136,7 @@ model DocumentSummary {
   id         String   @id @default(uuid())
   title      String
   summary    String
-  key_points String   // JSON string array
+  key_points String
   file_type  String
   file_name  String
   file_size  String

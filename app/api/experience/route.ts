@@ -21,7 +21,9 @@ export async function GET() {
     const experiences = await prisma.experience.findMany({
       orderBy: { sort_order: "asc" },
     });
-    return NextResponse.json(experiences.map(mapExperience));
+    return NextResponse.json(experiences.map(mapExperience), {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" }
+    });
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch experience" }, { status: 500 });
   }

@@ -6,7 +6,9 @@ export async function GET() {
     const summaries = await prisma.documentSummary.findMany({
       orderBy: { created_at: "desc" },
     });
-    return NextResponse.json(summaries);
+    return NextResponse.json(summaries, {
+      headers: { "Cache-Control": "private, max-age=30, stale-while-revalidate=60" }
+    });
   } catch (error) {
     console.error("Error fetching summaries:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

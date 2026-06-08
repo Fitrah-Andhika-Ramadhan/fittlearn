@@ -19,7 +19,9 @@ export async function GET() {
     const skills = await prisma.skill.findMany({
       orderBy: { sort_order: "asc" }
     });
-    return NextResponse.json(skills.map(mapSkill));
+    return NextResponse.json(skills.map(mapSkill), {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" }
+    });
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch skills" }, { status: 500 });
   }

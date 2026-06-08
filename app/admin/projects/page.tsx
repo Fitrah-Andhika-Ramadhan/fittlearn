@@ -177,18 +177,18 @@ export default function AdminProjects() {
   }
 
   if (loading) {
-    return <div>Loading projects...</div>
+    return <div className="text-white">Loading projects...</div>
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Project Management</h1>
-          <p className="text-gray-600 mt-2">Manage your portfolio projects, add new ones, or edit existing entries.</p>
+          <h1 className="text-3xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">Project Management</h1>
+          <p className="text-white/60 mt-2">Manage your portfolio projects, add new ones, or edit existing entries.</p>
         </div>
-        <Button onClick={openCreateModal}>
+        <Button onClick={openCreateModal} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
           <PlusCircle className="mr-2 h-5 w-5" />
           Add New Project
         </Button>
@@ -197,42 +197,58 @@ export default function AdminProjects() {
       {/* Projects List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project) => (
-          <Card key={project.id} className="flex flex-col">
-            <CardHeader>
+          <Card key={project.id} className="flex flex-col bg-white/5 backdrop-blur-xl border-white/10 overflow-hidden relative group hover:border-white/30 transition-all duration-300">
+            <div className={`absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            <CardHeader className="relative z-10">
               <div className="flex items-center justify-between">
-                <CardTitle>{project.title}</CardTitle>
-                <Badge variant={project.status === "published" ? "default" : "secondary"}>
+                <CardTitle className="text-white text-xl">{project.title}</CardTitle>
+                <span
+                  className={`px-3 py-1 text-xs rounded-full font-medium border ${
+                    project.status === "published"
+                      ? "bg-green-500/10 text-green-400 border-green-500/30"
+                      : "bg-yellow-500/10 text-yellow-400 border-yellow-500/30"
+                  }`}
+                >
                   {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                </Badge>
+                </span>
               </div>
-              <CardDescription>{project.description}</CardDescription>
+              <CardDescription className="text-white/50">{project.description}</CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow">
-              {project.image && (
-                <img
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.title}
-                  className="w-full h-40 object-cover rounded-md mb-4"
-                />
+            <CardContent className="flex-grow relative z-10">
+              {project.image ? (
+                <div className="w-full h-40 overflow-hidden rounded-xl mb-4 relative border border-white/10">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                </div>
+              ) : (
+                <div className="w-full h-40 bg-black/40 border border-white/5 rounded-xl mb-4 flex items-center justify-center">
+                  <span className="text-white/30">No Image</span>
+                </div>
               )}
               <div className="flex flex-wrap gap-2 mb-4">
                 {project.tech.map((tech, index) => (
-                  <Badge key={index} variant="outline">
+                  <Badge key={index} variant="outline" className="bg-white/5 text-purple-300 border-purple-500/30">
                     {tech}
                   </Badge>
                 ))}
               </div>
-              <p className="text-sm text-gray-700">Category: {project.category}</p>
-              <p className="text-sm text-gray-700">Featured: {project.featured ? "Yes" : "No"}</p>
+              <div className="space-y-1 bg-black/20 p-3 rounded-lg border border-white/5">
+                <p className="text-sm text-white/70"><span className="text-white/40">Category:</span> {project.category}</p>
+                <p className="text-sm text-white/70"><span className="text-white/40">Featured:</span> {project.featured ? "Yes" : "No"}</p>
+              </div>
             </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-              <Button variant="outline" size="sm" onClick={() => openEditModal(project)}>
-                <Edit className="h-4 w-4" />
-                <span className="sr-only">Edit</span>
+            <CardFooter className="flex justify-end gap-3 border-t border-white/5 pt-4 relative z-10 bg-black/10">
+              <Button variant="outline" size="sm" onClick={() => openEditModal(project)} className="bg-transparent border-blue-500/50 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300">
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
               </Button>
-              <Button variant="destructive" size="sm" onClick={() => handleDelete(project.id)}>
-                <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Delete</span>
+              <Button variant="destructive" size="sm" onClick={() => handleDelete(project.id)} className="bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500/40 hover:text-red-300">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
               </Button>
             </CardFooter>
           </Card>
@@ -241,187 +257,195 @@ export default function AdminProjects() {
 
       {/* Project Add/Edit Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-[#1a142c] border border-purple-500/30 text-white shadow-[0_0_50px_rgba(0,0,0,0.8)]">
           <DialogHeader>
-            <DialogTitle>{editingProject ? "Edit Project" : "Add New Project"}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+              {editingProject ? "Edit Project" : "Add New Project"}
+            </DialogTitle>
+            <DialogDescription className="text-white/50">
               {editingProject ? "Make changes to your project here." : "Add a new project to your portfolio."}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="title" className="text-right">
-                Title
-              </Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => handleInputChange("title", e.target.value)}
-                className="col-span-3"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Short Description
-              </Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
-                className="col-span-3"
-                rows={2}
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="longDescription" className="text-right">
-                Long Description
-              </Label>
-              <Textarea
-                id="longDescription"
-                value={formData.longDescription}
-                onChange={(e) => handleInputChange("longDescription", e.target.value)}
-                className="col-span-3"
-                rows={4}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="category" className="text-right">
-                Category
-              </Label>
-              <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Web Application">Web Application</SelectItem>
-                  <SelectItem value="Mobile Application">Mobile Application</SelectItem>
-                  <SelectItem value="Data Science">Data Science</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="tech" className="text-right">
-                Technologies
-              </Label>
-              <div className="col-span-3">
+          <form onSubmit={handleSubmit} className="grid gap-6 py-4">
+            
+            <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-5">
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label htmlFor="title" className="text-right mt-3 text-white/80">Title</Label>
                 <Input
-                  id="tech"
-                  value={techInput}
-                  onChange={(e) => setTechInput(e.target.value)}
-                  onKeyDown={handleTechAdd}
-                  placeholder="Type tech and press Enter (e.g., React, Node.js)"
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => handleInputChange("title", e.target.value)}
+                  className="col-span-3 bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                  required
                 />
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {formData.tech.map((tech, index) => (
-                    <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                      {tech}
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-auto p-0"
-                        onClick={() => handleTechRemove(tech)}
-                      >
-                        <XCircle className="h-3 w-3" />
-                        <span className="sr-only">Remove {tech}</span>
-                      </Button>
-                    </Badge>
-                  ))}
+              </div>
+              
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label htmlFor="description" className="text-right mt-3 text-white/80">Short Description</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange("description", e.target.value)}
+                  className="col-span-3 bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                  rows={2}
+                  required
+                />
+              </div>
+              
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label htmlFor="longDescription" className="text-right mt-3 text-white/80">Long Description</Label>
+                <Textarea
+                  id="longDescription"
+                  value={formData.longDescription}
+                  onChange={(e) => handleInputChange("longDescription", e.target.value)}
+                  className="col-span-3 bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                  rows={4}
+                />
+              </div>
+            </div>
+
+            <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-5">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="category" className="text-right text-white/80">Category</Label>
+                <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+                  <SelectTrigger className="col-span-3 bg-black/50 border-white/10 text-white">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#1a142c] border-white/10 text-white">
+                    <SelectItem value="Web Application" className="focus:bg-purple-600/30 focus:text-white">Web Application</SelectItem>
+                    <SelectItem value="Mobile Application" className="focus:bg-purple-600/30 focus:text-white">Mobile Application</SelectItem>
+                    <SelectItem value="Data Science" className="focus:bg-purple-600/30 focus:text-white">Data Science</SelectItem>
+                    <SelectItem value="Other" className="focus:bg-purple-600/30 focus:text-white">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label htmlFor="tech" className="text-right mt-3 text-white/80">Technologies</Label>
+                <div className="col-span-3">
+                  <Input
+                    id="tech"
+                    value={techInput}
+                    onChange={(e) => setTechInput(e.target.value)}
+                    onKeyDown={handleTechAdd}
+                    placeholder="Type tech and press Enter (e.g., React)"
+                    className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                  />
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {formData.tech.map((tech, index) => (
+                      <Badge key={index} variant="secondary" className="flex items-center gap-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/40 pr-1 py-1">
+                        {tech}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 w-5 p-0 rounded-full hover:bg-purple-500/50 ml-1 text-purple-200"
+                          onClick={() => handleTechRemove(tech)}
+                        >
+                          <XCircle className="h-3 w-3" />
+                          <span className="sr-only">Remove {tech}</span>
+                        </Button>
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="github" className="text-right">
-                GitHub URL
-              </Label>
-              <Input
-                id="github"
-                value={formData.github}
-                onChange={(e) => handleInputChange("github", e.target.value)}
-                className="col-span-3"
-                type="url"
-                placeholder="https://github.com/your-project"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="demo" className="text-right">
-                Demo URL
-              </Label>
-              <Input
-                id="demo"
-                value={formData.demo}
-                onChange={(e) => handleInputChange("demo", e.target.value)}
-                className="col-span-3"
-                type="url"
-                placeholder="https://your-project-demo.com"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="image-upload" className="text-right">
-                Project Image
-              </Label>
-              <div className="col-span-3">
+
+            <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-5">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="github" className="text-right text-white/80">GitHub URL</Label>
                 <Input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="col-span-3"
+                  id="github"
+                  value={formData.github}
+                  onChange={(e) => handleInputChange("github", e.target.value)}
+                  className="col-span-3 bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                  type="url"
+                  placeholder="https://github.com/..."
                 />
-                {imagePreview && (
-                  <div className="mt-2">
-                    <img
-                      src={imagePreview || "/placeholder.svg"}
-                      alt="Image Preview"
-                      className="w-32 h-auto rounded-md object-cover"
-                    />
-                  </div>
-                )}
-                {!imagePreview && formData.image && (
-                  <div className="mt-2">
-                    <img
-                      src={formData.image || "/placeholder.svg"}
-                      alt="Current Image"
-                      className="w-32 h-auto rounded-md object-cover"
-                    />
-                  </div>
-                )}
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="demo" className="text-right text-white/80">Demo URL</Label>
+                <Input
+                  id="demo"
+                  value={formData.demo}
+                  onChange={(e) => handleInputChange("demo", e.target.value)}
+                  className="col-span-3 bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                  type="url"
+                  placeholder="https://..."
+                />
               </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="featured" className="text-right">
-                Featured
-              </Label>
-              <Switch
-                id="featured"
-                checked={formData.featured}
-                onCheckedChange={(checked) => handleInputChange("featured", checked)}
-                className="col-span-3 justify-self-start"
-              />
+
+            <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-5">
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label htmlFor="image-upload" className="text-right mt-3 text-white/80">Project Image</Label>
+                <div className="col-span-3">
+                  <Input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="bg-black/50 border-white/10 text-white file:bg-white/10 file:text-white file:border-0 file:mr-4 file:py-1 file:px-3 file:rounded-md hover:file:bg-white/20"
+                  />
+                  <div className="mt-3 bg-black/40 p-2 rounded-lg border border-white/5 inline-block">
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-40 h-28 rounded-md object-cover border border-white/10"
+                      />
+                    ) : formData.image ? (
+                      <img
+                        src={formData.image}
+                        alt="Current"
+                        className="w-40 h-28 rounded-md object-cover border border-white/10"
+                      />
+                    ) : (
+                      <div className="w-40 h-28 rounded-md bg-black/50 border border-dashed border-white/20 flex flex-col items-center justify-center text-white/30 text-xs">
+                        <span>No Image</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="status" className="text-right">
-                Status
-              </Label>
-              <Select
-                value={formData.status}
-                onValueChange={(value) => handleInputChange("status", value as "draft" | "published" | "archived")}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                  <SelectItem value="archived">Archived</SelectItem>
-                </SelectContent>
-              </Select>
+
+            <div className="flex gap-6 p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl">
+              <div className="flex-1 flex items-center gap-4">
+                <Label htmlFor="status" className="text-white/80 whitespace-nowrap">Status</Label>
+                <Select
+                  value={formData.status}
+                  onValueChange={(value) => handleInputChange("status", value as "draft" | "published" | "archived")}
+                >
+                  <SelectTrigger className="w-full bg-black/50 border-white/10 text-white">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#1a142c] border-white/10 text-white">
+                    <SelectItem value="draft" className="focus:bg-purple-600/30 focus:text-white">Draft</SelectItem>
+                    <SelectItem value="published" className="focus:bg-purple-600/30 focus:text-white text-green-400">Published</SelectItem>
+                    <SelectItem value="archived" className="focus:bg-purple-600/30 focus:text-white text-yellow-400">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center gap-4 border-l border-white/10 pl-6">
+                <Label htmlFor="featured" className="text-white/80">Featured</Label>
+                <Switch
+                  id="featured"
+                  checked={formData.featured}
+                  onCheckedChange={(checked) => handleInputChange("featured", checked)}
+                  className="data-[state=checked]:bg-purple-500"
+                />
+              </div>
             </div>
-            <DialogFooter>
-              <Button type="submit" disabled={isUploading}>
+
+            <DialogFooter className="mt-4">
+              <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="bg-transparent border-white/20 text-white hover:bg-white/10">
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isUploading} className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
                 {isUploading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (

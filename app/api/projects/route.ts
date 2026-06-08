@@ -30,7 +30,11 @@ export async function GET() {
         techs: { include: { tech: true } }
       }
     });
-    return NextResponse.json(projects.map(mapProject));
+    return NextResponse.json(projects.map(mapProject), {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     console.error("Failed to fetch projects:", error);
     return NextResponse.json({ error: "Failed to fetch projects" }, { status: 500 });

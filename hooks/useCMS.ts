@@ -1,55 +1,117 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import type { CMSProject, CMSExperience, CMSSkill, CMSSettings, BlogPost } from "@/lib/types"
 
-// Custom hook for real-time CMS data synchronization
+// ─────────────────────────────────────────
+// Simple in-memory cache with TTL (5 min)
+// ─────────────────────────────────────────
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+const cache: Record<string, { data: any; timestamp: number }> = {}
+
+function getCached(key: string) {
+  const entry = cache[key]
+  if (!entry) return null
+  if (Date.now() - entry.timestamp > CACHE_TTL) {
+    delete cache[key]
+    return null
+  }
+  return entry.data
+}
+
+function setCache(key: string, data: any) {
+  cache[key] = { data, timestamp: Date.now() }
+}
+
+function invalidateCache(key: string) {
+  delete cache[key]
+}
+
+// ─────────────────────────────────────────
+// Fetch with deduplication (prevents
+// multiple simultaneous calls for same URL)
+// ─────────────────────────────────────────
+const inflight: Record<string, Promise<any>> = {}
+
+async function fetchDedup(url: string) {
+  if (inflight[url]) return inflight[url]
+  inflight[url] = fetch(url, { cache: "no-store" })
+    .then((r) => r.json())
+    .finally(() => delete inflight[url])
+  return inflight[url]
+}
+
+// ─────────────────────────────────────────
+// Sync hook — debounced so rapid events
+// don't trigger multiple fetches
+// ─────────────────────────────────────────
 function useCMSSync() {
   const [syncTrigger, setSyncTrigger] = useState(0)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    const handleCMSDataChange = () => {
-      setSyncTrigger((prev) => prev + 1)
+    const handle = () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => {
+        setSyncTrigger((prev) => prev + 1)
+      }, 300) // debounce 300ms
     }
-
-    window.addEventListener("cms-data-changed", handleCMSDataChange)
-
+    window.addEventListener("cms-data-changed", handle)
     return () => {
-      window.removeEventListener("cms-data-changed", handleCMSDataChange)
+      window.removeEventListener("cms-data-changed", handle)
+      if (timerRef.current) clearTimeout(timerRef.current)
     }
   }, [])
 
   return syncTrigger
 }
 
+// ─────────────────────────────────────────
+// Projects
+// ─────────────────────────────────────────
 export function useCMSProjects() {
   const [projects, setProjects] = useState<CMSProject[]>([])
   const [loading, setLoading] = useState(true)
   const syncTrigger = useCMSSync()
+  const isFirstLoad = useRef(true)
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async (force = false) => {
+    const cacheKey = "projects"
+    if (!force) {
+      const cached = getCached(cacheKey)
+      if (cached) {
+        setProjects(cached)
+        setLoading(false)
+        return
+      }
+    }
+    // Only show loading spinner on first load
+    if (isFirstLoad.current) setLoading(true)
     try {
-      const res = await fetch('/api/projects')
-      const data = await res.json()
+      const data = await fetchDedup("/api/projects")
       setProjects(data)
+      setCache(cacheKey, data)
     } catch (err) {
-      console.error(err)
+      console.error("Projects fetch error:", err)
     } finally {
       setLoading(false)
+      isFirstLoad.current = false
     }
-  }
+  }, [])
 
   useEffect(() => {
-    fetchProjects()
-  }, [syncTrigger])
+    fetchProjects(syncTrigger > 0) // force=true on sync events
+  }, [fetchProjects, syncTrigger])
 
   const createProject = async (project: any) => {
-    const res = await fetch('/api/projects', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(project)
+    const res = await fetch("/api/projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(project),
     })
     const newProject = await res.json()
+    invalidateCache("projects")
     setProjects((prev) => [...prev, newProject])
     window.dispatchEvent(new CustomEvent("cms-data-changed"))
     return newProject
@@ -57,19 +119,21 @@ export function useCMSProjects() {
 
   const updateProject = async (id: string, updates: any) => {
     const res = await fetch(`/api/projects/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
     })
     const updated = await res.json()
+    invalidateCache("projects")
     setProjects((prev) => prev.map((p) => (p.id === id ? updated : p)))
     window.dispatchEvent(new CustomEvent("cms-data-changed"))
     return updated
   }
 
   const deleteProject = async (id: string) => {
-    const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/projects/${id}`, { method: "DELETE" })
     if (res.ok) {
+      invalidateCache("projects")
       setProjects((prev) => prev.filter((p) => p.id !== id))
       window.dispatchEvent(new CustomEvent("cms-data-changed"))
       return true
@@ -77,49 +141,62 @@ export function useCMSProjects() {
     return false
   }
 
-  const getFeaturedProjects = () => projects.filter((p) => p.is_featured && p.status === "published")
-  const getPublishedProjects = () => projects.filter((p) => p.status === "published")
-
   return {
     projects,
     loading,
     createProject,
     updateProject,
     deleteProject,
-    getFeaturedProjects,
-    getPublishedProjects,
-    refreshProjects: fetchProjects,
+    getFeaturedProjects: () => projects.filter((p) => p.is_featured && p.status === "published"),
+    getPublishedProjects: () => projects.filter((p) => p.status === "published"),
+    refreshProjects: () => fetchProjects(true),
   }
 }
 
+// ─────────────────────────────────────────
+// Skills
+// ─────────────────────────────────────────
 export function useCMSSkills() {
   const [skills, setSkills] = useState<CMSSkill[]>([])
   const [loading, setLoading] = useState(true)
   const syncTrigger = useCMSSync()
+  const isFirstLoad = useRef(true)
 
-  const fetchSkills = async () => {
+  const fetchSkills = useCallback(async (force = false) => {
+    const cacheKey = "skills"
+    if (!force) {
+      const cached = getCached(cacheKey)
+      if (cached) {
+        setSkills(cached)
+        setLoading(false)
+        return
+      }
+    }
+    if (isFirstLoad.current) setLoading(true)
     try {
-      const res = await fetch('/api/skills')
-      const data = await res.json()
+      const data = await fetchDedup("/api/skills")
       setSkills(data)
+      setCache(cacheKey, data)
     } catch (err) {
-      console.error(err)
+      console.error("Skills fetch error:", err)
     } finally {
       setLoading(false)
+      isFirstLoad.current = false
     }
-  }
+  }, [])
 
   useEffect(() => {
-    fetchSkills()
-  }, [syncTrigger])
+    fetchSkills(syncTrigger > 0)
+  }, [fetchSkills, syncTrigger])
 
   const createSkill = async (skill: any) => {
-    const res = await fetch('/api/skills', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(skill)
+    const res = await fetch("/api/skills", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(skill),
     })
     const newSkill = await res.json()
+    invalidateCache("skills")
     setSkills((prev) => [...prev, newSkill])
     window.dispatchEvent(new CustomEvent("cms-data-changed"))
     return newSkill
@@ -127,19 +204,21 @@ export function useCMSSkills() {
 
   const updateSkill = async (id: string, updates: any) => {
     const res = await fetch(`/api/skills/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
     })
     const updated = await res.json()
+    invalidateCache("skills")
     setSkills((prev) => prev.map((s) => (s.id === id ? updated : s)))
     window.dispatchEvent(new CustomEvent("cms-data-changed"))
     return updated
   }
 
   const deleteSkill = async (id: string) => {
-    const res = await fetch(`/api/skills/${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/skills/${id}`, { method: "DELETE" })
     if (res.ok) {
+      invalidateCache("skills")
       setSkills((prev) => prev.filter((s) => s.id !== id))
       window.dispatchEvent(new CustomEvent("cms-data-changed"))
       return true
@@ -147,67 +226,83 @@ export function useCMSSkills() {
     return false
   }
 
-  const getSkillsByCategory = (category: string) => skills.filter((s) => s.category === category)
-
   return {
     skills,
     loading,
     createSkill,
     updateSkill,
     deleteSkill,
-    getSkillsByCategory,
-    refreshSkills: fetchSkills,
+    getSkillsByCategory: (category: string) => skills.filter((s) => s.category === category),
+    refreshSkills: () => fetchSkills(true),
   }
 }
 
+// ─────────────────────────────────────────
+// Experiences
+// ─────────────────────────────────────────
 export function useCMSExperiences() {
   const [experiences, setExperiences] = useState<CMSExperience[]>([])
   const [loading, setLoading] = useState(true)
   const syncTrigger = useCMSSync()
+  const isFirstLoad = useRef(true)
 
-  const fetchExperiences = async () => {
+  const fetchExperiences = useCallback(async (force = false) => {
+    const cacheKey = "experiences"
+    if (!force) {
+      const cached = getCached(cacheKey)
+      if (cached) {
+        setExperiences(cached)
+        setLoading(false)
+        return
+      }
+    }
+    if (isFirstLoad.current) setLoading(true)
     try {
-      const res = await fetch('/api/experience')
-      const data = await res.json()
+      const data = await fetchDedup("/api/experience")
       setExperiences(data)
+      setCache(cacheKey, data)
     } catch (err) {
-      console.error(err)
+      console.error("Experiences fetch error:", err)
     } finally {
       setLoading(false)
+      isFirstLoad.current = false
     }
-  }
+  }, [])
 
   useEffect(() => {
-    fetchExperiences()
-  }, [syncTrigger])
+    fetchExperiences(syncTrigger > 0)
+  }, [fetchExperiences, syncTrigger])
 
   const createExperience = async (experience: any) => {
-    const res = await fetch('/api/experience', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(experience)
+    const res = await fetch("/api/experience", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(experience),
     })
-    const newExperience = await res.json()
-    setExperiences((prev) => [...prev, newExperience])
+    const newExp = await res.json()
+    invalidateCache("experiences")
+    setExperiences((prev) => [...prev, newExp])
     window.dispatchEvent(new CustomEvent("cms-data-changed"))
-    return newExperience
+    return newExp
   }
 
   const updateExperience = async (id: string, updates: any) => {
     const res = await fetch(`/api/experience/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
     })
     const updated = await res.json()
+    invalidateCache("experiences")
     setExperiences((prev) => prev.map((e) => (e.id === id ? updated : e)))
     window.dispatchEvent(new CustomEvent("cms-data-changed"))
     return updated
   }
 
   const deleteExperience = async (id: string) => {
-    const res = await fetch(`/api/experience/${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/experience/${id}`, { method: "DELETE" })
     if (res.ok) {
+      invalidateCache("experiences")
       setExperiences((prev) => prev.filter((e) => e.id !== id))
       window.dispatchEvent(new CustomEvent("cms-data-changed"))
       return true
@@ -221,64 +316,61 @@ export function useCMSExperiences() {
     createExperience,
     updateExperience,
     deleteExperience,
-    refreshExperiences: fetchExperiences,
+    refreshExperiences: () => fetchExperiences(true),
   }
 }
 
+// ─────────────────────────────────────────
+// Settings / Profile
+// ─────────────────────────────────────────
 export function useCMSSettings() {
   const [settings, setSettings] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
-  const syncTrigger = useCMSSync()
-
-  const fetchSettings = async () => {
-    try {
-      const res = await fetch('/api/profile')
-      if (res.ok) {
-        const data = await res.json()
-        setSettings(data)
-      }
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
-    fetchSettings()
-  }, [syncTrigger])
+    const cached = getCached("settings")
+    if (cached) {
+      setSettings(cached)
+      setLoading(false)
+      return
+    }
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((data) => {
+        setSettings(data)
+        setCache("settings", data)
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
 
   const updateSettings = async (updates: any) => {
-    const res = await fetch('/api/profile', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+    const res = await fetch("/api/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
     })
     const updated = await res.json()
     setSettings(updated)
-    window.dispatchEvent(new CustomEvent("cms-data-changed"))
+    setCache("settings", updated)
     return updated
   }
 
-  return {
-    settings,
-    loading,
-    updateSettings,
-    refreshSettings: fetchSettings,
-  }
+  return { settings, loading, updateSettings, refreshSettings: () => {} }
 }
 
+// ─────────────────────────────────────────
+// Blog (mock — no DB model yet)
+// ─────────────────────────────────────────
 export function useCMSBlog() {
-  // Temporary mock for blog posts until DB model is added
   const [posts, setPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(false)
 
   return {
     posts,
-    loading,
-    createPost: () => {},
-    updatePost: () => {},
-    deletePost: () => false,
+    loading: false,
+    createPost: (_: any) => Promise.resolve(null),
+    updatePost: (_id: string, _updates: any) => Promise.resolve(null),
+    deletePost: (_id: string) => Promise.resolve(false),
     getPublishedPosts: () => [],
     refreshPosts: () => {},
   }

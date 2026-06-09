@@ -110,6 +110,9 @@ export function useCMSProjects() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(project),
     })
+    if (!res.ok) {
+      throw new Error("Failed to create project")
+    }
     const newProject = await res.json()
     invalidateCache("projects")
     setProjects((prev) => [...prev, newProject])
@@ -123,6 +126,9 @@ export function useCMSProjects() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
     })
+    if (!res.ok) {
+      throw new Error("Failed to update project")
+    }
     const updated = await res.json()
     invalidateCache("projects")
     setProjects((prev) => prev.map((p) => (p.id === id ? updated : p)))

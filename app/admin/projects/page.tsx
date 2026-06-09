@@ -204,12 +204,12 @@ export default function AdminProjects() {
                 <CardTitle className="text-white text-xl">{project.title}</CardTitle>
                 <span
                   className={`px-3 py-1 text-xs rounded-full font-medium border ${
-                    project.status === "published"
+                    (project.status || "draft") === "published"
                       ? "bg-green-500/10 text-green-400 border-green-500/30"
                       : "bg-yellow-500/10 text-yellow-400 border-yellow-500/30"
                   }`}
                 >
-                  {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                  {(project.status || "draft").charAt(0).toUpperCase() + (project.status || "draft").slice(1)}
                 </span>
               </div>
               <CardDescription className="text-white/50">{project.description}</CardDescription>

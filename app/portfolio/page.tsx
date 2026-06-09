@@ -101,7 +101,7 @@ export default async function PortfolioPage() {
         degree: e.title,
         school: e.organization,
         period: `${e.start_date.getFullYear()} - ${e.end_date ? (e.end_date.getFullYear() === e.start_date.getFullYear() ? 'Present' : e.end_date.getFullYear()) : 'Present'}`,
-        gpa: "3.75/4.00",
+        gpa: e.description || "3.64/4.00",
         achievements: (() => {
           try { return e.key_points ? JSON.parse(e.key_points) : [] } catch { return [] }
         })()

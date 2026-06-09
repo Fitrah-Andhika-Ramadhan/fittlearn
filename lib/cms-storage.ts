@@ -302,6 +302,11 @@ class CMSStorage {
             "Platform untuk merangkum dokumen PDF dan Word menggunakan AI, membantu mahasiswa dan profesional menghemat waktu belajar.",
           longDescription:
             "FitLearned adalah platform AI-powered yang dirancang khusus untuk membantu mahasiswa dan profesional dalam memproses dokumen dengan lebih efisien. Aplikasi ini menggunakan teknologi AI canggih untuk mengekstrak informasi penting dari dokumen PDF dan Word, kemudian mengubahnya menjadi ringkasan yang mudah dipahami beserta poin-poin kunci.",
+          keyAchievements: [
+            "Reduced document review time by up to 80% using AI summarization",
+            "Supports PDF and Word document formats",
+            "Built with Next.js and TypeScript for a robust, typed codebase",
+          ],
           tech: ["Next.js", "TypeScript", "AI Integration", "Tailwind CSS", "React"],
           github: "https://github.com/Fitrah-Andhika-Ramadhan/fitlearned",
           demo: "/summarizer",
@@ -316,6 +321,11 @@ class CMSStorage {
             "Sistem manajemen pembelajaran online dengan fitur video streaming, quiz interaktif, dan tracking progress.",
           longDescription:
             "Sistem LMS lengkap yang dibangun dengan Laravel dan Vue.js, menyediakan platform pembelajaran online yang komprehensif dengan fitur-fitur modern seperti video streaming, quiz interaktif, tracking progress siswa, dan dashboard analytics untuk instructor.",
+          keyAchievements: [
+            "Full LMS with video streaming and interactive quizzes",
+            "Student progress tracking and instructor dashboard analytics",
+            "Deployed and live at elearning-lms-i3jk.vercel.app",
+          ],
           tech: ["Laravel", "Vue.js", "MySQL", "Redis", "PHP"],
           github: "https://github.com/Fitrah-Andhika-Ramadhan/elearning-lms",
           demo: "https://elearning-lms-i3jk.vercel.app/",
@@ -330,6 +340,11 @@ class CMSStorage {
             "Aplikasi mobile untuk kampus dengan fitur jadwal kuliah, absensi digital, dan notifikasi akademik.",
           longDescription:
             "Aplikasi mobile yang memudahkan mahasiswa dalam mengakses informasi kampus, melihat jadwal kuliah, melakukan absensi digital, dan menerima notifikasi penting dari kampus.",
+          keyAchievements: [
+            "Digital attendance system replacing manual paperwork",
+            "Real-time academic notifications via Firebase",
+            "Cross-platform support with React Native",
+          ],
           tech: ["React Native", "Firebase", "Node.js", "Express"],
           github: "https://github.com/Fitrah-Andhika-Ramadhan/smart-campus",
           demo: "#",

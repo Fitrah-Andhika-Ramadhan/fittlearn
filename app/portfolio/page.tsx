@@ -48,7 +48,7 @@ export default async function PortfolioPage() {
     ? dbExperiences.filter(e => e.type === "work" || e.type === "achievement").map(e => ({
         title: e.title,
         company: e.organization,
-        period: `${e.start_date.getFullYear()} - ${e.end_date ? e.end_date.getFullYear() : 'Present'}`,
+        period: `${e.start_date.getFullYear()} - ${e.end_date ? (e.end_date.getFullYear() === e.start_date.getFullYear() ? 'Present' : e.end_date.getFullYear()) : 'Present'}`,
         description: e.description || "",
         achievements: []
       }))
@@ -266,18 +266,22 @@ export default async function PortfolioPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-purple-100 mb-4">{exp.description}</p>
-                  <div>
-                    <h4 className="font-medium mb-2 text-white">Key Activities:</h4>
-                    <ul className="space-y-1">
-                      {exp.achievements.map((achievement, achIndex) => (
-                        <li key={achIndex} className="flex items-start text-sm text-purple-200">
-                          <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                          {achievement}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  {exp.description && (
+                    <p className="text-purple-100 mb-4 text-sm leading-relaxed line-clamp-4">{exp.description}</p>
+                  )}
+                  {exp.achievements.length > 0 && (
+                    <div>
+                      <h4 className="font-medium mb-2 text-white text-sm">Key Activities:</h4>
+                      <ul className="space-y-1">
+                        {exp.achievements.map((achievement, achIndex) => (
+                          <li key={achIndex} className="flex items-start text-sm text-purple-200">
+                            <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {achievement}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}

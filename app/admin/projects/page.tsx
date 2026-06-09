@@ -4,7 +4,7 @@ import { CardFooter } from "@/components/ui/card"
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { PlusCircle, Edit, Trash2, Save, XCircle, Loader2 } from "lucide-react"
+import { PlusCircle, Edit, Trash2, Save, XCircle, Loader2, Plus, Trophy } from "lucide-react"
 import {
   Button,
   Card,
@@ -33,12 +33,13 @@ import { useCMSProjects } from "@/hooks/useCMS"
 import type { CMSProject } from "@/lib/types"
 import { uploadFile } from "@/lib/supabase"
 
-type ProjectFormState = Omit<CMSProject, "id" | "createdAt" | "updatedAt" | "views" | "likes">
+type ProjectFormState = Omit<CMSProject, "id" | "createdAt" | "updatedAt" | "views" | "likes"> & { keyAchievements: string[] }
 
 const initialFormState: ProjectFormState = {
   title: "",
   description: "",
   longDescription: "",
+  keyAchievements: [""],
   tech: [],
   github: "",
   demo: "",
@@ -64,6 +65,7 @@ export default function AdminProjects() {
         title: editingProject.title,
         description: editingProject.description,
         longDescription: editingProject.longDescription || "",
+        keyAchievements: editingProject.keyAchievements?.length > 0 ? editingProject.keyAchievements : [""],
         tech: editingProject.tech,
         github: editingProject.github,
         demo: editingProject.demo,
@@ -136,7 +138,7 @@ export default function AdminProjects() {
         }
       }
 
-      const finalData = { ...formData, image: finalImageUrl }
+      const finalData = { ...formData, image: finalImageUrl, keyAchievements: formData.keyAchievements.filter(Boolean) }
 
       if (editingProject) {
         updateProject(editingProject.id, finalData)
@@ -240,6 +242,24 @@ export default function AdminProjects() {
                 <p className="text-sm text-white/70"><span className="text-white/40">Category:</span> {project.category}</p>
                 <p className="text-sm text-white/70"><span className="text-white/40">Featured:</span> {project.featured ? "Yes" : "No"}</p>
               </div>
+              {project.keyAchievements?.length > 0 && project.keyAchievements.some(Boolean) && (
+                <div className="mt-3">
+                  <p className="text-xs text-white/40 mb-1.5 flex items-center gap-1">
+                    <Trophy className="h-3 w-3 text-yellow-400" /> Key Achievements
+                  </p>
+                  <ul className="space-y-1">
+                    {project.keyAchievements.filter(Boolean).slice(0, 2).map((ach, i) => (
+                      <li key={i} className="flex items-start text-xs text-white/60">
+                        <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-1 mr-2 flex-shrink-0" />
+                        {ach}
+                      </li>
+                    ))}
+                    {project.keyAchievements.filter(Boolean).length > 2 && (
+                      <li className="text-xs text-white/30 pl-3.5">+{project.keyAchievements.filter(Boolean).length - 2} more...</li>
+                    )}
+                  </ul>
+                </div>
+              )}
             </CardContent>
             <CardFooter className="flex justify-end gap-3 border-t border-white/5 pt-4 relative z-10 bg-black/10">
               <Button variant="outline" size="sm" onClick={() => openEditModal(project)} className="bg-transparent border-blue-500/50 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300">
@@ -301,6 +321,64 @@ export default function AdminProjects() {
                   className="col-span-3 bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
                   rows={4}
                 />
+              </div>
+            </div>
+
+            {/* Key Achievements */}
+            <div className="bg-black/30 p-5 rounded-xl border border-white/5 space-y-4">
+              <Label className="text-white/80 flex items-center gap-2">
+                <Trophy className="h-4 w-4 text-yellow-400" />
+                Key Achievements
+              </Label>
+              <div className="space-y-3">
+                {formData.keyAchievements.map((achievement, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-purple-500 flex-shrink-0" />
+                    <input
+                      type="text"
+                      value={achievement}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          keyAchievements: prev.keyAchievements.map((a, i) => (i === index ? e.target.value : a)),
+                        }))
+                      }
+                      placeholder="Describe a key achievement or impact"
+                      className="flex-1 bg-black/50 border border-white/10 text-white text-sm rounded-md px-3 py-2 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20 placeholder:text-white/30"
+                    />
+                    {formData.keyAchievements.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            keyAchievements: prev.keyAchievements.filter((_, i) => i !== index),
+                          }))
+                        }
+                        className="bg-transparent border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8 p-0 flex-shrink-0"
+                      >
+                        <XCircle className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      keyAchievements: [...prev.keyAchievements, ""],
+                    }))
+                  }
+                  className="mt-1 bg-purple-500/10 border-purple-500/30 text-purple-300 hover:bg-purple-500/20 hover:text-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Achievement
+                </Button>
               </div>
             </div>
 

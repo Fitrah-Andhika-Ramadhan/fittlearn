@@ -14,6 +14,7 @@ export interface CMSProject {
   title: string
   description: string
   longDescription?: string
+  keyAchievements: string[]
   tech: string[]
   github: string
   demo: string

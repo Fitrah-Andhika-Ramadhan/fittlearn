@@ -7,6 +7,8 @@ import Image from "next/image"
 
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 export default async function PortfolioPage() {
   // Fetch real data from Database
   const dbProjects = await prisma.project.findMany({

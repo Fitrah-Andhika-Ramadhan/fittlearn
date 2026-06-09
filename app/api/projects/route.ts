@@ -57,6 +57,7 @@ export async function POST(req: Request) {
         status: body.status || "draft",
         is_featured: body.featured || false,
         sort_order: 0,
+        gallery_urls: "",
         techs: body.tech && Array.isArray(body.tech) ? {
           create: body.tech.map((t: string) => ({
             tech: {
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
             category: {
               connectOrCreate: {
                 where: { name: body.category },
-                create: { name: body.category, slug: body.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') }
+                create: { name: body.category, slug: body.category.toLowerCase().replace(/[^a-z0-9]+/g, '-'), color: "#A855F7" }
               }
             }
           }]

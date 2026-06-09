@@ -77,7 +77,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
             category: {
               connectOrCreate: {
                 where: { name: body.category },
-                create: { name: body.category, slug: body.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') }
+                create: { name: body.category, slug: body.category.toLowerCase().replace(/[^a-z0-9]+/g, '-'), color: "#A855F7" }
               }
             }
           }]

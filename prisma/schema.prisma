@@ -87,6 +87,7 @@ model Experience {
   title        String
   organization String
   description  String?
+  key_points   String?   // JSON array of achievement strings
   start_date   DateTime
   end_date     DateTime?
   sort_order   Int       @default(0)

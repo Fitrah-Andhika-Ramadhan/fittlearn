@@ -28,6 +28,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     if (body.title !== undefined) updateData.title = body.title;
     if (body.company !== undefined) updateData.organization = body.company;
     if (body.description !== undefined) updateData.description = body.description;
+    if (body.achievements !== undefined) updateData.key_points = body.achievements?.length > 0 ? JSON.stringify(body.achievements.filter(Boolean)) : null;
     if (body.order !== undefined) updateData.sort_order = body.order;
 
     if (body.period) {
@@ -58,7 +59,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       company: e.organization || "",
       period: (e.start_date ? new Date(e.start_date).getFullYear().toString() : "") + (e.end_date ? " - " + new Date(e.end_date).getFullYear().toString() : " - Present"),
       description: e.description || "",
-      achievements: [],
+      achievements: (() => {
+        try { return e.key_points ? JSON.parse(e.key_points) : [] } catch { return [] }
+      })(),
       current: !e.end_date,
       order: e.sort_order || 0,
     });

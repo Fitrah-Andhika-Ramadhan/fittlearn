@@ -9,7 +9,9 @@ const mapExperience = (e: any) => ({
   company: e.organization || "",
   period: (e.start_date ? new Date(e.start_date).getFullYear().toString() : "") + (e.end_date ? " - " + new Date(e.end_date).getFullYear().toString() : " - Present"),
   description: e.description || "",
-  achievements: [],
+  achievements: (() => {
+    try { return e.key_points ? JSON.parse(e.key_points) : [] } catch { return [] }
+  })(),
   current: !e.end_date,
   order: e.sort_order || 0,
   createdAt: e.created_at ? e.created_at.toISOString() : new Date().toISOString(),
@@ -59,6 +61,7 @@ export async function POST(req: Request) {
         title: body.title,
         organization: body.company || body.organization || "",
         description: body.description || "",
+        key_points: body.achievements?.length > 0 ? JSON.stringify(body.achievements.filter(Boolean)) : null,
         start_date,
         end_date: body.current ? null : (end_date || new Date()),
         sort_order: body.order || 0,

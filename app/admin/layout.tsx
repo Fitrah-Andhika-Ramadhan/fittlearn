@@ -155,8 +155,14 @@ export default function AdminLayout({
                 <span className="text-sm font-medium text-white/80">{user?.name}</span>
                 <span className="text-xs text-white/40 capitalize">{user?.role}</span>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-[0_0_12px_rgba(168,85,247,0.4)] border border-white/20 flex-shrink-0">
-                <span className="text-white text-sm font-bold">{user?.name?.charAt(0).toUpperCase() || 'A'}</span>
+              <div className="relative group cursor-pointer flex-shrink-0 ml-2">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-blue-500 rounded-full blur opacity-60 group-hover:opacity-100 transition duration-500"></div>
+                <div className="relative w-10 h-10 rounded-full bg-[#0a0812] border border-white/10 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20 z-0"></div>
+                  <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-br from-purple-200 to-blue-200 text-lg font-bold drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]">
+                    {user?.name?.charAt(0).toUpperCase() || 'A'}
+                  </span>
+                </div>
               </div>
             </div>
           </header>

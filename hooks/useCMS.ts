@@ -327,6 +327,89 @@ export function useCMSExperiences() {
 }
 
 // ─────────────────────────────────────────
+// Education
+// ─────────────────────────────────────────
+export function useCMSEducation() {
+  const [educationList, setEducationList] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const syncTrigger = useCMSSync()
+  const isFirstLoad = useRef(true)
+
+  const fetchEducation = useCallback(async (force = false) => {
+    const cacheKey = "education"
+    if (!force) {
+      const cached = getCached(cacheKey)
+      if (cached) {
+        setEducationList(cached)
+        setLoading(false)
+        return
+      }
+    }
+    if (isFirstLoad.current) setLoading(true)
+    try {
+      const data = await fetchDedup("/api/education")
+      setEducationList(data)
+      setCache(cacheKey, data)
+    } catch (err) {
+      console.error("Education fetch error:", err)
+    } finally {
+      setLoading(false)
+      isFirstLoad.current = false
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchEducation(syncTrigger > 0)
+  }, [fetchEducation, syncTrigger])
+
+  const createEducation = async (education: any) => {
+    const res = await fetch("/api/education", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(education),
+    })
+    const newEdu = await res.json()
+    invalidateCache("education")
+    setEducationList((prev) => [...prev, newEdu])
+    window.dispatchEvent(new CustomEvent("cms-data-changed"))
+    return newEdu
+  }
+
+  const updateEducation = async (id: string, updates: any) => {
+    const res = await fetch(`/api/education/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    })
+    const updated = await res.json()
+    invalidateCache("education")
+    setEducationList((prev) => prev.map((e) => (e.id === id ? updated : e)))
+    window.dispatchEvent(new CustomEvent("cms-data-changed"))
+    return updated
+  }
+
+  const deleteEducation = async (id: string) => {
+    const res = await fetch(`/api/education/${id}`, { method: "DELETE" })
+    if (res.ok) {
+      invalidateCache("education")
+      setEducationList((prev) => prev.filter((e) => e.id !== id))
+      window.dispatchEvent(new CustomEvent("cms-data-changed"))
+      return true
+    }
+    return false
+  }
+
+  return {
+    educationList,
+    loading,
+    createEducation,
+    updateEducation,
+    deleteEducation,
+    refreshEducation: () => fetchEducation(true),
+  }
+}
+
+// ─────────────────────────────────────────
 // Settings / Profile
 // ─────────────────────────────────────────
 export function useCMSSettings() {

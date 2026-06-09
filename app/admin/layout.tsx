@@ -14,6 +14,7 @@ const sidebarItems = [
   { href: "/admin/projects", icon: FolderOpen, label: "Projects" },
   { href: "/admin/skills", icon: User, label: "Skills" },
   { href: "/admin/experience", icon: BookOpen, label: "Experience" },
+  { href: "/admin/education", icon: BookOpen, label: "Education" },
   { href: "/admin/files", icon: FileText, label: "Study Files" },
   { href: "/admin/blog", icon: FileText, label: "Blog" },
   { href: "/admin/settings", icon: Settings, label: "Settings" },

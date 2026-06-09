@@ -38,12 +38,12 @@ export function PortfolioShell({ children }: { children: React.ReactNode }) {
         <nav className="hidden lg:flex items-center space-x-16 ml-16 text-xs font-medium tracking-widest uppercase text-white/70 pointer-events-auto">
           <Link href="/" className="hover:text-purple-400 transition text-white">Home</Link>
           <Link href="/about" className="hover:text-purple-400 transition">About</Link>
-          <div className="w-12 h-12 rounded-full border border-purple-500/50 flex items-center justify-center text-2xl font-serif text-purple-400 mx-8 shadow-[0_0_15px_rgba(168,85,247,0.3)] bg-purple-900/20 backdrop-blur-sm">S</div>
+          <div className="w-12 h-12 rounded-full border border-purple-500/50 flex items-center justify-center text-2xl font-serif text-purple-400 mx-8 shadow-[0_0_15px_rgba(168,85,247,0.3)] bg-purple-900/20 backdrop-blur-sm">F</div>
           <Link href="/portfolio" className="hover:text-purple-400 transition">Work</Link>
           <Link href="/contact" className="hover:text-purple-400 transition">Contact</Link>
         </nav>
         {/* Mobile Logo */}
-        <div className="flex lg:hidden w-10 h-10 rounded-full border border-purple-500/50 items-center justify-center text-xl font-serif text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.3)] bg-purple-900/20 backdrop-blur-sm pointer-events-auto mt-2">S</div>
+        <div className="flex lg:hidden w-10 h-10 rounded-full border border-purple-500/50 items-center justify-center text-xl font-serif text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.3)] bg-purple-900/20 backdrop-blur-sm pointer-events-auto mt-2">F</div>
       </header>
 
       {/* Main Content Area */}

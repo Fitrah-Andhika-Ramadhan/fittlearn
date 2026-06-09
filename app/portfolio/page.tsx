@@ -7,7 +7,7 @@ import Image from "next/image"
 
 import { prisma } from "@/lib/prisma"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 30
 
 export default async function PortfolioPage() {
   // Fetch real data from Database concurrently

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { revalidatePath } from "next/cache";
 
 const mapProject = (p: any) => ({
   id: p.id,
@@ -88,6 +89,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       }
     });
 
+    revalidatePath("/portfolio");
+    revalidatePath("/");
     return NextResponse.json(mapProject(project));
   } catch (error) {
     console.error("Failed to update project:", error);
@@ -104,6 +107,8 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       where: { id: params.id }
     });
 
+    revalidatePath("/portfolio");
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete project" }, { status: 500 });

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { revalidatePath } from "next/cache";
 
 const mapProject = (p: any) => ({
   id: p.id,
@@ -85,6 +86,8 @@ export async function POST(req: Request) {
       }
     });
 
+    revalidatePath("/portfolio");
+    revalidatePath("/");
     return NextResponse.json(mapProject(project), { status: 201 });
   } catch (error) {
     console.error("Failed to create project:", error);

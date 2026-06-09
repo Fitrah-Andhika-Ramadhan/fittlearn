@@ -10,12 +10,21 @@ import { prisma } from "@/lib/prisma"
 export const dynamic = "force-dynamic"
 
 export default async function PortfolioPage() {
-  // Fetch real data from Database
-  const dbProjects = await prisma.project.findMany({
-    where: { status: "published" },
-    orderBy: { sort_order: "asc" },
-    include: { techs: { include: { tech: true } } }
-  });
+  // Fetch real data from Database concurrently
+  const [dbProjects, dbSkills, dbExperiences, dbProfile] = await Promise.all([
+    prisma.project.findMany({
+      where: { status: "published" },
+      orderBy: { sort_order: "asc" },
+      include: { techs: { include: { tech: true } } }
+    }),
+    prisma.skill.findMany({
+      orderBy: { sort_order: "asc" }
+    }),
+    prisma.experience.findMany({
+      orderBy: { sort_order: "asc" }
+    }),
+    prisma.profile.findFirst()
+  ]);
 
   const projects = dbProjects.map(p => ({
     title: p.title,
@@ -26,10 +35,6 @@ export default async function PortfolioPage() {
     image: p.thumbnail_url || "/placeholder.svg?height=200&width=300",
   }));
 
-  const dbSkills = await prisma.skill.findMany({
-    orderBy: { sort_order: "asc" }
-  });
-  
   const skills = dbSkills.length > 0 ? dbSkills : [
     { name: "JavaScript", level: 90 },
     { name: "TypeScript", level: 85 },
@@ -38,10 +43,6 @@ export default async function PortfolioPage() {
     { name: "Laravel/PHP", level: 80 },
     { name: "MySQL/PostgreSQL", level: 85 },
   ];
-
-  const dbExperiences = await prisma.experience.findMany({
-    orderBy: { sort_order: "asc" }
-  });
 
   const experiences = dbExperiences.filter(e => e.type === "work" || e.type === "achievement").length > 0 
     ? dbExperiences.filter(e => e.type === "work" || e.type === "achievement").map(e => ({
@@ -62,8 +63,6 @@ export default async function PortfolioPage() {
       ],
     }
   ];
-
-  const dbProfile = await prisma.profile.findFirst();
 
   const profile = dbProfile ? {
     name: dbProfile.name || "Fitrah Andhika Ramadhan",

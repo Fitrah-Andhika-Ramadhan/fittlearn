@@ -20,7 +20,7 @@ import { useCMSEducation } from "@/hooks/useCMS"
 import type { CMSEducation } from "@/lib/types"
 
 export default function AdminEducation() {
-  const { educations, createEducation, updateEducation, deleteEducation } = useCMSEducation()
+  const { educationList: educations, createEducation, updateEducation, deleteEducation } = useCMSEducation()
   const [searchTerm, setSearchTerm] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)

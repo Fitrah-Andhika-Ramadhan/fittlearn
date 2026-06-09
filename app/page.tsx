@@ -115,14 +115,14 @@ export default async function HomePage() {
               <p>✉️ {email}</p>
             </div>
           </div>
-          <div className="w-full sm:w-7/12 space-y-3">
+          <form action={`mailto:${email}`} method="post" encType="text/plain" className="w-full sm:w-7/12 space-y-3">
             <h3 className="text-sm font-bold mb-4 text-white">Send me a message</h3>
-            <input type="text" placeholder="Name" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10" />
-            <input type="email" placeholder="Email Address" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10" />
-            <input type="text" placeholder="Subject" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10" />
-            <textarea placeholder="Your message" rows={3} className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition resize-none focus:bg-white/10"></textarea>
-            <button className="w-2/3 py-2.5 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition text-xs font-bold mt-2 shadow-[0_0_15px_rgba(168,85,247,0.3)]">Send Message</button>
-          </div>
+            <input name="Name" type="text" placeholder="Name" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
+            <input name="Email" type="email" placeholder="Email Address" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
+            <input name="Subject" type="text" placeholder="Subject" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
+            <textarea name="Message" placeholder="Your message" rows={3} required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition resize-none focus:bg-white/10 text-white"></textarea>
+            <button type="submit" className="w-2/3 py-2.5 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition text-xs font-bold mt-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] text-white">Send Message</button>
+          </form>
         </div>
       </div>
     </div>

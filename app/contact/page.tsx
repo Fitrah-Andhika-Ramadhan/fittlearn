@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
-import { Mail, Phone, MapPin, Send } from "lucide-react"
+import { Mail, Phone, MapPin } from "lucide-react"
+import { ClientContactForm } from "@/components/client-contact-form"
 
 export const dynamic = "force-dynamic"
 
@@ -50,54 +51,7 @@ export default async function ContactPage() {
             {/* Message Form */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
               <h2 className="text-2xl font-bold text-white mb-6">Send a Message</h2>
-              <form action={`mailto:${email}`} method="post" encType="text/plain" className="space-y-4">
-                <div>
-                  <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Your Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    placeholder={`Message to ${name}`}
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Your Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    placeholder="your@email.com"
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Subject</label>
-                  <input
-                    type="text"
-                    name="subject"
-                    placeholder="What is this about?"
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Message</label>
-                  <textarea
-                    name="message"
-                    rows={4}
-                    required
-                    placeholder="Write your message here..."
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition resize-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 transition font-semibold text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-                >
-                  <Send className="w-4 h-4" />
-                  Send Message
-                </button>
-              </form>
+              <ClientContactForm email={email} variant="contact" />
             </div>
           </div>
         </div>

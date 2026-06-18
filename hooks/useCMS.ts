@@ -453,14 +453,83 @@ export function useCMSSettings() {
 // ─────────────────────────────────────────
 export function useCMSBlog() {
   const [posts, setPosts] = useState<BlogPost[]>([])
+  const [loading, setLoading] = useState(true)
+  const syncTrigger = useCMSSync()
+  const isFirstLoad = useRef(true)
+
+  const fetchPosts = useCallback(async (force = false) => {
+    const cacheKey = "blog_posts"
+    if (!force) {
+      const cached = getCached(cacheKey)
+      if (cached) {
+        setPosts(cached)
+        setLoading(false)
+        return
+      }
+    }
+    if (isFirstLoad.current) setLoading(true)
+    try {
+      const data = await fetchDedup("/api/blog")
+      setPosts(data)
+      setCache(cacheKey, data)
+    } catch (err) {
+      console.error("Blog fetch error:", err)
+    } finally {
+      setLoading(false)
+      isFirstLoad.current = false
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchPosts(syncTrigger > 0)
+  }, [fetchPosts, syncTrigger])
+
+  const createPost = async (post: any) => {
+    const res = await fetch("/api/blog", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(post),
+    })
+    if (!res.ok) throw new Error("Failed to create post")
+    const newPost = await res.json()
+    invalidateCache("blog_posts")
+    setPosts((prev) => [newPost, ...prev])
+    window.dispatchEvent(new CustomEvent("cms-data-changed"))
+    return newPost
+  }
+
+  const updatePost = async (id: string, updates: any) => {
+    const res = await fetch(`/api/blog/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    })
+    if (!res.ok) throw new Error("Failed to update post")
+    const updated = await res.json()
+    invalidateCache("blog_posts")
+    setPosts((prev) => prev.map((p) => (p.id === id ? updated : p)))
+    window.dispatchEvent(new CustomEvent("cms-data-changed"))
+    return updated
+  }
+
+  const deletePost = async (id: string) => {
+    const res = await fetch(`/api/blog/${id}`, { method: "DELETE" })
+    if (res.ok) {
+      invalidateCache("blog_posts")
+      setPosts((prev) => prev.filter((p) => p.id !== id))
+      window.dispatchEvent(new CustomEvent("cms-data-changed"))
+      return true
+    }
+    return false
+  }
 
   return {
     posts,
-    loading: false,
-    createPost: (_: any) => Promise.resolve(null),
-    updatePost: (_id: string, _updates: any) => Promise.resolve(null),
-    deletePost: (_id: string) => Promise.resolve(false),
-    getPublishedPosts: () => [],
-    refreshPosts: () => {},
+    loading,
+    createPost,
+    updatePost,
+    deletePost,
+    getPublishedPosts: () => posts.filter((p) => p.status === "published"),
+    refreshPosts: () => fetchPosts(true),
   }
 }

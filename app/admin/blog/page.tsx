@@ -290,7 +290,7 @@ export default function AdminBlog() {
                   <p className="text-white/60 mb-4 line-clamp-2 leading-relaxed">{post.excerpt}</p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.map((tag, index) => (
+                    {(post.tags || []).map((tag, index) => (
                       <Badge key={index} variant="secondary" className="text-xs bg-purple-500/20 text-purple-300 border border-purple-500/30">
                         <Tag className="h-3 w-3 mr-1" />
                         {tag}

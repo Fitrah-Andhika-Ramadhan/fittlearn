@@ -35,7 +35,7 @@ function invalidateCache(key: string) {
 const inflight: Record<string, Promise<any>> = {}
 
 async function fetchDedup(url: string) {
-  if (inflight[url]) return inflight[url]
+  if (url in inflight) return inflight[url]
   inflight[url] = fetch(url, { cache: "no-store" })
     .then((r) => r.json())
     .finally(() => delete inflight[url])
@@ -153,7 +153,7 @@ export function useCMSProjects() {
     createProject,
     updateProject,
     deleteProject,
-    getFeaturedProjects: () => projects.filter((p) => p.is_featured && p.status === "published"),
+    getFeaturedProjects: () => projects.filter((p) => p.featured && p.status === "published"),
     getPublishedProjects: () => projects.filter((p) => p.status === "published"),
     refreshProjects: () => fetchProjects(true),
   }

@@ -48,7 +48,7 @@ export default async function PortfolioPage() {
     ? dbExperiences.filter(e => e.type === "work" || e.type === "achievement").map(e => ({
         title: e.title,
         company: e.organization,
-        period: `${e.start_date.getFullYear()} - ${e.end_date ? (e.end_date.getFullYear() === e.start_date.getFullYear() ? 'Present' : e.end_date.getFullYear()) : 'Present'}`,
+        period: `${e.start_date.getFullYear()} - ${e.end_date ? e.end_date.getFullYear() : 'Present'}`,
         description: e.description || "",
         achievements: (() => {
           try { return e.key_points ? JSON.parse(e.key_points) : [] } catch { return [] }
@@ -100,7 +100,7 @@ export default async function PortfolioPage() {
     ? dbExperiences.filter(e => e.type === "education").map(e => ({
         degree: e.title,
         school: e.organization,
-        period: `${e.start_date.getFullYear()} - ${e.end_date ? (e.end_date.getFullYear() === e.start_date.getFullYear() ? 'Present' : e.end_date.getFullYear()) : 'Present'}`,
+        period: `${e.start_date.getFullYear()} - ${e.end_date ? e.end_date.getFullYear() : 'Present'}`,
         gpa: e.description || "3.64/4.00",
         achievements: (() => {
           try { return e.key_points ? JSON.parse(e.key_points) : [] } catch { return [] }
@@ -277,7 +277,7 @@ export default async function PortfolioPage() {
                     <div>
                       <h4 className="font-medium mb-2 text-white text-sm">Key Activities:</h4>
                       <ul className="space-y-1">
-                        {exp.achievements.map((achievement, achIndex) => (
+                        {exp.achievements.map((achievement: string, achIndex: number) => (
                           <li key={achIndex} className="flex items-start text-sm text-purple-200">
                             <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                             {achievement}
@@ -322,7 +322,7 @@ export default async function PortfolioPage() {
                   <div>
                     <h4 className="font-medium mb-2 text-white">Current Focus:</h4>
                     <ul className="space-y-1">
-                      {edu.achievements.map((achievement, achIndex) => (
+                      {edu.achievements.map((achievement: string, achIndex: number) => (
                         <li key={achIndex} className="flex items-start text-sm text-purple-200">
                           <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                           {achievement}

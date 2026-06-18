@@ -85,7 +85,7 @@ export default function AdminEducation() {
       degree: education.degree,
       school: education.school,
       period: education.period,
-      gpa: education.gpa,
+      gpa: education.gpa || "",
       achievements: education.achievements.length > 0 ? education.achievements : [""],
       current: education.current,
       order: education.order,
@@ -273,7 +273,7 @@ export default function AdminEducation() {
                       Key Achievements:
                     </h4>
                     <ul className="space-y-2">
-                      {education.achievements.map((achievement, index) => (
+                      {education.achievements.map((achievement: string, index: number) => (
                         <li key={index} className="flex items-start text-sm text-white/70 bg-white/5 p-3 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
                           <span className="inline-block w-2 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mt-1.5 mr-3 flex-shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.6)]"></span>
                           {achievement}
@@ -336,7 +336,7 @@ export default function AdminEducation() {
                       Key Achievements:
                     </h4>
                     <ul className="space-y-2">
-                      {education.achievements.map((achievement, index) => (
+                      {education.achievements.map((achievement: string, index: number) => (
                         <li key={index} className="flex items-start text-sm text-white/70 bg-white/5 p-3 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
                           <span className="inline-block w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mt-1.5 mr-3 flex-shrink-0 shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
                           {achievement}

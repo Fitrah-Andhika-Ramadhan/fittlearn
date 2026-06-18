@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FolderOpen, User, BookOpen, FileText, Eye, TrendingUp, Users, ArrowRight } from "lucide-react"
@@ -11,6 +12,31 @@ export default function AdminDashboard() {
   const { skills } = useCMSSkills()
   const { experiences } = useCMSExperiences()
   const { posts } = useCMSBlog()
+
+  const [analytics, setAnalytics] = useState({
+    totalViews: 0,
+    uniqueVisitors: 0,
+    recentVisitors: [] as any[],
+  })
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const res = await fetch("/api/analytics/stats")
+        if (res.ok) {
+          const data = await res.json()
+          setAnalytics(data)
+        }
+      } catch (err) {
+        console.error("Failed to fetch analytics", err)
+      }
+    }
+
+    fetchAnalytics()
+    const interval = setInterval(fetchAnalytics, 5000) // Poll every 5s
+    return () => clearInterval(interval)
+  }, [])
+
 
   const stats = [
     {
@@ -204,9 +230,10 @@ export default function AdminDashboard() {
         <p className="text-white/60 text-sm mb-6 relative z-10">Portfolio performance metrics</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
           {[
-            { icon: Eye, label: "Total Views", value: "1,234", color: "text-blue-300", bg: "bg-blue-500/20", border: "border-blue-400/40", glow: "shadow-[0_0_20px_rgba(59,130,246,0.2)]" },
-            { icon: Users, label: "Unique Visitors", value: "567", color: "text-emerald-300", bg: "bg-emerald-500/20", border: "border-emerald-400/40", glow: "shadow-[0_0_20px_rgba(52,211,153,0.2)]" },
-            { icon: TrendingUp, label: "Growth Rate", value: "+23%", color: "text-purple-300", bg: "bg-purple-500/20", border: "border-purple-400/40", glow: "shadow-[0_0_20px_rgba(168,85,247,0.2)]" },
+            { icon: Eye, label: "Total Views", value: analytics.totalViews.toLocaleString(), color: "text-blue-300", bg: "bg-blue-500/20", border: "border-blue-400/40", glow: "shadow-[0_0_20px_rgba(59,130,246,0.2)]" },
+            { icon: Users, label: "Unique Visitors", value: analytics.uniqueVisitors.toLocaleString(), color: "text-emerald-300", bg: "bg-emerald-500/20", border: "border-emerald-400/40", glow: "shadow-[0_0_20px_rgba(52,211,153,0.2)]" },
+            { icon: TrendingUp, label: "Growth Rate", value: "+0%", color: "text-purple-300", bg: "bg-purple-500/20", border: "border-purple-400/40", glow: "shadow-[0_0_20px_rgba(168,85,247,0.2)]" },
+
           ].map((item) => (
             <div key={item.label} className={`text-center p-6 bg-black/30 rounded-2xl border ${item.border} ${item.glow} hover:bg-black/40 transition-colors`}>
               <div className={`flex items-center justify-center w-14 h-14 ${item.bg} border ${item.border} rounded-2xl mx-auto mb-4`}>
@@ -216,6 +243,39 @@ export default function AdminDashboard() {
               <div className="text-sm font-medium text-white/60 uppercase tracking-wider">{item.label}</div>
             </div>
           ))}
+        </div>
+
+        {/* Recent Visitors Table */}
+        <div className="mt-8 relative z-10">
+          <h3 className="text-md font-semibold text-white mb-4">Recent Visitors</h3>
+          <div className="bg-black/20 border border-white/10 rounded-xl overflow-x-auto custom-scrollbar">
+            <table className="w-full text-left text-sm text-white/70 min-w-[600px]">
+              <thead className="bg-white/5 border-b border-white/10 text-xs uppercase text-white/50">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Path</th>
+                  <th className="px-4 py-3 font-medium">Device / Browser</th>
+                  <th className="px-4 py-3 font-medium">IP Address</th>
+                  <th className="px-4 py-3 font-medium">Time</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {analytics.recentVisitors.length > 0 ? (
+                  analytics.recentVisitors.map((v, i) => (
+                    <tr key={v.id || i} className="hover:bg-white/5 transition-colors">
+                      <td className="px-4 py-3 truncate max-w-[150px]">{v.path}</td>
+                      <td className="px-4 py-3">{v.device} - {v.browser}</td>
+                      <td className="px-4 py-3 font-mono text-xs">{v.ip}</td>
+                      <td className="px-4 py-3 text-xs">{new Date(v.visitedAt).toLocaleString()}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="px-4 py-6 text-center text-white/40">No recent visitors</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

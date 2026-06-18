@@ -7,6 +7,8 @@ import { CMSDataSync } from "@/components/cms-data-sync"
 import { ThemeProvider } from "@/components/theme-provider"
 import { PortfolioShell } from "@/components/portfolio-shell"
 
+import { AnalyticsTracker } from "@/components/analytics-tracker"
+
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -26,6 +28,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <NextAuthProvider>
             <CMSDataSync />
+            <AnalyticsTracker />
             <PortfolioShell>
               {children}
             </PortfolioShell>

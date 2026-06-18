@@ -18,6 +18,8 @@ export default async function HomePage() {
         title: true,
         slug: true,
         thumbnail_url: true,
+        demo_url: true,
+        github_url: true,
       }
     }).catch(() => [])
   ]);
@@ -26,7 +28,8 @@ export default async function HomePage() {
     id: p.id,
     title: p.title,
     slug: p.slug,
-    thumbnail_url: p.thumbnail_url
+    thumbnail_url: p.thumbnail_url,
+    link: p.demo_url && p.demo_url !== "#" ? p.demo_url : (p.github_url || `/portfolio`),
   }));
 
   const name = profile?.name || "Fitrah Andhika Ramadhan";

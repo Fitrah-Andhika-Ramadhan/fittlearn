@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ClientContactForm } from "@/components/client-contact-form";
+import { Guestbook } from "@/components/guestbook";
 
 export const revalidate = 60; // ISR: revalidate every 60s
 
@@ -26,7 +27,8 @@ export default async function HomePage() {
   const portfolioSubtitle = profile?.portfolio_subtitle || "View all projects →";
 
   return (
-    <div className="flex flex-col lg:flex-row relative w-full gap-12 lg:gap-0">
+    <div className="flex flex-col gap-20 w-full pb-10">
+      <div className="flex flex-col lg:flex-row relative w-full gap-12 lg:gap-0">
       {/* Left Section (Hero) */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center relative pb-10 lg:pb-20 pt-10 lg:pt-0">
         <div className="space-y-4 mb-10">
@@ -118,6 +120,12 @@ export default async function HomePage() {
           </div>
           <ClientContactForm email={email} variant="home" />
         </div>
+      </div>
+      </div>
+
+      {/* Guestbook Section */}
+      <div className="w-full relative z-10 px-4 md:px-0">
+        <Guestbook />
       </div>
     </div>
   );

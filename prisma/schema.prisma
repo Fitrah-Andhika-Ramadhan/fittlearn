@@ -166,3 +166,11 @@ model DocumentSummary {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+
+model Guestbook {
+  id         String   @id @default(uuid())
+  name       String
+  message    String
+  is_approved Boolean @default(true)
+  created_at DateTime @default(now())
+}

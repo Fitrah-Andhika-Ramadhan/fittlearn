@@ -2,12 +2,32 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ClientContactForm } from "@/components/client-contact-form";
 import { Guestbook } from "@/components/guestbook";
+import { FeaturedProjectsCarousel } from "@/components/featured-projects-carousel";
 
 export const revalidate = 60; // ISR: revalidate every 60s
 
 export default async function HomePage() {
-  // Fetch profile from DB
-  const profile = await prisma.profile.findFirst().catch(() => null);
+  // Fetch profile and featured projects from DB
+  const [profile, dbFeaturedProjects] = await Promise.all([
+    prisma.profile.findFirst().catch(() => null),
+    prisma.project.findMany({
+      where: { is_featured: true, status: "published" },
+      orderBy: { created_at: "desc" },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        thumbnail_url: true,
+      }
+    }).catch(() => [])
+  ]);
+
+  const featuredProjects = dbFeaturedProjects.map(p => ({
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    thumbnail_url: p.thumbnail_url
+  }));
 
   const name = profile?.name || "Fitrah Andhika Ramadhan";
   const title = profile?.headline || "Web Developer & System Analyst";
@@ -71,40 +91,12 @@ export default async function HomePage() {
       {/* Right Section */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center space-y-12 lg:space-y-16 pb-20">
         
-        {/* Work Preview */}
-        <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
-          <h3 className="text-center text-lg font-semibold mb-8">{portfolioTitle}</h3>
-          <div className="flex justify-center items-end space-x-6">
-            <div className="w-28 h-40 bg-gradient-to-b from-blue-900/40 to-purple-900/40 rounded-xl flex flex-col items-center justify-center p-3 opacity-60 scale-90 border border-white/5 shadow-inner">
-              <div className="w-full h-full bg-black/40 rounded-lg mb-2 overflow-hidden flex items-center justify-center">
-                <div className="w-16 h-10 bg-blue-500/30 rounded"></div>
-              </div>
-              <div className="text-xs font-medium">Mockups</div>
-            </div>
-            <div className="w-40 h-56 bg-gradient-to-b from-slate-800 to-indigo-950 rounded-2xl border border-purple-500/50 shadow-[0_0_40px_rgba(168,85,247,0.4)] flex flex-col items-center justify-start p-3 z-10 relative">
-              <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-purple-500/20 to-transparent rounded-t-2xl pointer-events-none"></div>
-              <div className="w-full flex justify-between space-x-2 mt-2">
-                <div className="w-1/3 h-28 bg-black rounded-lg border border-white/10"></div>
-                <div className="w-1/3 h-32 bg-black rounded-lg border border-white/10 -mt-2 shadow-lg"></div>
-                <div className="w-1/3 h-28 bg-black rounded-lg border border-white/10"></div>
-              </div>
-              <div className="text-sm font-bold mt-auto mb-2 text-white">UI Designs</div>
-              <div className="w-1/2 h-1 bg-purple-500/50 rounded-full mb-1"></div>
-            </div>
-            <div className="w-28 h-40 bg-gradient-to-b from-pink-900/40 to-purple-900/40 rounded-xl flex flex-col items-center justify-center p-3 opacity-60 scale-90 border border-white/5 shadow-inner">
-              <div className="w-full h-full bg-black/40 rounded-lg mb-2 overflow-hidden flex flex-col items-center justify-center">
-                <div className="w-12 h-16 bg-pink-500/30 rounded rotate-12"></div>
-              </div>
-              <div className="text-xs font-medium">Mockups</div>
-            </div>
-          </div>
-          <div className="text-center mt-6">
-            <Link href="/portfolio" className="text-sm text-purple-300 hover:text-purple-200 transition underline underline-offset-4">
-              {portfolioSubtitle}
-            </Link>
-          </div>
-        </div>
+        {/* Dynamic Featured Projects Carousel */}
+        <FeaturedProjectsCarousel 
+          title={portfolioTitle} 
+          subtitle={portfolioSubtitle} 
+          projects={featuredProjects} 
+        />
 
         {/* Contact */}
         <div className="w-full max-w-lg bg-[#1a153a]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row gap-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">

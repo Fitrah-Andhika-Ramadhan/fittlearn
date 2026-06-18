@@ -3,7 +3,7 @@
 import type React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { User, Briefcase, Phone, Search, Home } from "lucide-react"
+import { User, Briefcase, Phone, Search, Home, Book } from "lucide-react"
 
 export function PortfolioShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -29,6 +29,7 @@ export function PortfolioShell({ children }: { children: React.ReactNode }) {
         <Link href="/" className="p-2 lg:p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition shadow-inner"><Home size={20}/></Link>
         <Link href="/dashboard" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition"><User size={20}/></Link>
         <Link href="/portfolio" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition"><Briefcase size={20}/></Link>
+        <Link href="/blog" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition"><Book size={20}/></Link>
         <Link href="/contact" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition"><Phone size={20}/></Link>
         <Link href="/summarizer" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition"><Search size={20}/></Link>
       </aside>
@@ -40,6 +41,7 @@ export function PortfolioShell({ children }: { children: React.ReactNode }) {
           <Link href="/about" className="hover:text-purple-400 transition">About</Link>
           <div className="w-12 h-12 rounded-full border border-purple-500/50 flex items-center justify-center text-2xl font-serif text-purple-400 mx-8 shadow-[0_0_15px_rgba(168,85,247,0.3)] bg-purple-900/20 backdrop-blur-sm">F</div>
           <Link href="/portfolio" className="hover:text-purple-400 transition">Work</Link>
+          <Link href="/blog" className="hover:text-purple-400 transition">Blog</Link>
           <Link href="/contact" className="hover:text-purple-400 transition">Contact</Link>
         </nav>
         {/* Mobile Logo */}

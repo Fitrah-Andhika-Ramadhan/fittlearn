@@ -75,7 +75,7 @@ export function CustomSvgAnimation({ lang = 'en' }: { lang?: string }) {
           y: isTurbo ? [0, 2, -2, 0] : [0, -10, 0] // Shakes when turbo
         }}
         transition={{ duration: isTurbo ? 0.2 : 6, repeat: Infinity, ease: "easeInOut" }}
-        className="relative w-[350px] h-[350px] transform-style-3d"
+        className="relative w-full max-w-[350px] aspect-square transform-style-3d"
       >
         {/* Floating Hologram Screens (Background) */}
         <motion.div 

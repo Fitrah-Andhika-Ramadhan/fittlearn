@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -23,6 +23,15 @@ export default function SummarizerPage() {
 
   const { createSummary } = useSummaries()
   const router = useRouter()
+  const [lang, setLang] = useState('en')
+
+  useEffect(() => {
+    const cookies = document.cookie.split(';');
+    const localeCookie = cookies.find(c => c.trim().startsWith('NEXT_LOCALE='));
+    if (localeCookie) {
+      setLang(localeCookie.split('=')[1]);
+    }
+  }, [])
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0]
@@ -119,8 +128,8 @@ export default function SummarizerPage() {
       <div className="w-full py-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-md">Document Summarizer</h1>
-            <p className="text-purple-200">Upload your PDF or Word document to get an intelligent summary</p>
+            <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-md">{lang === 'id' ? 'Ringkasan Dokumen' : 'Document Summarizer'}</h1>
+            <p className="text-purple-200">{lang === 'id' ? 'Unggah dokumen PDF atau Word Anda untuk mendapatkan ringkasan cerdas' : 'Upload your PDF or Word document to get an intelligent summary'}</p>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
@@ -129,13 +138,13 @@ export default function SummarizerPage() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Upload className="mr-2 h-5 w-5" />
-                  Upload Document
+                  {lang === 'id' ? 'Unggah Dokumen' : 'Upload Document'}
                 </CardTitle>
-                <CardDescription>Select a PDF or Word document to summarize</CardDescription>
+                <CardDescription>{lang === 'id' ? 'Pilih dokumen PDF atau Word untuk diringkas' : 'Select a PDF or Word document to summarize'}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="file">Choose File</Label>
+                  <Label htmlFor="file">{lang === 'id' ? 'Pilih File' : 'Choose File'}</Label>
                   <Input id="file" type="file" accept=".pdf,.doc,.docx" onChange={handleFileUpload} className="mt-1" />
                 </div>
 
@@ -153,12 +162,12 @@ export default function SummarizerPage() {
                   {isProcessing ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing Document...
+                      {lang === 'id' ? 'Memproses Dokumen...' : 'Processing Document...'}
                     </>
                   ) : (
                     <>
                       <Brain className="mr-2 h-4 w-4" />
-                      Generate Summary
+                      {lang === 'id' ? 'Buat Ringkasan' : 'Generate Summary'}
                     </>
                   )}
                 </Button>
@@ -168,24 +177,24 @@ export default function SummarizerPage() {
             {/* Summary Results */}
             <Card className="bg-white/5 border-white/10 backdrop-blur-md shadow-xl text-white">
               <CardHeader>
-                <CardTitle>Summary Results</CardTitle>
-                <CardDescription>AI-generated summary and key points</CardDescription>
+                <CardTitle>{lang === 'id' ? 'Hasil Ringkasan' : 'Summary Results'}</CardTitle>
+                <CardDescription>{lang === 'id' ? 'Ringkasan dan poin penting buatan AI' : 'AI-generated summary and key points'}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {summary ? (
                   <>
                     <div>
-                      <Label htmlFor="title">Document Title</Label>
+                      <Label htmlFor="title">{lang === 'id' ? 'Judul Dokumen' : 'Document Title'}</Label>
                       <Input
                         id="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Enter document title"
+                        placeholder={lang === 'id' ? 'Masukkan judul dokumen' : 'Enter document title'}
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="summary">Summary</Label>
+                      <Label htmlFor="summary">{lang === 'id' ? 'Ringkasan' : 'Summary'}</Label>
                       <Textarea
                         id="summary"
                         value={summary}
@@ -196,7 +205,7 @@ export default function SummarizerPage() {
                     </div>
 
                     <div>
-                      <Label>Key Points</Label>
+                      <Label>{lang === 'id' ? 'Poin Penting' : 'Key Points'}</Label>
                       <div className="mt-2 space-y-2">
                         {keyPoints.map((point, index) => (
                           <div key={index} className="flex items-start">
@@ -218,7 +227,7 @@ export default function SummarizerPage() {
                           onClick={() => setKeyPoints([...keyPoints, ""])}
                           className="mt-2"
                         >
-                          Add Key Point
+                          {lang === 'id' ? 'Tambah Poin Penting' : 'Add Key Point'}
                         </Button>
                       </div>
                     </div>
@@ -228,25 +237,25 @@ export default function SummarizerPage() {
                         {isSaving ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving...
+                            {lang === 'id' ? 'Menyimpan...' : 'Saving...'}
                           </>
                         ) : (
                           <>
                             <Save className="mr-2 h-4 w-4" />
-                            Save Summary
+                            {lang === 'id' ? 'Simpan Ringkasan' : 'Save Summary'}
                           </>
                         )}
                       </Button>
                       <Button variant="outline" className="flex-1 bg-transparent" onClick={handleExport}>
                         <Download className="mr-2 h-4 w-4" />
-                        Export
+                        {lang === 'id' ? 'Ekspor' : 'Export'}
                       </Button>
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-8 text-white/50">
                     <FileText className="h-12 w-12 mx-auto mb-4 text-white/20" />
-                    <p>Upload a document to see the summary here</p>
+                    <p>{lang === 'id' ? 'Unggah dokumen untuk melihat ringkasan di sini' : 'Upload a document to see the summary here'}</p>
                   </div>
                 )}
               </CardContent>

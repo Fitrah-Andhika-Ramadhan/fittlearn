@@ -5,6 +5,7 @@ import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { Calendar, Eye, Heart, Tag, ArrowLeft, Clock } from "lucide-react"
+import { cookies } from "next/headers"
 
 export const revalidate = 60 // Revalidate every minute
 
@@ -14,6 +15,9 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
+  
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('NEXT_LOCALE')?.value || 'id'
 
   const post = await prisma.blogPost.findUnique({
     where: { slug },
@@ -42,7 +46,7 @@ export default async function BlogPostPage({
           className="inline-flex items-center text-sm text-purple-400 hover:text-purple-300 transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Kembali ke Blog
+          {lang === 'id' ? 'Kembali ke Blog' : 'Back to Blog'}
         </Link>
 
         {post.category && (
@@ -61,16 +65,16 @@ export default async function BlogPostPage({
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
             <time dateTime={post.createdAt.toISOString()}>
-              {post.createdAt.toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}
+              {post.createdAt.toLocaleDateString(lang === 'id' ? "id-ID" : "en-US", { day: 'numeric', month: 'long', year: 'numeric' })}
             </time>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
-            <span>{readingTime} min read</span>
+            <span>{readingTime} {lang === 'id' ? 'mnt baca' : 'min read'}</span>
           </div>
           <div className="flex items-center gap-2">
             <Eye className="w-4 h-4" />
-            <span>{post.views + 1} views</span>
+            <span>{post.views + 1} {lang === 'id' ? 'dilihat' : 'views'}</span>
           </div>
         </div>
       </header>

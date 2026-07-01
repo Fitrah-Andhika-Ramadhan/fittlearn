@@ -12,7 +12,16 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "sans-serif"],
+        heading: ["var(--font-plus-jakarta)", "sans-serif"],
+      },
   		colors: {
+        // Cosmic Catalyst Palette
+        'cosmic-indigo': '#0F0C29',
+        'electric-blue': '#6366F1',
+        'vibrant-purple': '#A855F7',
+        'soft-pink': '#EC4899',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

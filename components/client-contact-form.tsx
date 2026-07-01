@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Send } from "lucide-react"
 
-export function ClientContactForm({ email, variant = "home" }: { email: string, variant?: "home" | "contact" }) {
+export function ClientContactForm({ email, variant = "home", lang = 'en' }: { email: string, variant?: "home" | "contact", lang?: string }) {
   const [formData, setFormData] = useState({
     name: "",
     emailAddress: "",
@@ -30,18 +30,18 @@ export function ClientContactForm({ email, variant = "home" }: { email: string, 
     return (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Your Name</label>
+          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">{lang === 'id' ? 'Nama Anda' : 'Your Name'}</label>
           <input
             type="text"
             name="name"
             required
             onChange={handleChange}
-            placeholder="Your name"
+            placeholder={lang === 'id' ? 'Nama Anda' : 'Your name'}
             className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition"
           />
         </div>
         <div>
-          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Your Email</label>
+          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">{lang === 'id' ? 'Email Anda' : 'Your Email'}</label>
           <input
             type="email"
             name="emailAddress"
@@ -52,23 +52,23 @@ export function ClientContactForm({ email, variant = "home" }: { email: string, 
           />
         </div>
         <div>
-          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Subject</label>
+          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">{lang === 'id' ? 'Subjek' : 'Subject'}</label>
           <input
             type="text"
             name="subject"
             onChange={handleChange}
-            placeholder="What is this about?"
+            placeholder={lang === 'id' ? 'Tentang apa ini?' : 'What is this about?'}
             className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition"
           />
         </div>
         <div>
-          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">Message</label>
+          <label className="block text-xs text-purple-300/70 uppercase tracking-widest mb-1.5">{lang === 'id' ? 'Pesan' : 'Message'}</label>
           <textarea
             name="message"
             rows={4}
             required
             onChange={handleChange}
-            placeholder="Write your message here..."
+            placeholder={lang === 'id' ? 'Tulis pesan Anda di sini...' : 'Write your message here...'}
             className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition resize-none"
           />
         </div>
@@ -77,7 +77,7 @@ export function ClientContactForm({ email, variant = "home" }: { email: string, 
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 transition font-semibold text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]"
         >
           <Send className="w-4 h-4" />
-          Send Message
+          {lang === 'id' ? 'Kirim Pesan' : 'Send Message'}
         </button>
       </form>
     )
@@ -86,12 +86,14 @@ export function ClientContactForm({ email, variant = "home" }: { email: string, 
   // Home variant
   return (
     <form onSubmit={handleSubmit} className="w-full sm:w-7/12 space-y-3">
-      <h3 className="text-sm font-bold mb-4 text-white">Send me a message</h3>
-      <input name="name" onChange={handleChange} type="text" placeholder="Name" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
-      <input name="emailAddress" onChange={handleChange} type="email" placeholder="Email Address" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
-      <input name="subject" onChange={handleChange} type="text" placeholder="Subject" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
-      <textarea name="message" onChange={handleChange} placeholder="Your message" rows={3} required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition resize-none focus:bg-white/10 text-white"></textarea>
-      <button type="submit" className="w-2/3 py-2.5 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition text-xs font-bold mt-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] text-white">Send Message</button>
+      <h3 className="text-sm font-bold mb-4 text-white">{lang === 'id' ? 'Kirim saya pesan' : 'Send me a message'}</h3>
+      <input name="name" onChange={handleChange} type="text" placeholder={lang === 'id' ? 'Nama' : 'Name'} required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
+      <input name="emailAddress" onChange={handleChange} type="email" placeholder={lang === 'id' ? 'Alamat Email' : 'Email Address'} required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
+      <input name="subject" onChange={handleChange} type="text" placeholder={lang === 'id' ? 'Subjek' : 'Subject'} className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition focus:bg-white/10 text-white" />
+      <textarea name="message" onChange={handleChange} placeholder={lang === 'id' ? 'Pesan Anda' : 'Your message'} rows={3} required className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-xs outline-none focus:border-purple-500 transition resize-none focus:bg-white/10 text-white"></textarea>
+      <button type="submit" className="w-2/3 py-2.5 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition text-xs font-bold mt-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] text-white">
+        {lang === 'id' ? 'Kirim Pesan' : 'Send Message'}
+      </button>
     </form>
   )
 }

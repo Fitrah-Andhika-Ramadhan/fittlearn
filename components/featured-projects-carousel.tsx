@@ -22,6 +22,15 @@ interface FeaturedProjectsCarouselProps {
 
 export function FeaturedProjectsCarousel({ title, subtitle, projects }: FeaturedProjectsCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [lang, setLang] = useState('en');
+
+  useEffect(() => {
+    const cookies = document.cookie.split(';');
+    const localeCookie = cookies.find(c => c.trim().startsWith('NEXT_LOCALE='));
+    if (localeCookie) {
+      setLang(localeCookie.split('=')[1]);
+    }
+  }, []);
 
   // Fallback if no projects exist
   const displayProjects = projects.length >= 3 ? projects : [
@@ -51,12 +60,12 @@ export function FeaturedProjectsCarousel({ title, subtitle, projects }: Featured
   }, [displayProjects.length]);
 
   return (
-    <div className="w-full max-w-3xl bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 sm:p-10 shadow-2xl relative overflow-visible group">
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-[2rem]"></div>
+    <div className="w-full glass-card rounded-[2.5rem] p-8 sm:p-12 relative overflow-visible group">
+      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-[2.5rem]"></div>
       
-      <h3 className="text-center text-xl font-bold text-white mb-10">{title}</h3>
+      <h3 className="text-center text-2xl font-bold text-white mb-12 tracking-wide">{title}</h3>
       
-      <div className="relative h-48 sm:h-64 w-full flex items-center justify-center perspective-[1200px]">
+      <div className="relative h-64 sm:h-80 md:h-[400px] lg:h-[500px] w-full flex items-center justify-center perspective-[1200px]">
         {displayProjects.map((project, index) => {
           let relativeIndex = index - currentIndex;
           if (relativeIndex < -1 && currentIndex === displayProjects.length - 1 && index === 0) {
@@ -73,14 +82,14 @@ export function FeaturedProjectsCarousel({ title, subtitle, projects }: Featured
           return (
             <motion.div
               key={`${project.id}-${index}`}
-              className={`absolute cursor-pointer rounded-2xl overflow-hidden border transition-all duration-300 ${
+              className={`absolute cursor-pointer rounded-2xl overflow-hidden border transition-all duration-500 w-[85%] sm:w-[75%] md:w-[65%] max-w-[750px] aspect-[16/9] ${
                 isActive 
-                  ? "border-purple-500/50 shadow-[0_0_50px_rgba(168,85,247,0.5)] z-20" 
-                  : "border-white/10 shadow-inner z-10 blur-[1px] hover:blur-none"
+                  ? "border-purple-400/50 shadow-[0_10px_50px_rgba(168,85,247,0.4)] z-20 hover:scale-[1.02]" 
+                  : "border-white/10 shadow-inner z-10 blur-[1px] hover:blur-none opacity-60"
               }`}
               initial={false}
               animate={{
-                x: `${relativeIndex * 55}%`,
+                x: `${relativeIndex * (typeof window !== "undefined" && window.innerWidth < 640 ? 110 : 50)}%`,
                 scale: isActive ? 1 : 0.75,
                 opacity: isActive ? 1 : 0.4,
                 zIndex: isActive ? 20 : 10,
@@ -93,11 +102,7 @@ export function FeaturedProjectsCarousel({ title, subtitle, projects }: Featured
                 if (relativeIndex === -1) handlePrev();
                 if (relativeIndex === 1) handleNext();
               }}
-              style={{
-                width: "80%",
-                maxWidth: "380px",
-                aspectRatio: "16/9",
-              }}
+              style={{}}
             >
               <div className="w-full h-full relative group/card">
                 <Image
@@ -111,14 +116,14 @@ export function FeaturedProjectsCarousel({ title, subtitle, projects }: Featured
                 <div className={`absolute inset-0 transition-opacity duration-300 ${isActive ? 'bg-gradient-to-t from-[#090714] via-[#090714]/60 to-transparent opacity-90' : 'bg-black/60'}`}></div>
                 
                 {/* Title overlay */}
-                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-center">
-                  <h4 className={`font-bold transition-all duration-300 drop-shadow-md ${isActive ? "text-white text-xl sm:text-2xl mb-1" : "text-white/60 text-sm mb-0"}`}>
+                <div className="absolute inset-0 flex flex-col justify-end p-2 sm:p-4 md:p-6 text-center">
+                  <h4 className={`font-bold transition-all duration-300 drop-shadow-md leading-tight ${isActive ? "text-white text-base sm:text-xl md:text-2xl mb-1" : "text-white/60 text-xs sm:text-sm mb-0"}`}>
                     {project.title}
                   </h4>
                   
                   {isActive && project.link && (
                     <div className="flex justify-center items-center gap-1 text-xs text-purple-300 font-medium opacity-0 group-hover/card:opacity-100 transition-opacity mb-2">
-                      <span>View Live</span>
+                      <span>{lang === 'id' ? 'Lihat Langsung' : 'View Live'}</span>
                       <ExternalLink className="w-3 h-3" />
                     </div>
                   )}

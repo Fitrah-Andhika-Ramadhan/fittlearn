@@ -4,12 +4,16 @@ import { Badge } from "@/components/ui/badge"
 import { Brain, Github, ExternalLink, Mail, Phone, MapPin, Calendar, Award, BookOpen, Briefcase } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/animated-section"
+import { cookies } from "next/headers"
 
 import { prisma } from "@/lib/prisma"
 
 export const revalidate = 30
 
 export default async function PortfolioPage() {
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('NEXT_LOCALE')?.value || 'id'
   // Fetch real data from Database concurrently
   const [dbProjects, dbSkills, dbExperiences, dbProfile] = await Promise.all([
     prisma.project.findMany({
@@ -68,32 +72,32 @@ export default async function PortfolioPage() {
 
   const profile = dbProfile ? {
     name: dbProfile.name || "Fitrah Andhika Ramadhan",
-    title: dbProfile.headline || "Web Developer & System Analyst",
-    bio: dbProfile.bio || "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern.",
+    title: dbProfile.headline || (lang === 'id' ? "Pengembang Web & Analis Sistem" : "Web Developer & System Analyst"),
+    bio: dbProfile.bio || (lang === 'id' ? "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern." : "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies."),
     email: dbProfile.email_contact || "fitrah.andhika@email.com",
     phone: dbProfile.phone || "+62 877 6028 7039",
     location: dbProfile.location || "Bandung, Indonesia",
     github_url: dbProfile.github_url || "https://github.com/Fitrah-Andhika-Ramadhan/",
-    btn_contact: dbProfile.portfolio_btn_contact || "Contact Me",
+    btn_contact: dbProfile.portfolio_btn_contact || (lang === 'id' ? "Hubungi Saya" : "Contact Me"),
     btn_github: dbProfile.portfolio_btn_github || "GitHub",
-    btn_files: dbProfile.portfolio_btn_files || "My Study Files",
-    skills_title: dbProfile.portfolio_skills_title || "Technical Skills",
-    projects_title: dbProfile.portfolio_projects_title || "Featured Projects",
-    experience_title: dbProfile.portfolio_experience_title || "Experience & Education"
+    btn_files: dbProfile.portfolio_btn_files || (lang === 'id' ? "File Belajar Saya" : "My Study Files"),
+    skills_title: dbProfile.portfolio_skills_title || (lang === 'id' ? "Keahlian Teknis" : "Technical Skills"),
+    projects_title: dbProfile.portfolio_projects_title || (lang === 'id' ? "Proyek Unggulan" : "Featured Projects"),
+    experience_title: dbProfile.portfolio_experience_title || (lang === 'id' ? "Pengalaman & Pendidikan" : "Experience & Education")
   } : {
     name: "Fitrah Andhika Ramadhan",
-    title: "Web Developer & System Analyst",
-    bio: "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern.",
+    title: lang === 'id' ? "Pengembang Web & Analis Sistem" : "Web Developer & System Analyst",
+    bio: lang === 'id' ? "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern." : "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies.",
     email: "fitrah.andhika@email.com",
     phone: "+62 877 6028 7039",
     location: "Bandung, Indonesia",
     github_url: "https://github.com/Fitrah-Andhika-Ramadhan/",
-    btn_contact: "Contact Me",
+    btn_contact: lang === 'id' ? "Hubungi Saya" : "Contact Me",
     btn_github: "GitHub",
-    btn_files: "My Study Files",
-    skills_title: "Technical Skills",
-    projects_title: "Featured Projects",
-    experience_title: "Experience & Education"
+    btn_files: lang === 'id' ? "File Belajar Saya" : "My Study Files",
+    skills_title: lang === 'id' ? "Keahlian Teknis" : "Technical Skills",
+    projects_title: lang === 'id' ? "Proyek Unggulan" : "Featured Projects",
+    experience_title: lang === 'id' ? "Pengalaman & Pendidikan" : "Experience & Education"
   };
 
   const education = dbExperiences.filter(e => e.type === "education").length > 0
@@ -126,23 +130,29 @@ export default async function PortfolioPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-transparent pointer-events-none"></div>
 
           <div className="relative z-10 w-full max-w-4xl mx-auto">
-            <div className="text-center mb-10">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-md">{profile.name}</h1>
-              <p className="text-xl text-purple-300 mb-6 font-medium">{profile.title}</p>
-              <p className="text-lg text-purple-100 max-w-2xl mx-auto mb-8 opacity-80">
-                {profile.bio}
-              </p>
-            </div>
+            <StaggerContainer className="text-center mb-10">
+              <StaggerItem>
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-indigo-400 mb-6 drop-shadow-lg">{profile.name}</h1>
+              </StaggerItem>
+              <StaggerItem>
+                <p className="text-xl md:text-2xl text-purple-300 mb-6 font-semibold tracking-wide">{profile.title}</p>
+              </StaggerItem>
+              <StaggerItem>
+                <p className="text-base md:text-lg text-purple-100/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+                  {profile.bio}
+                </p>
+              </StaggerItem>
+            </StaggerContainer>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+            <AnimatedSection delay={0.4} direction="up" className="flex flex-wrap justify-center gap-6 mb-12">
+              <Button size="lg" className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white rounded-full px-8 transition-all hover:scale-105 shadow-[0_0_20px_rgba(168,85,247,0.4)] border-0" asChild>
                 <Link href={`mailto:${profile.email}`}>
                   <Mail className="mr-2 h-5 w-5" />
                   {profile.btn_contact}
                 </Link>
               </Button>
               {profile.github_url && (
-                <Button size="lg" variant="outline" className="bg-transparent" asChild>
+                <Button size="lg" variant="outline" className="rounded-full px-8 bg-white/5 backdrop-blur-md border-white/20 hover:bg-white/10 hover:text-white transition-all hover:scale-105" asChild>
                   <Link href={profile.github_url} target="_blank" rel="noopener noreferrer">
                     <Github className="mr-2 h-5 w-5" />
                     {profile.btn_github}
@@ -155,7 +165,7 @@ export default async function PortfolioPage() {
                   {profile.btn_files}
                 </Button>
               </Link>
-            </div>
+            </AnimatedSection>
 
             <div className="flex flex-wrap justify-center gap-6 text-purple-200">
               {profile.location && (
@@ -182,158 +192,178 @@ export default async function PortfolioPage() {
       </div>
 
       {/* Skills Section */}
-      <section className="py-16 px-4 bg-white/5 backdrop-blur-sm border-y border-white/10">
+      <section className="py-24 px-4 bg-white/5 backdrop-blur-md border-y border-white/10 relative z-10 shadow-[0_0_50px_rgba(0,0,0,0.2)]">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">{profile.skills_title}</h2>
-          <div className="grid md:grid-cols-2 gap-8">
+          <AnimatedSection delay={0.2} direction="up">
+            <h2 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-400 mb-16 drop-shadow-lg tracking-tight">{profile.skills_title}</h2>
+          </AnimatedSection>
+          <StaggerContainer className="grid md:grid-cols-2 gap-10">
             {skills.map((skill, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="font-medium text-white">{skill.name}</span>
-                  <span className="text-purple-300">{skill.level}%</span>
+              <StaggerItem key={index} className="space-y-4 bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                <div className="flex justify-between items-end">
+                  <span className="font-bold text-lg text-white tracking-wide">{skill.name}</span>
+                  <span className="text-purple-300 font-mono font-medium bg-purple-900/30 px-3 py-1 rounded-full text-sm">{skill.level}%</span>
                 </div>
-                <div className="w-full bg-white/10 rounded-full h-2">
+                <div className="w-full bg-black/40 rounded-full h-3 shadow-inner overflow-hidden border border-white/5">
                   <div
-                    className="bg-purple-500 h-2 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                    className="bg-gradient-to-r from-purple-600 to-indigo-400 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(168,85,247,0.8)] relative"
                     style={{ width: `${skill.level}%` }}
-                  ></div>
+                  >
+                    <div className="absolute top-0 right-0 bottom-0 w-10 bg-gradient-to-l from-white/30 to-transparent"></div>
+                  </div>
                 </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Projects Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">{profile.projects_title}</h2>
-          <div className="grid md:grid-cols-2 gap-8">
+      <section className="py-24 px-4 relative z-10">
+        <div className="container mx-auto max-w-7xl">
+          <AnimatedSection delay={0.2} direction="down">
+            <h2 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-400 mb-16 drop-shadow-lg tracking-tight">{profile.projects_title}</h2>
+          </AnimatedSection>
+          
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             {projects.map((project, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] transition-shadow bg-white/5 border-white/10 backdrop-blur-md text-white">
-                <div className="aspect-video relative">
-                  <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover" />
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-lg">{project.title}</CardTitle>
-                  <CardDescription>{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tech.map((tech, techIndex) => (
-                      <Badge key={techIndex} variant="secondary">
-                        {tech}
-                      </Badge>
-                    ))}
+              <StaggerItem key={index}>
+                <Card className="h-full flex flex-col overflow-hidden glass-card rounded-3xl border-white/10 group cursor-pointer hover:-translate-y-2">
+                  <div className="aspect-video relative overflow-hidden">
+                    <div className="absolute inset-0 bg-purple-500/20 group-hover:bg-transparent transition-colors duration-500 z-10 mix-blend-overlay"></div>
+                    <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" />
                   </div>
-                  <div className="flex space-x-2">
-                    <Button size="sm" variant="outline" asChild>
-                      <Link href={project.github} target="_blank" rel="noopener noreferrer">
-                        <Github className="h-4 w-4 mr-2" />
-                        Code
-                      </Link>
-                    </Button>
-                    <Button size="sm" asChild>
-                      <Link href={project.demo}>
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Demo
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                  <CardHeader className="pt-6 relative z-20 bg-gradient-to-t from-transparent via-[#1a153a]/50 to-[#1a153a]">
+                    <CardTitle className="text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">{project.title}</CardTitle>
+                    <CardDescription className="text-purple-200/70 text-sm leading-relaxed mt-2">{project.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex flex-col flex-grow justify-between mt-4">
+                    <div className="flex flex-wrap gap-2 mb-8">
+                      {project.tech.map((tech, techIndex) => (
+                        <Badge key={techIndex} variant="secondary" className="bg-purple-900/30 text-purple-200 border border-purple-500/30 hover:bg-purple-800/50 transition-colors">
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex space-x-3 w-full">
+                      <Button size="sm" variant="outline" className="flex-1 rounded-xl bg-white/5 border-white/10 hover:bg-white/10 hover:text-white transition-all" asChild>
+                        <Link href={project.github} target="_blank" rel="noopener noreferrer">
+                          <Github className="h-4 w-4 mr-2" />
+                          Code
+                        </Link>
+                      </Button>
+                      <Button size="sm" className="flex-1 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 border-0 shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all" asChild>
+                        <Link href={project.demo}>
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          Demo
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Experience Section */}
-      <section className="py-16 px-4 bg-white/5 backdrop-blur-sm border-y border-white/10">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">{profile.experience_title}</h2>
-          <div className="space-y-8">
+      <section className="py-24 px-4 bg-white/5 backdrop-blur-md border-y border-white/10 relative z-10 shadow-[0_0_50px_rgba(0,0,0,0.2)]">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection delay={0.2} direction="up">
+            <h2 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-400 mb-16 drop-shadow-lg tracking-tight">{profile.experience_title}</h2>
+          </AnimatedSection>
+          
+          <StaggerContainer className="space-y-8">
             {experiences.map((exp, index) => (
-              <Card key={index} className="bg-white/5 border-white/10 backdrop-blur-md text-white shadow-xl">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="flex items-center">
-                        <Briefcase className="h-5 w-5 mr-2 text-blue-600" />
-                        {exp.title}
-                      </CardTitle>
-                      <CardDescription className="text-lg font-medium text-blue-600">{exp.company}</CardDescription>
+              <StaggerItem key={index}>
+                <Card className="glass-card rounded-[2rem] border-purple-500/10 hover:border-purple-400/30 transition-all duration-300 group">
+                  <CardHeader className="pb-4">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <CardTitle className="flex items-center text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">
+                          <Briefcase className="h-6 w-6 mr-3 text-purple-400" />
+                          {exp.title}
+                        </CardTitle>
+                        <CardDescription className="text-xl font-medium text-purple-300/80 mt-2">{exp.company}</CardDescription>
+                      </div>
+                      <Badge variant="outline" className="flex items-center w-fit bg-purple-900/20 border-purple-500/30 text-purple-200 py-1.5 px-4 rounded-full">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        {exp.period}
+                      </Badge>
                     </div>
-                    <Badge variant="outline" className="flex items-center">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {exp.period}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {exp.description && (
-                    <p className="text-purple-100 mb-4 text-sm leading-relaxed line-clamp-4">{exp.description}</p>
-                  )}
-                  {exp.achievements.length > 0 && (
-                    <div>
-                      <h4 className="font-medium mb-2 text-white text-sm">Key Activities:</h4>
-                      <ul className="space-y-1">
-                        {exp.achievements.map((achievement: string, achIndex: number) => (
-                          <li key={achIndex} className="flex items-start text-sm text-purple-200">
-                            <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  </CardHeader>
+                  <CardContent>
+                    {exp.description && (
+                      <p className="text-purple-100/70 mb-6 text-base leading-relaxed">{exp.description}</p>
+                    )}
+                    {exp.achievements.length > 0 && (
+                      <div className="bg-white/5 rounded-2xl p-6 border border-white/5">
+                        <h4 className="font-semibold mb-4 text-white text-sm tracking-widest uppercase">Key Activities & Achievements</h4>
+                        <ul className="space-y-3">
+                          {exp.achievements.map((achievement: string, achIndex: number) => (
+                            <li key={achIndex} className="flex items-start text-base text-purple-100/80">
+                              <span className="inline-block w-2 h-2 bg-purple-400 rounded-full mt-2 mr-4 flex-shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></span>
+                              {achievement}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* Education Section */}
+      <section className="py-24 px-4 relative z-10">
+        <div className="container mx-auto max-w-5xl">
+          <AnimatedSection delay={0.2} direction="up">
+            <h2 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-400 mb-16 drop-shadow-lg tracking-tight">Education</h2>
+          </AnimatedSection>
+          
+          <StaggerContainer className="space-y-8">
+            {education.map((edu, index) => (
+              <StaggerItem key={index}>
+                <Card className="glass-card rounded-[2rem] border-purple-500/10 hover:border-purple-400/30 transition-all duration-300 group">
+                  <CardHeader className="pb-4">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <CardTitle className="flex items-center text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">
+                          <Award className="h-6 w-6 mr-3 text-purple-400" />
+                          {edu.degree}
+                        </CardTitle>
+                        <CardDescription className="text-xl font-medium text-purple-300/80 mt-2">{edu.school}</CardDescription>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <Badge variant="outline" className="flex items-center bg-purple-900/20 border-purple-500/30 text-purple-200 py-1.5 px-4 rounded-full">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          {edu.period}
+                        </Badge>
+                        <div className="text-sm font-semibold text-white/60 bg-white/5 px-3 py-1 rounded-lg border border-white/5">GPA: <span className="text-purple-300">{edu.gpa}</span></div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="bg-white/5 rounded-2xl p-6 border border-white/5 mt-2">
+                      <h4 className="font-semibold mb-4 text-white text-sm tracking-widest uppercase">Current Focus & Achievements</h4>
+                      <ul className="space-y-3">
+                        {edu.achievements.map((achievement: string, achIndex: number) => (
+                          <li key={achIndex} className="flex items-start text-base text-purple-100/80">
+                            <span className="inline-block w-2 h-2 bg-purple-400 rounded-full mt-2 mr-4 flex-shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></span>
                             {achievement}
                           </li>
                         ))}
                       </ul>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </StaggerItem>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Education Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-12 drop-shadow-md">Education</h2>
-          <div className="space-y-6">
-            {education.map((edu, index) => (
-              <Card key={index} className="bg-white/5 border-white/10 backdrop-blur-md text-white shadow-xl">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="flex items-center">
-                        <Award className="h-5 w-5 mr-2 text-blue-600" />
-                        {edu.degree}
-                      </CardTitle>
-                      <CardDescription className="text-lg font-medium text-blue-600">{edu.school}</CardDescription>
-                    </div>
-                    <div className="text-right">
-                      <Badge variant="outline" className="flex items-center mb-2">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        {edu.period}
-                      </Badge>
-                      <div className="text-sm text-gray-600">GPA: {edu.gpa}</div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div>
-                    <h4 className="font-medium mb-2 text-white">Current Focus:</h4>
-                    <ul className="space-y-1">
-                      {edu.achievements.map((achievement: string, achIndex: number) => (
-                        <li key={achIndex} className="flex items-start text-sm text-purple-200">
-                          <span className="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                          {achievement}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -369,3 +399,4 @@ export default async function PortfolioPage() {
     </div>
   )
 }
+

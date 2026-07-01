@@ -4,10 +4,14 @@ import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Eye, Heart, Tag, ArrowRight } from "lucide-react"
+import { cookies } from "next/headers"
 
 export const revalidate = 60
 
 export default async function PublicBlogPage() {
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('NEXT_LOCALE')?.value || 'id'
+
   const posts = await prisma.blogPost.findMany({
     where: { status: "published" },
     orderBy: { createdAt: "desc" },
@@ -21,10 +25,10 @@ export default async function PublicBlogPage() {
 
         <div className="relative z-10 w-full max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-md bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
-            Insights & Thoughts
+            {lang === 'id' ? 'Wawasan & Pemikiran' : 'Insights & Thoughts'}
           </h1>
           <p className="text-lg text-purple-200/80 max-w-2xl mx-auto mb-8">
-            Tulisan seputar teknologi, web development, dan pengalaman pribadi saya dalam memecahkan masalah.
+            {lang === 'id' ? 'Tulisan seputar teknologi, web development, dan pengalaman pribadi saya dalam memecahkan masalah.' : 'Articles about technology, web development, and my personal experiences in solving problems.'}
           </p>
         </div>
       </section>
@@ -34,7 +38,7 @@ export default async function PublicBlogPage() {
         <div className="container mx-auto max-w-6xl">
           {posts.length === 0 ? (
             <div className="text-center py-20 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md">
-              <p className="text-white/50 text-lg">Belum ada artikel yang dipublikasikan saat ini.</p>
+              <p className="text-white/50 text-lg">{lang === 'id' ? 'Belum ada artikel yang dipublikasikan saat ini.' : 'No articles published at the moment.'}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -96,7 +100,7 @@ export default async function PublicBlogPage() {
                         href={`/blog/${post.slug}`}
                         className="inline-flex items-center text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
                       >
-                        Baca selengkapnya <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        {lang === 'id' ? 'Baca selengkapnya' : 'Read more'} <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
                   </CardContent>
@@ -109,3 +113,4 @@ export default async function PublicBlogPage() {
     </div>
   )
 }
+

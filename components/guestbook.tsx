@@ -12,7 +12,7 @@ type GuestbookEntry = {
   replies?: GuestbookEntry[];
 };
 
-export function Guestbook() {
+export function Guestbook({ lang = 'en' }: { lang?: string }) {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
@@ -217,8 +217,8 @@ export function Guestbook() {
                 rows={3}
               />
               <div className="flex gap-2">
-                <button onClick={() => handleEdit(entry.id)} className="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg transition">Save</button>
-                <button onClick={() => setEditingId(null)} className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition">Cancel</button>
+                <button onClick={() => handleEdit(entry.id)} className="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg transition">{lang === 'id' ? 'Simpan' : 'Save'}</button>
+                <button onClick={() => setEditingId(null)} className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition">{lang === 'id' ? 'Batal' : 'Cancel'}</button>
               </div>
             </div>
           ) : (
@@ -235,7 +235,7 @@ export function Guestbook() {
                   onClick={() => { setReplyingTo(entry.id); setEditingId(null); setReplyMessage(""); }}
                   className="text-xs text-white/50 hover:text-purple-300 transition"
                 >
-                  Reply
+                  {lang === 'id' ? 'Balas' : 'Reply'}
                 </button>
               )}
               {isOwner && (
@@ -244,13 +244,13 @@ export function Guestbook() {
                     onClick={() => { setEditingId(entry.id); setEditMessage(entry.message); setReplyingTo(null); }}
                     className="text-xs text-white/50 hover:text-blue-300 transition"
                   >
-                    Edit
+                    {lang === 'id' ? 'Edit' : 'Edit'}
                   </button>
                   <button 
                     onClick={() => handleDelete(entry.id)}
                     className="text-xs text-white/50 hover:text-red-400 transition"
                   >
-                    Delete
+                    {lang === 'id' ? 'Hapus' : 'Delete'}
                   </button>
                 </>
               )}
@@ -260,27 +260,27 @@ export function Guestbook() {
           {/* Reply Form */}
           {isReplying && (
             <div className="mt-4 p-3 bg-white/5 rounded-xl border border-white/10 space-y-2">
-              {!name.trim() && <p className="text-xs text-yellow-400 mb-1">Please enter your name in the main form first.</p>}
+              {!name.trim() && <p className="text-xs text-yellow-400 mb-1">{lang === 'id' ? 'Mohon masukkan nama Anda di formulir utama terlebih dahulu.' : 'Please enter your name in the main form first.'}</p>}
               <textarea
                 value={replyMessage}
                 onChange={(e) => setReplyMessage(e.target.value)}
-                placeholder={`Reply to ${entry.name}...`}
-                className="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500 transition resize-none"
+                placeholder={lang === 'id' ? 'Tulis balasan...' : 'Write a reply...'}
+                className="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500 transition resize-none mb-2"
                 rows={2}
               />
               <div className="flex gap-2">
                 <button 
                   onClick={() => handleReply(entry.id)} 
-                  disabled={!name.trim() || !replyMessage.trim()}
+                  disabled={!replyMessage.trim()}
                   className="text-xs bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition"
                 >
-                  Post Reply
+                  {lang === 'id' ? 'Kirim Balasan' : 'Post Reply'}
                 </button>
                 <button 
                   onClick={() => setReplyingTo(null)} 
                   className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition"
                 >
-                  Cancel
+                  {lang === 'id' ? 'Batal' : 'Cancel'}
                 </button>
               </div>
             </div>
@@ -298,29 +298,29 @@ export function Guestbook() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+    <div className="w-full max-w-[90vw] xl:max-w-[85vw] mx-auto glass-card rounded-[2.5rem] p-6 sm:p-10 shadow-2xl relative overflow-visible">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-transparent pointer-events-none"></div>
       
       <div className="relative z-10 flex flex-col md:flex-row gap-10">
         
         {/* Left Side: Form */}
         <div className="w-full md:w-1/3">
-          <h3 className="text-2xl font-bold mb-2 text-white">Guestbook</h3>
+          <h3 className="text-2xl font-bold mb-2 text-white">{lang === 'id' ? 'Buku Tamu' : 'Guestbook'}</h3>
           <p className="text-sm text-purple-200/80 mb-6">
-            Leave a message, share your thoughts, or just say hi!
+            {lang === 'id' ? 'Tinggalkan pesan, bagikan pemikiran Anda, atau sekadar menyapa!' : 'Leave a message, share your thoughts, or just say hi!'}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4 sticky top-6">
             <div>
               <label htmlFor="name" className="block text-xs font-medium text-purple-200 mb-1">
-                Name
+                {lang === 'id' ? 'Nama' : 'Name'}
               </label>
               <input
                 type="text"
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
+                placeholder={lang === 'id' ? 'Nama Anda' : 'Your name'}
                 required
                 maxLength={50}
                 className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition text-sm"
@@ -328,13 +328,13 @@ export function Guestbook() {
             </div>
             <div>
               <label htmlFor="message" className="block text-xs font-medium text-purple-200 mb-1">
-                Message
+                {lang === 'id' ? 'Pesan' : 'Message'}
               </label>
               <textarea
                 id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Your message..."
+                placeholder={lang === 'id' ? 'Pesan Anda...' : 'Your message...'}
                 required
                 maxLength={500}
                 rows={4}
@@ -349,7 +349,7 @@ export function Guestbook() {
               disabled={isSubmitting || !name.trim() || !message.trim()}
               className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium text-sm text-white shadow-[0_0_20px_rgba(168,85,247,0.3)]"
             >
-              {isSubmitting ? "Submitting..." : "Post Message"}
+              {isSubmitting ? (lang === 'id' ? "Mengirim..." : "Submitting...") : (lang === 'id' ? "Kirim Pesan" : "Post Message")}
             </button>
           </form>
         </div>
@@ -357,13 +357,13 @@ export function Guestbook() {
         {/* Right Side: Comments List */}
         <div className="w-full md:w-2/3 flex flex-col max-h-[600px]">
           <h4 className="text-sm font-semibold text-white/80 mb-4 sticky top-0 bg-[#0f0c29]/0 backdrop-blur-sm py-1 z-10">
-            Recent Messages ({entries.length})
+            {lang === 'id' ? 'Pesan Terbaru' : 'Recent Messages'} ({entries.length})
           </h4>
           
           <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
             {rootEntries.length === 0 ? (
               <div className="flex items-center justify-center h-40 text-white/40 text-sm border border-dashed border-white/10 rounded-2xl">
-                No messages yet. Be the first to say hi!
+                {lang === 'id' ? 'Belum ada pesan. Jadilah yang pertama menyapa!' : 'No messages yet. Be the first to say hi!'}
               </div>
             ) : (
               <div className="pb-8">

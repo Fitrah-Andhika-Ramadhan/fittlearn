@@ -7,11 +7,31 @@
     text-wrap: balance;
   }
   .glass {
-    @apply bg-slate-900/40 backdrop-blur-md border border-white/10;
+    @apply bg-[rgba(255,255,255,0.03)] backdrop-blur-xl border border-[rgba(255,255,255,0.12)] shadow-[0_4px_30px_rgba(0,0,0,0.3)];
   }
   .glass-card {
-    @apply bg-slate-800/50 backdrop-blur-lg border border-white/5 shadow-xl;
+    @apply bg-[rgba(255,255,255,0.08)] backdrop-blur-2xl border border-[rgba(255,255,255,0.2)] shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.2)] hover:border-[rgba(255,255,255,0.3)] transition-all duration-500 relative overflow-hidden;
   }
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0.5;
+  }
+  .animate-bg-shift {
+    background-size: 400% 400%;
+    animation: bg-shift 15s ease infinite;
+  }
+}
+
+@keyframes bg-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @layer base {
@@ -90,6 +110,9 @@
 @layer base {
   * {
     @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground;

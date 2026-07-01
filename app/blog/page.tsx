@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Eye, Heart, Tag, ArrowRight } from "lucide-react"
 import { cookies } from "next/headers"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
 export default async function PublicBlogPage() {
   const cookieStore = await cookies()

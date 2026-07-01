@@ -9,7 +9,7 @@ import { cookies } from "next/headers"
 
 import { prisma } from "@/lib/prisma"
 
-export const revalidate = 30
+export const dynamic = "force-dynamic"
 
 export default async function PortfolioPage() {
   const cookieStore = await cookies()

@@ -8,7 +8,7 @@ import { FeaturedProjectsCarousel } from "@/components/featured-projects-carouse
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/animated-section";
 import { cookies } from "next/headers";
 
-export const revalidate = 60; // ISR: revalidate every 60s
+export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
   // Fetch profile and featured projects from DB

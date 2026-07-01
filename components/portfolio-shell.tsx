@@ -59,7 +59,7 @@ export function PortfolioShell({ children, lang = 'en' }: { children: React.Reac
         </nav>
         
         {/* Right side icons (Mobile & Desktop) */}
-        <div className="absolute right-4 lg:right-12 flex items-center space-x-3 pointer-events-auto">
+        <div className="absolute right-40 lg:right-64 flex items-center space-x-3 pointer-events-auto">
           <PWAInstallButton lang={lang} />
         </div>
 

@@ -93,7 +93,7 @@ export default async function HomePage() {
             </p>
           </StaggerItem>
           <StaggerItem>
-            <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight text-white drop-shadow-lg">
+            <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight text-white drop-shadow-lg">
               {name.split(" ").slice(0, 2).join(" ")}<br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-500 drop-shadow-sm">
                 {name.split(" ").slice(2).join(" ") || "Ramadhan"}

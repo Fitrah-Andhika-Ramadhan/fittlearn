@@ -10,10 +10,17 @@ export function CosmicBackground() {
     if (!canvas) return;
 
     // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+    // OPTIMIZATION: Reduce resolution on mobile to fix lag.
     function syncSize() {
       if (!canvas) return;
-      const w = canvas.clientWidth || 1280;
-      const h = canvas.clientHeight || 720;
+      
+      const isMobile = window.innerWidth < 768;
+      // Use half resolution on mobile for massive performance boost
+      const dpr = isMobile ? 0.5 : Math.min(window.devicePixelRatio || 1, 1.5);
+      
+      const w = Math.floor((canvas.clientWidth || window.innerWidth) * dpr);
+      const h = Math.floor((canvas.clientHeight || window.innerHeight) * dpr);
+      
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
@@ -22,6 +29,7 @@ export function CosmicBackground() {
 
     const resizeObserver = new ResizeObserver(syncSize);
     resizeObserver.observe(canvas);
+    window.addEventListener("resize", syncSize);
     syncSize();
 
     const gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext | null;
@@ -126,6 +134,7 @@ void main() {
     animationFrameId = requestAnimationFrame(render);
 
     return () => {
+      window.removeEventListener("resize", syncSize);
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();

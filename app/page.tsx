@@ -131,7 +131,7 @@ export default async function HomePage() {
       </div>
 
       {/* Right Section - Custom Interactive Animation */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center relative z-10 min-h-[500px]">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center relative z-10 min-h-[500px] [clip-path:inset(0)]">
         <AnimatedSection delay={0.2} direction="left" className="w-full h-full flex justify-center relative">
           <div className="w-full h-full max-w-xl aspect-square relative z-10 flex items-center justify-center drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
             <CustomSvgAnimation lang={lang} />

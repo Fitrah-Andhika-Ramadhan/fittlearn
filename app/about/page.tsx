@@ -13,8 +13,17 @@ export default async function AboutPage() {
   const lang = cookieStore.get('NEXT_LOCALE')?.value || 'id'
 
   const name = profile?.name || "Fitrah Andhika Ramadhan"
-  const title = profile?.headline || (lang === 'id' ? "Pengembang Web & Analis Sistem" : "Web Developer & System Analyst")
-  const bio = profile?.bio || (lang === 'id' ? "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern." : "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies.")
+  let title = profile?.headline || "Web Developer & System Analyst"
+  let bio = profile?.bio || "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies."
+
+  // CMS Translation Dictionary
+  if (lang === 'id') {
+    if (title === "Web Developer & System Analyst") title = "Pengembang Web & Analis Sistem";
+    if (bio.includes("Information Systems fresh graduate")) bio = "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern.";
+  } else {
+    if (title === "Pengembang Web & Analis Sistem") title = "Web Developer & System Analyst";
+    if (bio.includes("Sistem Informasi")) bio = "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies.";
+  }
   const phone = profile?.phone || "+62 877 6028 7039"
   const email = profile?.email_contact || "fitrahramadhan310@gmail.com"
   const location = profile?.location || "Banten, Indonesia"

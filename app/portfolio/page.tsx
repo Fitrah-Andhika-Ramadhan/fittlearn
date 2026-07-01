@@ -70,34 +70,43 @@ export default async function PortfolioPage() {
     }
   ];
 
-  const profile = dbProfile ? {
-    name: dbProfile.name || "Fitrah Andhika Ramadhan",
-    title: dbProfile.headline || (lang === 'id' ? "Pengembang Web & Analis Sistem" : "Web Developer & System Analyst"),
-    bio: dbProfile.bio || (lang === 'id' ? "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern." : "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies."),
-    email: dbProfile.email_contact || "fitrah.andhika@email.com",
-    phone: dbProfile.phone || "+62 877 6028 7039",
-    location: dbProfile.location || "Bandung, Indonesia",
-    github_url: dbProfile.github_url || "https://github.com/Fitrah-Andhika-Ramadhan/",
-    btn_contact: dbProfile.portfolio_btn_contact || (lang === 'id' ? "Hubungi Saya" : "Contact Me"),
-    btn_github: dbProfile.portfolio_btn_github || "GitHub",
-    btn_files: dbProfile.portfolio_btn_files || (lang === 'id' ? "File Belajar Saya" : "My Study Files"),
-    skills_title: dbProfile.portfolio_skills_title || (lang === 'id' ? "Keahlian Teknis" : "Technical Skills"),
-    projects_title: dbProfile.portfolio_projects_title || (lang === 'id' ? "Proyek Unggulan" : "Featured Projects"),
-    experience_title: dbProfile.portfolio_experience_title || (lang === 'id' ? "Pengalaman & Pendidikan" : "Experience & Education")
-  } : {
-    name: "Fitrah Andhika Ramadhan",
-    title: lang === 'id' ? "Pengembang Web & Analis Sistem" : "Web Developer & System Analyst",
-    bio: lang === 'id' ? "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern." : "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies.",
-    email: "fitrah.andhika@email.com",
-    phone: "+62 877 6028 7039",
-    location: "Bandung, Indonesia",
-    github_url: "https://github.com/Fitrah-Andhika-Ramadhan/",
-    btn_contact: lang === 'id' ? "Hubungi Saya" : "Contact Me",
-    btn_github: "GitHub",
-    btn_files: lang === 'id' ? "File Belajar Saya" : "My Study Files",
-    skills_title: lang === 'id' ? "Keahlian Teknis" : "Technical Skills",
-    projects_title: lang === 'id' ? "Proyek Unggulan" : "Featured Projects",
-    experience_title: lang === 'id' ? "Pengalaman & Pendidikan" : "Experience & Education"
+  let name = dbProfile?.name || "Fitrah Andhika Ramadhan";
+  let title = dbProfile?.headline || "Web Developer & System Analyst";
+  let bio = dbProfile?.bio || "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies.";
+  let email = dbProfile?.email_contact || "fitrah.andhika@email.com";
+  let phone = dbProfile?.phone || "+62 877 6028 7039";
+  let location = dbProfile?.location || "Banten, Indonesia";
+  let github_url = dbProfile?.github_url || "https://github.com/Fitrah-Andhika-Ramadhan/";
+  
+  let btn_contact = dbProfile?.portfolio_btn_contact || "Contact Me";
+  let btn_github = dbProfile?.portfolio_btn_github || "GitHub";
+  let btn_files = dbProfile?.portfolio_btn_files || "My Study Files";
+  let skills_title = dbProfile?.portfolio_skills_title || "Technical Skills";
+  let projects_title = dbProfile?.portfolio_projects_title || "Featured Projects";
+  let experience_title = dbProfile?.portfolio_experience_title || "Experience & Education";
+
+  // CMS Translation Dictionary
+  if (lang === 'id') {
+    if (title === "Web Developer & System Analyst") title = "Pengembang Web & Analis Sistem";
+    if (bio.includes("Information Systems fresh graduate")) bio = "Fresh Graduate S1 Sistem Informasi di Telkom University yang passionate dalam mengembangkan solusi teknologi untuk memecahkan masalah nyata. Berfokus sebagai Web Developer dan System Analyst menggunakan teknologi web modern.";
+    if (btn_contact === "Contact Me") btn_contact = "Hubungi Saya";
+    if (btn_files === "My Study Files") btn_files = "File Belajar Saya";
+    if (skills_title === "Technical Skills") skills_title = "Keahlian Teknis";
+    if (projects_title === "Featured Projects") projects_title = "Proyek Unggulan";
+    if (experience_title === "Experience & Education") experience_title = "Pengalaman & Pendidikan";
+  } else {
+    if (title === "Pengembang Web & Analis Sistem") title = "Web Developer & System Analyst";
+    if (bio.includes("Sistem Informasi")) bio = "Information Systems fresh graduate from Telkom University passionate about developing tech solutions to solve real problems. Focused on Web Development and System Analysis using modern web technologies.";
+    if (btn_contact === "Hubungi Saya") btn_contact = "Contact Me";
+    if (btn_files === "File Belajar Saya") btn_files = "My Study Files";
+    if (skills_title === "Keahlian Teknis") skills_title = "Technical Skills";
+    if (projects_title === "Proyek Unggulan") projects_title = "Featured Projects";
+    if (experience_title === "Pengalaman & Pendidikan") experience_title = "Experience & Education";
+  }
+
+  const profile = {
+    name, title, bio, email, phone, location, github_url,
+    btn_contact, btn_github, btn_files, skills_title, projects_title, experience_title
   };
 
   const education = dbExperiences.filter(e => e.type === "education").length > 0

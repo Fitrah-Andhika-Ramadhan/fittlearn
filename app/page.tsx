@@ -81,7 +81,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="flex flex-col gap-20 w-full max-w-full overflow-hidden pb-10">
+    <div className="flex flex-col gap-20 w-full max-w-[100vw] overflow-x-hidden overflow-y-clip pb-10">
       <div className="flex flex-col lg:flex-row relative w-full max-w-full gap-12 lg:gap-8 items-center min-h-[70vh]">
       {/* Left Section (Hero) */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center relative pb-10 lg:pb-20 pt-10 lg:pt-0 z-10">

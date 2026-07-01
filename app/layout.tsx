@@ -40,8 +40,8 @@ export default async function RootLayout({
   const lang = cookieStore.get('NEXT_LOCALE')?.value || 'id'
 
   return (
-    <html lang={lang} suppressHydrationWarning>
-      <body className={`${inter.variable} ${plusJakarta.variable} dark min-h-screen bg-cosmic-indigo text-white overflow-x-hidden relative font-sans`}>
+    <html lang={lang} suppressHydrationWarning className="overflow-x-hidden w-screen max-w-full">
+      <body className={`${inter.variable} ${plusJakarta.variable} dark min-h-screen bg-cosmic-indigo text-white overflow-x-hidden relative font-sans w-full max-w-full`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <NextAuthProvider>
             <CMSDataSync />

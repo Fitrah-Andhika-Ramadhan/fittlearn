@@ -70,7 +70,7 @@ export function PortfolioShell({ children, lang = 'en' }: { children: React.Reac
       </header>
 
       {/* Main Content Area */}
-      <div className="px-4 pt-20 lg:pl-32 lg:pr-12 lg:pt-32 min-h-screen relative z-10 pb-24 lg:pb-20">
+      <div className="px-4 pt-20 lg:pl-32 lg:pr-12 lg:pt-32 min-h-screen relative z-10 pb-24 lg:pb-20 max-w-[100vw] overflow-x-hidden">
         {children}
       </div>
 

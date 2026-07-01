@@ -13,10 +13,22 @@ import { cookies } from "next/headers"
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" })
 
+import { Viewport } from "next"
+
+export const viewport: Viewport = {
+  themeColor: '#090714',
+}
+
 export const metadata: Metadata = {
   title: "FitLearned - AI Document Summarizer & Portfolio",
   description: "Creative UI Designer Portfolio & AI Summarizer",
-  generator: 'v0.dev'
+  generator: 'v0.dev',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'FitLearned',
+  },
 }
 
 export default async function RootLayout({

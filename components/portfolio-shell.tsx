@@ -6,6 +6,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { User, Briefcase, Phone, Search, Home, Book } from "lucide-react"
 import { CosmicBackground } from "@/components/cosmic-background"
+import { PWAInstallButton } from "@/components/pwa-install-button"
 
 export function PortfolioShell({ children, lang = 'en' }: { children: React.ReactNode, lang?: string }) {
   const pathname = usePathname()
@@ -56,6 +57,12 @@ export function PortfolioShell({ children, lang = 'en' }: { children: React.Reac
             {lang === 'id' ? 'Kontak' : 'Contact'}
           </Link>
         </nav>
+        
+        {/* Right side icons (Mobile & Desktop) */}
+        <div className="absolute right-4 lg:right-12 flex items-center space-x-3 pointer-events-auto">
+          <PWAInstallButton lang={lang} />
+        </div>
+
         {/* Mobile Logo */}
         <div className="flex lg:hidden w-10 h-10 rounded-full border border-purple-500/50 items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.3)] bg-white/5 backdrop-blur-xl pointer-events-auto mt-2 overflow-hidden relative">
           <Image src="/logo.png" alt="Logo" fill className="object-cover" />

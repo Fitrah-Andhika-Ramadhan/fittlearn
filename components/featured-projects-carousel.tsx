@@ -60,7 +60,7 @@ export function FeaturedProjectsCarousel({ title, subtitle, projects }: Featured
   }, [displayProjects.length]);
 
   return (
-    <div className="w-full glass-card rounded-[2.5rem] p-8 sm:p-12 relative overflow-visible group">
+    <div className="w-full glass-card rounded-[2.5rem] p-8 sm:p-12 relative overflow-hidden group">
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-[2.5rem]"></div>
       
       <h3 className="text-center text-2xl font-bold text-white mb-12 tracking-wide">{title}</h3>

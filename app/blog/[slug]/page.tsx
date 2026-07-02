@@ -83,12 +83,10 @@ export default async function BlogPostPage({
       {post.image && (
         <div className="max-w-5xl mx-auto px-4 mb-12">
           <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-            <Image
+            <img
               src={post.image}
               alt={post.title}
-              fill
-              className="object-cover"
-              priority
+              className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
         </div>

@@ -419,6 +419,17 @@ export default function AdminBlog() {
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor={isEdit ? "edit-image" : "image"} className="text-white/80">Cover Image URL</Label>
+                    <Input
+                      id={isEdit ? "edit-image" : "image"}
+                      value={formData.image || ""}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, image: e.target.value }))}
+                      placeholder="e.g., https://images.unsplash.com/..."
+                      className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor={isEdit ? "edit-content" : "content"} className="text-white/80">Content <span className="text-red-400">*</span></Label>
                     <div data-color-mode="dark" className="mt-2 rounded-xl overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
                       <MDEditor

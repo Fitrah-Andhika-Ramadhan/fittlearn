@@ -83,11 +83,10 @@ export default async function PublicBlogPage({ searchParams }: { searchParams: P
                   >
                     {/* Thumbnail */}
                     <Link href={`/blog/${post.slug}`} className="block relative w-full md:w-5/12 aspect-[4/3] rounded-2xl overflow-hidden shrink-0 bg-black/40">
-                      <Image
+                      <img
                         src={post.image || "/placeholder.svg?height=400&width=600"}
                         alt={post.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
                     </Link>

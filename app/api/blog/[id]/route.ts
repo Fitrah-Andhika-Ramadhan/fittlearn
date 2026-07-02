@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { revalidateTag } from "next/cache";
 
 export async function GET(
   request: Request,
@@ -36,6 +37,8 @@ export async function PUT(
       data: body,
     });
 
+    revalidateTag("blog");
+
     return NextResponse.json(updatedPost);
   } catch (error) {
     console.error("Failed to update blog post:", error);
@@ -52,6 +55,8 @@ export async function DELETE(
     await prisma.blogPost.delete({
       where: { id },
     });
+
+    revalidateTag("blog");
 
     return NextResponse.json({ success: true });
   } catch (error) {

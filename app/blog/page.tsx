@@ -1,111 +1,168 @@
 import { prisma } from "@/lib/prisma"
 import Link from "next/link"
 import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, Eye, Heart, Tag, ArrowRight } from "lucide-react"
+import { Calendar, ArrowRight, Clock, ChevronLeft, ChevronRight } from "lucide-react"
 import { cookies } from "next/headers"
 
 export const dynamic = "force-dynamic"
 
-export default async function PublicBlogPage() {
+export default async function PublicBlogPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const cookieStore = await cookies()
   const lang = cookieStore.get('NEXT_LOCALE')?.value || 'id'
+  
+  const resolvedSearchParams = await searchParams;
+  const page = Number(resolvedSearchParams.page) || 1;
+  const limit = 4;
+  const skip = (page - 1) * limit;
 
-  const posts = await prisma.blogPost.findMany({
-    where: { status: "published" },
-    orderBy: { createdAt: "desc" },
-  })
+  const [posts, totalPosts] = await Promise.all([
+    prisma.blogPost.findMany({
+      where: { status: "published" },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      skip: skip
+    }),
+    prisma.blogPost.count({
+      where: { status: "published" }
+    })
+  ])
+  
+  const totalPages = Math.ceil(totalPosts / limit);
 
   return (
     <div className="w-full text-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-transparent pointer-events-none"></div>
+      <section className="relative pt-32 pb-16 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 to-transparent pointer-events-none"></div>
 
         <div className="relative z-10 w-full max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-md bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+          <div className="inline-block px-5 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/70 mb-6 backdrop-blur-md">
             {lang === 'id' ? 'Wawasan & Pemikiran' : 'Insights & Thoughts'}
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-md tracking-tight">
+            The Digital <span className="text-blue-500">Journal</span>
           </h1>
-          <p className="text-lg text-purple-200/80 max-w-2xl mx-auto mb-8">
-            {lang === 'id' ? 'Tulisan seputar teknologi, web development, dan pengalaman pribadi saya dalam memecahkan masalah.' : 'Articles about technology, web development, and my personal experiences in solving problems.'}
+          
+          <p className="text-sm md:text-base text-purple-200/60 max-w-2xl mx-auto mb-8 font-light leading-relaxed">
+            {lang === 'id' 
+              ? 'Mengeksplorasi titik temu antara analisis sistem, pengembangan web modern, dan inovasi digital. Kumpulan pelajaran, tutorial, dan tren teknologi.' 
+              : 'Exploring the intersections of systems analysis, modern web development, and digital innovation. A collection of lessons, tutorials, and tech trends.'}
           </p>
         </div>
       </section>
 
-      {/* Blog Posts Grid */}
-      <section className="py-8 px-4">
-        <div className="container mx-auto max-w-6xl">
+      {/* Blog Posts Stacked List */}
+      <section className="py-8 px-4 pb-24">
+        <div className="container mx-auto max-w-4xl">
           {posts.length === 0 ? (
             <div className="text-center py-20 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md">
               <p className="text-white/50 text-lg">{lang === 'id' ? 'Belum ada artikel yang dipublikasikan saat ini.' : 'No articles published at the moment.'}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {posts.map((post) => (
-                <Card 
-                  key={post.id} 
-                  className="group flex flex-col overflow-hidden bg-white/5 border-white/10 backdrop-blur-md text-white hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all duration-300"
-                >
-                  <Link href={`/blog/${post.slug}`} className="block relative aspect-[16/10] overflow-hidden">
-                    <Image
-                      src={post.image || "/placeholder.svg?height=400&width=600"}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0b0914] to-transparent opacity-60"></div>
-                    {post.category && (
-                      <Badge className="absolute top-4 left-4 bg-purple-600/80 backdrop-blur border-none hover:bg-purple-600">
-                        {post.category}
-                      </Badge>
-                    )}
-                  </Link>
+            <div className="flex flex-col gap-6">
+              {posts.map((post) => {
+                const wordCount = post.content ? post.content.split(/\s+/).length : 0;
+                const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
-                  <CardContent className="flex flex-col flex-1 p-6 pt-6">
-                    <div className="flex items-center gap-4 text-xs text-white/50 mb-3">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{new Date(post.createdAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
-                        <span>{post.views}</span>
-                      </div>
-                    </div>
-
-                    <Link href={`/blog/${post.slug}`} className="group-hover:text-purple-300 transition-colors">
-                      <h3 className="text-xl font-bold mb-3 line-clamp-2 leading-tight">{post.title}</h3>
+                return (
+                  <div 
+                    key={post.id} 
+                    className="group flex flex-col md:flex-row gap-6 md:gap-8 p-4 md:p-6 bg-[#13141f]/80 backdrop-blur-md border border-white/5 rounded-[2rem] hover:border-purple-500/30 hover:bg-[#161726] transition-all duration-500"
+                  >
+                    {/* Thumbnail */}
+                    <Link href={`/blog/${post.slug}`} className="block relative w-full md:w-5/12 aspect-[4/3] rounded-2xl overflow-hidden shrink-0 bg-black/40">
+                      <Image
+                        src={post.image || "/placeholder.svg?height=400&width=600"}
+                        alt={post.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
                     </Link>
 
-                    <p className="text-white/60 text-sm line-clamp-3 mb-6 flex-1">
-                      {post.excerpt}
-                    </p>
-
-                    <div className="mt-auto">
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {post.tags.slice(0, 3).map((tag, idx) => (
-                            <span key={idx} className="text-xs text-purple-300 bg-purple-500/10 px-2 py-1 rounded border border-purple-500/20">
-                              #{tag}
-                            </span>
-                          ))}
-                          {post.tags.length > 3 && (
-                            <span className="text-xs text-white/40 px-1 py-1">+{post.tags.length - 3}</span>
-                          )}
+                    {/* Content */}
+                    <div className="flex flex-col justify-center py-2 flex-1">
+                      <div className="flex flex-wrap items-center gap-3 mb-4">
+                        {post.category && (
+                          <span className="px-3 py-1 rounded-full border border-purple-500/30 text-[10px] font-bold text-purple-300 tracking-wider">
+                            {post.category.toUpperCase()}
+                          </span>
+                        )}
+                        
+                        <div className="flex items-center text-xs text-white/40 gap-1.5 font-medium">
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span>{new Date(post.createdAt).toLocaleDateString(lang === 'id' ? "id-ID" : "en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                         </div>
-                      )}
+                        
+                        <div className="flex items-center text-xs text-white/40 gap-1.5 font-medium">
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>{readTime} {lang === 'id' ? 'mnt baca' : 'min read'}</span>
+                        </div>
+                      </div>
+
+                      <Link href={`/blog/${post.slug}`}>
+                        <h2 className="text-2xl md:text-[1.7rem] font-bold text-white mb-3 leading-snug group-hover:text-purple-300 transition-colors">
+                          {post.title}
+                        </h2>
+                      </Link>
+
+                      <p className="text-sm text-white/50 leading-relaxed mb-6 line-clamp-3">
+                        {post.excerpt}
+                      </p>
 
                       <Link 
                         href={`/blog/${post.slug}`}
-                        className="inline-flex items-center text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+                        className="inline-flex items-center text-sm font-medium text-purple-500 hover:text-purple-400 transition-colors mt-auto"
                       >
-                        {lang === 'id' ? 'Baca selengkapnya' : 'Read more'} <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        {lang === 'id' ? 'Lanjutkan Membaca' : 'Continue Reading'} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-12">
+              {page > 1 ? (
+                <Link href={`/blog?page=${page - 1}`} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white/60 hover:bg-white/10 hover:text-white transition-colors">
+                  <ChevronLeft className="w-4 h-4" />
+                </Link>
+              ) : (
+                <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white/20 cursor-not-allowed">
+                  <ChevronLeft className="w-4 h-4" />
+                </div>
+              )}
+              
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const p = i + 1;
+                return (
+                  <Link 
+                    key={p} 
+                    href={`/blog?page=${p}`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-all duration-300 ${
+                      page === p 
+                        ? 'bg-[#5a67d8] text-white shadow-[0_0_15px_rgba(90,103,216,0.5)]' 
+                        : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {p}
+                  </Link>
+                )
+              })}
+
+              {page < totalPages ? (
+                <Link href={`/blog?page=${page + 1}`} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white/60 hover:bg-white/10 hover:text-white transition-colors">
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              ) : (
+                <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white/20 cursor-not-allowed">
+                  <ChevronRight className="w-4 h-4" />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -113,4 +170,3 @@ export default async function PublicBlogPage() {
     </div>
   )
 }
-

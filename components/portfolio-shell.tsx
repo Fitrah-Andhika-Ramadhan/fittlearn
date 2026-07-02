@@ -28,32 +28,32 @@ export function PortfolioShell({ children, lang = 'en' }: { children: React.Reac
 
       {/* Navigation Bar (Vertical on Desktop, Bottom Horizontal on Mobile) */}
       <aside className="fixed bottom-0 left-0 w-full h-16 lg:top-1/2 lg:-translate-y-1/2 lg:w-16 lg:h-3/4 glass border-t lg:border-t-0 lg:border-r rounded-t-3xl lg:rounded-t-none lg:rounded-r-3xl flex flex-row lg:flex-col items-center justify-around lg:justify-center space-x-2 lg:space-x-0 lg:space-y-8 z-50 px-4 lg:px-0">
-        <Link href="/" className="p-2 lg:p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all hover:scale-110 hover:-translate-y-1 shadow-inner"><Home size={20}/></Link>
-        <Link href="/portfolio" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Briefcase size={20}/></Link>
-        <Link href="/blog" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Book size={20}/></Link>
-        <Link href="/contact" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Phone size={20}/></Link>
-        <Link href="/summarizer" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Search size={20}/></Link>
+        <Link prefetch={true} href="/" className="p-2 lg:p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all hover:scale-110 hover:-translate-y-1 shadow-inner"><Home size={20}/></Link>
+        <Link prefetch={true} href="/portfolio" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Briefcase size={20}/></Link>
+        <Link prefetch={true} href="/blog" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Book size={20}/></Link>
+        <Link prefetch={true} href="/contact" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Phone size={20}/></Link>
+        <Link prefetch={true} href="/summarizer" className="p-2 lg:p-3 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-all hover:scale-110 hover:-translate-y-1"><Search size={20}/></Link>
       </aside>
 
       {/* Top Navbar */}
       <header className="fixed top-0 w-full lg:pl-24 lg:pr-12 py-4 lg:py-6 flex justify-center lg:justify-start items-center z-40 glass border-b-0 shadow-none pointer-events-none transition-all duration-300">
         <nav className="hidden lg:flex items-center space-x-12 ml-16 text-xs font-semibold tracking-widest uppercase text-white/70 pointer-events-auto">
-          <Link href="/" className="relative text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-purple-400">
+          <Link prefetch={true} href="/" className="relative text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-purple-400">
             {lang === 'id' ? 'Beranda' : 'Home'}
           </Link>
-          <Link href="/about" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
+          <Link prefetch={true} href="/about" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
             {lang === 'id' ? 'Tentang' : 'About'}
           </Link>
           <div className="w-12 h-12 rounded-full border border-purple-500/50 flex items-center justify-center mx-8 shadow-[0_0_20px_rgba(168,85,247,0.4)] bg-white/5 backdrop-blur-xl hover:scale-110 hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] transition-all duration-500 cursor-pointer overflow-hidden relative">
             <Image src="/logo.png" alt="Logo" fill className="object-cover" />
           </div>
-          <Link href="/portfolio" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
+          <Link prefetch={true} href="/portfolio" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
             {lang === 'id' ? 'Karya' : 'Work'}
           </Link>
-          <Link href="/blog" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
+          <Link prefetch={true} href="/blog" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
             Blog
           </Link>
-          <Link href="/contact" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
+          <Link prefetch={true} href="/contact" className="relative hover:text-white transition-colors py-2 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-purple-400 after:transition-all after:duration-300">
             {lang === 'id' ? 'Kontak' : 'Contact'}
           </Link>
         </nav>

@@ -111,7 +111,7 @@ export default async function HomePage() {
         </StaggerContainer>
         
         <AnimatedSection delay={0.4} direction="up" className="flex space-x-6">
-          <Link href="/portfolio" className="px-8 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition font-medium text-sm hover:scale-105 active:scale-95 duration-200">
+          <Link prefetch={true} href="/portfolio" className="px-8 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition font-medium text-sm hover:scale-105 active:scale-95 duration-200">
             {ctaPrimaryText}
           </Link>
           {cvUrl !== "#" ? (

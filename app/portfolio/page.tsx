@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Brain, Github, ExternalLink, Mail, Phone, MapPin, Calendar, Award, BookOpen, Briefcase } from "lucide-react"
+import { Brain, Github, ExternalLink, Mail, Phone, MapPin, Calendar, Award, BookOpen, Briefcase, Code, Server, Smartphone, Globe, ArrowRight, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/animated-section"
 import { cookies } from "next/headers"
+import { unstable_cache } from "next/cache"
 
 import { prisma } from "@/lib/prisma"
 
@@ -14,21 +15,32 @@ export const dynamic = "force-dynamic"
 export default async function PortfolioPage() {
   const cookieStore = await cookies()
   const lang = cookieStore.get('NEXT_LOCALE')?.value || 'id'
+  
   // Fetch real data from Database concurrently
-  const [dbProjects, dbSkills, dbExperiences, dbProfile] = await Promise.all([
-    prisma.project.findMany({
-      where: { status: "published" },
-      orderBy: { sort_order: "asc" },
-      include: { techs: { include: { tech: true } } }
-    }),
-    prisma.skill.findMany({
-      orderBy: { sort_order: "asc" }
-    }),
-    prisma.experience.findMany({
-      orderBy: { sort_order: "asc" }
-    }),
-    prisma.profile.findFirst()
-  ]);
+  // Cache database queries for 60 seconds for instant page loads
+  const getCachedData = unstable_cache(
+    async () => {
+      const [dbProjects, dbSkills, dbExperiences, dbProfile] = await Promise.all([
+        prisma.project.findMany({
+          where: { status: "published" },
+          orderBy: { sort_order: "asc" },
+          include: { techs: { include: { tech: true } } }
+        }),
+        prisma.skill.findMany({
+          orderBy: { sort_order: "asc" }
+        }),
+        prisma.experience.findMany({
+          orderBy: { sort_order: "asc" }
+        }),
+        prisma.profile.findFirst()
+      ]);
+      return { dbProjects, dbSkills, dbExperiences, dbProfile }
+    },
+    ['portfolio-data'],
+    { revalidate: 60, tags: ['portfolio'] }
+  )
+
+  const { dbProjects, dbSkills, dbExperiences, dbProfile } = await getCachedData();
 
   const projects = dbProjects.map(p => ({
     title: p.title,

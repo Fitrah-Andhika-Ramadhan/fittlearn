@@ -3,6 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Calendar, ArrowRight, Clock, ChevronLeft, ChevronRight } from "lucide-react"
 import { cookies } from "next/headers"
+import { unstable_cache } from "next/cache"
 
 export const dynamic = "force-dynamic"
 
@@ -15,17 +16,27 @@ export default async function PublicBlogPage({ searchParams }: { searchParams: P
   const limit = 4;
   const skip = (page - 1) * limit;
 
-  const [posts, totalPosts] = await Promise.all([
-    prisma.blogPost.findMany({
-      where: { status: "published" },
-      orderBy: { createdAt: "desc" },
-      take: limit,
-      skip: skip
-    }),
-    prisma.blogPost.count({
-      where: { status: "published" }
-    })
-  ])
+  // Cache the blog posts query for 60 seconds to make page loads instant
+  const getCachedPosts = unstable_cache(
+    async (limit: number, skip: number) => {
+      const [posts, totalPosts] = await Promise.all([
+        prisma.blogPost.findMany({
+          where: { status: "published" },
+          orderBy: { createdAt: "desc" },
+          take: limit,
+          skip: skip
+        }),
+        prisma.blogPost.count({
+          where: { status: "published" }
+        })
+      ])
+      return { posts, totalPosts }
+    },
+    ['blog-posts'],
+    { revalidate: 60, tags: ['blog'] }
+  )
+
+  const { posts, totalPosts } = await getCachedPosts(limit, skip);
   
   const totalPages = Math.ceil(totalPosts / limit);
 

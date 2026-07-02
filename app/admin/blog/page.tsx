@@ -57,6 +57,21 @@ export default function AdminBlog() {
     return matchesSearch && matchesStatus
   })
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Image is too large. Please select an image under 2MB.")
+        return
+      }
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, image: reader.result as string }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const resetForm = () => {
     setFormData({
       title: "",
@@ -419,14 +434,21 @@ export default function AdminBlog() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor={isEdit ? "edit-image" : "image"} className="text-white/80">Cover Image URL</Label>
-                    <Input
-                      id={isEdit ? "edit-image" : "image"}
-                      value={formData.image || ""}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, image: e.target.value }))}
-                      placeholder="e.g., https://images.unsplash.com/..."
-                      className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20"
-                    />
+                    <Label htmlFor={isEdit ? "edit-image" : "image"} className="text-white/80">Cover Image</Label>
+                    <div className="flex items-center gap-4">
+                      {formData.image && (
+                        <div className="w-16 h-16 relative rounded-md overflow-hidden shrink-0 border border-white/10 bg-black/40">
+                          <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      <Input
+                        id={isEdit ? "edit-image" : "image"}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20 file:bg-purple-500/20 file:text-purple-300 file:border-0 file:mr-4 file:py-1 file:px-4 file:rounded-full hover:file:bg-purple-500/30 transition-colors cursor-pointer"
+                      />
+                    </div>
                   </div>
 
                   <div className="space-y-2">

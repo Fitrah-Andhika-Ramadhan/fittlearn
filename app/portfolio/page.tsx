@@ -64,7 +64,7 @@ export default async function PortfolioPage() {
     ? dbExperiences.filter(e => e.type === "work" || e.type === "achievement").map(e => ({
         title: e.title,
         company: e.organization,
-        period: `${e.start_date.getFullYear()} - ${e.end_date ? e.end_date.getFullYear() : 'Present'}`,
+        period: `${new Date(e.start_date).getFullYear()} - ${e.end_date ? new Date(e.end_date).getFullYear() : 'Present'}`,
         description: e.description || "",
         achievements: (() => {
           try { return e.key_points ? JSON.parse(e.key_points) : [] } catch { return [] }
@@ -125,7 +125,7 @@ export default async function PortfolioPage() {
     ? dbExperiences.filter(e => e.type === "education").map(e => ({
         degree: e.title,
         school: e.organization,
-        period: `${e.start_date.getFullYear()} - ${e.end_date ? e.end_date.getFullYear() : 'Present'}`,
+        period: `${new Date(e.start_date).getFullYear()} - ${e.end_date ? new Date(e.end_date).getFullYear() : 'Present'}`,
         gpa: e.description || "3.64/4.00",
         achievements: (() => {
           try { return e.key_points ? JSON.parse(e.key_points) : [] } catch { return [] }

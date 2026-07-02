@@ -7,6 +7,7 @@ import { CustomSvgAnimation } from "@/components/custom-svg-animation";
 import { FeaturedProjectsCarousel } from "@/components/featured-projects-carousel";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/animated-section";
 import { cookies } from "next/headers";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = "force-dynamic"
 
@@ -44,7 +45,7 @@ export default async function HomePage() {
     getCachedProjects()
   ]);
 
-  const featuredProjects = dbFeaturedProjects.map(p => ({
+  const featuredProjects = dbFeaturedProjects.map((p: any) => ({
     id: p.id,
     title: p.title,
     slug: p.slug,

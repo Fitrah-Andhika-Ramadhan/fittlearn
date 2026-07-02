@@ -19,6 +19,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Edit, Trash2, Search, Filter, Eye, FileText, Calendar, Tag, Heart } from "lucide-react"
 import { useCMSBlog } from "@/hooks/useCMS"
 import type { BlogPost } from "@/lib/types"
+import dynamic from "next/dynamic"
+
+// Import CSS for MD Editor
+import "@uiw/react-md-editor/markdown-editor.css"
+import "@uiw/react-markdown-preview/markdown.css"
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false })
 
 export default function AdminBlog() {
   const { posts, createPost, updatePost, deletePost } = useCMSBlog()
@@ -413,14 +420,16 @@ export default function AdminBlog() {
 
                   <div className="space-y-2">
                     <Label htmlFor={isEdit ? "edit-content" : "content"} className="text-white/80">Content <span className="text-red-400">*</span></Label>
-                    <Textarea
-                      id={isEdit ? "edit-content" : "content"}
-                      value={formData.content}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
-                      placeholder="Write your blog post content here (Markdown supported)..."
-                      rows={12}
-                      className="bg-black/50 border-white/10 text-white focus:border-purple-500/50 focus:ring-purple-500/20 font-mono text-sm leading-relaxed"
-                    />
+                    <div data-color-mode="dark" className="mt-2 rounded-xl overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
+                      <MDEditor
+                        value={formData.content}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, content: value || "" }))}
+                        height={400}
+                        preview="edit"
+                        hideToolbar={false}
+                        className="w-full bg-black/50"
+                      />
+                    </div>
                   </div>
                 </div>
 

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Brain, Github, ExternalLink, Mail, Phone, MapPin, Calendar, Award, BookOpen, Briefcase, Code, Server, Smartphone, Globe, ArrowRight, ChevronRight } from "lucide-react"
+import { Brain, Github, ExternalLink, Mail, Phone, MapPin, Calendar, Award, BookOpen, Briefcase, Code, Server, Smartphone, Globe, ArrowRight, ChevronRight, Linkedin } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/animated-section"
@@ -89,6 +89,7 @@ export default async function PortfolioPage() {
   let phone = dbProfile?.phone || "+62 877 6028 7039";
   let location = dbProfile?.location || "Banten, Indonesia";
   let github_url = dbProfile?.github_url || "https://github.com/Fitrah-Andhika-Ramadhan/";
+  let linkedin_url = dbProfile?.linkedin_url || "#";
   
   let btn_contact = dbProfile?.portfolio_btn_contact || "Contact Me";
   let btn_github = dbProfile?.portfolio_btn_github || "GitHub";
@@ -172,15 +173,23 @@ export default async function PortfolioPage() {
                   {profile.btn_contact}
                 </Link>
               </Button>
-              {profile.github_url && (
+              {github_url && github_url !== "#" && (
                 <Button size="lg" variant="outline" className="rounded-full px-8 bg-white/5 backdrop-blur-md border-white/20 hover:bg-white/10 hover:text-white transition-all hover:scale-105" asChild>
-                  <Link href={profile.github_url} target="_blank" rel="noopener noreferrer">
+                  <Link href={github_url} target="_blank" rel="noopener noreferrer">
                     <Github className="mr-2 h-5 w-5" />
-                    {profile.btn_github}
+                    {btn_github}
                   </Link>
                 </Button>
               )}
-              <Link href="/files">
+              {linkedin_url && linkedin_url !== "#" && (
+                <Button size="lg" className="rounded-full px-8 bg-blue-600 hover:bg-blue-700 text-white transition-all hover:scale-105 shadow-[0_0_20px_rgba(37,99,235,0.4)] border-0" asChild>
+                  <Link href={linkedin_url} target="_blank" rel="noopener noreferrer">
+                    <Linkedin className="mr-2 h-5 w-5" />
+                    LinkedIn
+                  </Link>
+                </Button>
+              )}
+              <Link href="/files" prefetch={true}>
                 <Button size="lg" variant="outline" className="bg-transparent">
                   <BookOpen className="mr-2 h-5 w-5" />
                   {profile.btn_files}

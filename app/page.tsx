@@ -11,21 +11,37 @@ import { cookies } from "next/headers";
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
-  // Fetch profile and featured projects from DB
+  // Fetch profile and featured projects from DB (Cached for 60 seconds to make page load instant)
+  const getCachedProfile = unstable_cache(
+    async () => {
+      return prisma.profile.findFirst().catch(() => null)
+    },
+    ['home-profile'],
+    { revalidate: 60, tags: ['profile'] }
+  )
+
+  const getCachedProjects = unstable_cache(
+    async () => {
+      return prisma.project.findMany({
+        where: { is_featured: true, status: "published" },
+        orderBy: { created_at: "desc" },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          thumbnail_url: true,
+          demo_url: true,
+          github_url: true,
+        }
+      }).catch(() => [])
+    },
+    ['home-featured-projects'],
+    { revalidate: 60, tags: ['projects'] }
+  )
+
   const [profile, dbFeaturedProjects] = await Promise.all([
-    prisma.profile.findFirst().catch(() => null),
-    prisma.project.findMany({
-      where: { is_featured: true, status: "published" },
-      orderBy: { created_at: "desc" },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        thumbnail_url: true,
-        demo_url: true,
-        github_url: true,
-      }
-    }).catch(() => [])
+    getCachedProfile(),
+    getCachedProjects()
   ]);
 
   const featuredProjects = dbFeaturedProjects.map(p => ({
